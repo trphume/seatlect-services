@@ -5,6 +5,7 @@
   - [**MongoDB Schema**](#mongodb-schema)
     - [`customer`](#customer)
     - [`owner`](#owner)
+    - [`business`](#business)
     - [`placement`](#placement)
     - [`menu`](#menu)
     - [`menu_item`](#menu_item)
@@ -23,7 +24,7 @@ This section contains the schema for MongoDB database. Each one corresponds to a
 
 ### `customer`
 
-The **customer** collection contains information on *general users*, these are users which does own a business. They are the *customer* of a business. The following defines the schema for the document in the collection.
+The **customer** collection contains information on *general users*, these are users which does own a business. They are the customer of a business. The following defines the schema for the document in the collection.
 
 ```json
 {
@@ -42,12 +43,32 @@ The **customer** collection contains information on *general users*, these are u
 - **password** - Hashed password in string format
 - **dob** - Date of birth of the user
 - **avatar** - Link to the avatar image asset of the user
-- **preference** - List of ids associated with a type of business
-- **favorite** - List of ids associated with a business
+- **preferences** - List of ids associated with a type of business
+- **favorites** - List of ids associated with a business
 
 ### `owner`
 
 The **owner** collection contains information on *business users*, these are users that owns a business and can configure their business store through our web application.
+
+```json
+{
+  _id: ObjectId [UNIQUE],
+  name: String [UNIQUE],
+  password: String,
+  avatar: String,
+  businesses: Array<String>
+}
+```
+
+- **_id** - This is MongoDB default uniquely generated id
+- **name** - The name of the user, is used on authentication
+- **password** - Hashed password in string format
+- **avatar** - Link to the avatar image asset of the user
+- **businesses** - List of ids associated with to the user's businesses
+
+### `business`
+
+The **business** collection contains information on the businesses owned by *business users*.
 
 ### `placement`
 
