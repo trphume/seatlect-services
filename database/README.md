@@ -8,8 +8,8 @@
       - [`placement`](#placement)
       - [`menu`](#menu)
       - [`menu_item`](#menu_item)
+      - [`policy`](#policy)
     - [`reservation`](#reservation)
-    - [`policy`](#policy)
     - [`order`](#order)
   - [**Scripts**](#scripts)
 
@@ -64,6 +64,7 @@ The **business** collection contains information on *business users* and there b
   placement: Array<placement>,
   menu: Array<menu>,
   menu_item: Array<menu_item>
+  policy: Array<policy>
 }
 ```
 
@@ -78,8 +79,9 @@ The **business** collection contains information on *business users* and there b
 - **placement** - Array of placement document objects
 - **menu** -Array of menu document objects
 - **menu_item** - Array of menu_item document
+- **policy** - Array of policy document
 
-Note that placement and menu are **templates** which is used during the **creation of reservation document**. Templates are used as a base for information to be contained in a reservation. They can then be **modified** before finalization of a reservation object creation.
+Note that placement, menu and policy are **templates** which is used during the **creation of reservation document**. Templates are used as a base for information to be contained in a reservation. They can then be **modified** before finalization of a reservation object creation.
 
 #### `placement`
 
@@ -133,6 +135,30 @@ The **menu_item** document contains information on a particular item.
 - **image** - Image resource url
 - **price** - The price of a single order of this item
 
+#### `policy`
+
+The **policy** object contains information on how each schedule should be treated. It defines the behavior and constraint of the reservation (eg. refund period, reservation cost). Policies can be attached to a reservation schedule and businesses can own more than one policy.
+
+```json
+{
+  name: String,
+  description: String,
+  before: 32-bit Integer,
+  freeCancelDeadline: 32-bit Integer,
+  cancelType: String,
+  cancelRate: Double,
+  price: Double
+}
+```
+
+- **name** - This uniquely identifies a policy within the array of other policy in the business object
+- **description** - Short description of the policy
+- **before** - How many days before the reservation will customers be able to start making reservation (eg. 7 states that customers can start making reservation 7 days before the actual date)
+- **freeCancelDeadline** - Define how many days before the date can customers still cancel with full refund (eg. 2 states that any cancellation 2 days before the actual date will be fully refunded)
+- **cancelType** - Indicates the type of cancellation cost calculation, can either be percent based on total paid or some predefined amount with an upper bound of 100% paid cost
+- **cancelRate** - This defines how much the customers will have to pay either in percentage or some predefined amount
+- **price** - The base price of making a reservation
+
 ### `reservation`
 
 The **reservation** collection contains information on a reservation schedule. A single reservation contains information on the date, time, placement (seats and availability) and menu (for pre-order).
@@ -144,7 +170,8 @@ The **reservation** collection contains information on a reservation schedule. A
   name: String,
   date: Date,
   placement: placement,
-  menu_item: Array<menu_item>
+  menu_item: Array<menu_item>,
+  policy: policy
 }
 ```
 
@@ -154,10 +181,7 @@ The **reservation** collection contains information on a reservation schedule. A
 - **date** - Date and time period of the reservation
 - **placement** - Placement document object
 - **menu_item** - List of items (not to be confused with menu document type)
-
-### `policy`
-
-The **policy** collection contains information on how each schedule should be treated. Policies can be attached to a reservation schedule and businesses can own more than one policy.
+- **policy** - Policy document object
 
 ### `order`
 
