@@ -17,6 +17,8 @@
 
 This repository contains files related to creating, testing, deploying and maintaining Seatlect's databases. Seatlect uses MongoDB as its primary data store for structured data.
 
+The convention of this section is that the schema is defined in a key-value where the field name is the key and the value is the data type. Index are identified by the square brackets []. Composite index are [COMPOSITE NUMBER] where the number is an integer indicating the composite index group.
+
 ## **MongoDB Schema**
 
 This section contains the schema for MongoDB database. Each one corresponds to a single collection.
@@ -137,8 +139,8 @@ The **reservation** collection contains information on a reservation schedule. A
 
 ```json
 {
-  _id: ObjectId,
-  businessId: ObjectId,
+  _id: ObjectId [UNIQUE] [COMPOSITE 1],
+  businessId: ObjectId [COMPOSITE 1],
   name: String,
   date: Date,
   placement: placement,
@@ -147,6 +149,7 @@ The **reservation** collection contains information on a reservation schedule. A
 ```
 
 - **_id** - This is MongoDB default uniquely generated id
+- **businessId** - This is a parent reference to the business
 - **name** - The name of the reservation (backend should handle setting a default if not specified)
 - **date** - Date and time period of the reservation
 - **placement** - Placement document object
