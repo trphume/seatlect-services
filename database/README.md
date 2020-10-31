@@ -5,8 +5,8 @@
   - [**MongoDB Schema**](#mongodb-schema)
     - [`customer`](#customer)
     - [`business`](#business)
-    - [`placement`](#placement)
-    - [`menu`](#menu)
+      - [`placement`](#placement)
+      - [`menu`](#menu)
     - [`menu_item`](#menu_item)
     - [`reservation`](#reservation)
     - [`policy`](#policy)
@@ -59,6 +59,8 @@ The **business** collection contains information on *business users* and there b
   description: String,
   displayImage: String,
   images: Array<String>,
+  placement: Array<placement>,
+  menu: Array<menu>
 }
 ```
 
@@ -70,18 +72,22 @@ The **business** collection contains information on *business users* and there b
 - **description** - Short description of the business, will be displayed on the mobile application
 - **displayImage** - Equivalent to a profile photo
 - **images** - List of image resource url
+- **placement** - Array of placement document objects
+- **menu** -Array of menu document objects
 
-### `placement`
+Note that placement and menu are **templates** which is used during the **creation of reservation document**.
 
-The **placement** collection contains information on the *floor layout* of a business. Businesses can have several placement that they can choose to apply to their reservation schedule.
+#### `placement`
 
-### `menu`
+The **placement** document contains information on the *floor layout template* of a business. Businesses can have several placement that they can choose to apply to their reservation schedule. The following define the schema for a placement document.
 
-The **menu** collection contains a *list of items** which can be customers can browse through or pre-order during reservation. Businesses can have several menu that they choose to apply to their reservation schedule.
+#### `menu`
+
+The **menu** document contains a *list of items template* of a business. Businesses can have several menu that they choose to apply to their reservation schedule. The following define the schema for a placement document.
 
 ### `menu_item`
 
-The **menu_item** collection contains information on a particular item.
+The **menu_item** collection contains information on a particular item. It is in its own collection because a business may have lots of menu items that result in exceeding MongoDB document size limit.
 
 ### `reservation`
 
