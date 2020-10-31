@@ -7,7 +7,7 @@
     - [`business`](#business)
       - [`placement`](#placement)
       - [`menu`](#menu)
-    - [`menu_item`](#menu_item)
+      - [`menu_item`](#menu_item)
     - [`reservation`](#reservation)
     - [`policy`](#policy)
     - [`order`](#order)
@@ -87,9 +87,37 @@ The **placement** document contains information on the *floor layout template* o
 
 The **menu** document contains a *list of menu_item names* of a business. Businesses can have several menu that they choose to apply to their reservation schedule. The following define the schema for a placement document.
 
-### `menu_item`
+```json
+{
+  name: String,
+  description: String,
+  image: String,
+  items: Array<String>
+}
+```
+
+- **name** - This uniquely identifies a menu template within the array of other menu in business object
+- **description** - Short description of the menu template
+- **image** - Image resource url
+- **items** - Array of menu_item name which can be found in menu_items array in the business object
+
+#### `menu_item`
 
 The **menu_item** document contains information on a particular item.
+
+```json
+{
+  name: String,
+  description: String,
+  image: String,
+  price: Double
+}
+```
+
+- **name** - This uniquely identifies an item within the array of other menu_items in business object
+- **description** - Short description of the item
+- **image** - Image resource url
+- **price** - The price of a single order of this item
 
 ### `reservation`
 
