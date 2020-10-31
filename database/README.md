@@ -83,6 +83,18 @@ Note that placement and menu are **templates** which is used during the **creati
 
 The **placement** document contains information on the *floor layout template* of a business. Businesses can have several placement that they can choose to apply to their reservation schedule. The following define the schema for a placement document.
 
+**`TODO`** *Define schema and detailed description of schema fields*
+
+```json
+{
+  name: String,
+  default: Boolean
+}
+```
+
+- **name** - This uniquely identifies a placement template within the array of other placement template in the business object
+- **default** - If true indicates that this placement should be on display in the mobile application
+
 #### `menu`
 
 The **menu** document contains a *list of menu_item names* of a business. Businesses can have several menu that they choose to apply to their reservation schedule. The following define the schema for a placement document.
@@ -91,15 +103,15 @@ The **menu** document contains a *list of menu_item names* of a business. Busine
 {
   name: String,
   description: String,
-  image: String,
-  items: Array<String>
+  items: Array<String>,
+  default: Boolean
 }
 ```
 
-- **name** - This uniquely identifies a menu template within the array of other menu in business object
+- **name** - This uniquely identifies a menu template within the array of other menu in the business object
 - **description** - Short description of the menu template
-- **image** - Image resource url
 - **items** - Array of menu_item name which can be found in menu_items array in the business object
+- **default** - If true indicates that this menu should be on display in the mobile application
 
 #### `menu_item`
 
@@ -114,7 +126,7 @@ The **menu_item** document contains information on a particular item.
 }
 ```
 
-- **name** - This uniquely identifies an item within the array of other menu_items in business object
+- **name** - This uniquely identifies an item within the array of other menu_items in the business object
 - **description** - Short description of the item
 - **image** - Image resource url
 - **price** - The price of a single order of this item
@@ -122,6 +134,23 @@ The **menu_item** document contains information on a particular item.
 ### `reservation`
 
 The **reservation** collection contains information on a reservation schedule. A single reservation contains information on the date, time, placement (seats and availability) and menu (for pre-order).
+
+```json
+{
+  _id: ObjectId,
+  businessId: ObjectId,
+  name: String,
+  date: Date,
+  placement: placement,
+  menu_item: Array<menu_item>
+}
+```
+
+- **_id** - This is MongoDB default uniquely generated id
+- **name** - The name of the reservation (backend should handle setting a default if not specified)
+- **date** - Date and time period of the reservation
+- **placement** - Placement document object
+- **menu_item** - List of items (not to be confused with menu document type)
 
 ### `policy`
 
