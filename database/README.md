@@ -157,7 +157,7 @@ The **policy** object contains information on how each schedule should be treate
 - **freeCancelDeadline** - Define how many days before the date can customers still cancel with full refund (eg. 2 states that any cancellation 2 days before the actual date will be fully refunded)
 - **cancelType** - Indicates the type of cancellation cost calculation, can either be percent based on total paid or some predefined amount with an upper bound of 100% paid cost
 - **cancelRate** - This defines how much the customers will have to pay either in percentage or some predefined amount
-- **price** - The base price of making a reservation
+- **price** - The base price of making a reservation (per seat)
 
 ### `reservation`
 
@@ -186,6 +186,32 @@ The **reservation** collection contains information on a reservation schedule. A
 ### `order`
 
 The **order** collection contains information on a each reservation order made.
+
+```json
+{
+  _id: ObjectId,
+  customerId: ObjectId,
+  businessId: ObjectId,
+  paymentDate: Date
+  reservationDate: Date,
+  seat: Array<32-bit Integer>,
+  item: Array<menu_item>,
+  basePrice: Double,
+  totalPrice: Double,
+  status: String,
+}
+```
+
+- **_id** - This is MOngoDB default uniquely generated id
+- **customerId** - This is a parent reference to the customer
+- **businessId** - This a parent reference to the business
+- **paymentDate** - When the customer paid for the reservation
+- **reservationDate** - The date of the reservation
+- **seat** - Array of seat number that was reserved
+- **item** - Array of items pre-ordered from the menu
+- **basePrice** - The base price defined in the policy for the reservation
+- **totalPrice** - The total cost of making the reservation including the items
+- **status** - The status of the order, can be paid, used, expired or cancelled
 
 ## **Scripts**
 
