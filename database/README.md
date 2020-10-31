@@ -202,7 +202,7 @@ The **order** collection contains information on a each reservation order made.
 }
 ```
 
-- **_id** - This is MOngoDB default uniquely generated id
+- **_id** - This is MongoDB default uniquely generated id
 - **customerId** - This is a parent reference to the customer
 - **businessId** - This a parent reference to the business
 - **paymentDate** - When the customer paid for the reservation
