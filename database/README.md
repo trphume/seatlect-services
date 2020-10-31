@@ -4,7 +4,6 @@
   - [**Overview**](#overview)
   - [**MongoDB Schema**](#mongodb-schema)
     - [`customer`](#customer)
-    - [`owner`](#owner)
     - [`business`](#business)
     - [`placement`](#placement)
     - [`menu`](#menu)
@@ -31,10 +30,10 @@ The **customer** collection contains information on *general users*, these are u
   _id: ObjectId [UNIQUE],
   name: String [UNIQUE],
   password: String,
-  dob: String,
+  dob: Date,
   avatar: String,
   preference: Array<String>,
-  favorite: Array<String>,
+  favorite: Array<ObjectId>
 }
 ```
 
@@ -46,29 +45,31 @@ The **customer** collection contains information on *general users*, these are u
 - **preferences** - List of ids associated with a type of business
 - **favorites** - List of ids associated with a business
 
-### `owner`
+### `business`
 
-The **owner** collection contains information on *business users*, these are users that owns a business and can configure their business store through our web application.
+The **business** collection contains information on *business users* and there business, these are users that owns a business and can configure their business store through our web application. The following defines the schema for the document in the collection.
 
 ```json
 {
   _id: ObjectId [UNIQUE],
   name: String [UNIQUE],
   password: String,
-  avatar: String,
-  businesses: Array<String>
+  businessName: String,
+  type: String,
+  description: String,
+  displayImage: String,
+  images: Array<String>,
 }
 ```
 
 - **_id** - This is MongoDB default uniquely generated id
 - **name** - The name of the user, is used on authentication
 - **password** - Hashed password in string format
-- **avatar** - Link to the avatar image asset of the user
-- **businesses** - List of ids associated with to the user's businesses
-
-### `business`
-
-The **business** collection contains information on the businesses owned by *business users*.
+- **businessName** - The name of the business, is not unique
+- **type** - The type associated with this business
+- **description** - Short description of the business, will be displayed on the mobile application
+- **displayImage** - Equivalent to a profile photo
+- **images** - List of image resource url
 
 ### `placement`
 
