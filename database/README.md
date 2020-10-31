@@ -60,7 +60,8 @@ The **business** collection contains information on *business users* and there b
   displayImage: String,
   images: Array<String>,
   placement: Array<placement>,
-  menu: Array<menu>
+  menu: Array<menu>,
+  menu_item: Array<menu_item>
 }
 ```
 
@@ -74,8 +75,9 @@ The **business** collection contains information on *business users* and there b
 - **images** - List of image resource url
 - **placement** - Array of placement document objects
 - **menu** -Array of menu document objects
+- **menu_item** - Array of menu_item document
 
-Note that placement and menu are **templates** which is used during the **creation of reservation document**.
+Note that placement and menu are **templates** which is used during the **creation of reservation document**. Templates are used as a base for information to be contained in a reservation. They can then be **modified** before finalization of a reservation object creation.
 
 #### `placement`
 
@@ -83,11 +85,11 @@ The **placement** document contains information on the *floor layout template* o
 
 #### `menu`
 
-The **menu** document contains a *list of items template* of a business. Businesses can have several menu that they choose to apply to their reservation schedule. The following define the schema for a placement document.
+The **menu** document contains a *list of menu_item names* of a business. Businesses can have several menu that they choose to apply to their reservation schedule. The following define the schema for a placement document.
 
 ### `menu_item`
 
-The **menu_item** collection contains information on a particular item. It is in its own collection because a business may have lots of menu items that result in exceeding MongoDB document size limit.
+The **menu_item** document contains information on a particular item.
 
 ### `reservation`
 
