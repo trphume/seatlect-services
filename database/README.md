@@ -59,6 +59,11 @@ The **business** collection contains information on *business users* and there b
   "businessName": "String",
   "type": "String",
   "description": "String",
+  "location": {
+    "type": "<GeoJSON Point>",
+    "coordinates": "<coordinates>"
+  },
+  "address": "String",
   "displayImage": "String",
   "images": "Array<String>",
   "placement": "Array<placement>",
@@ -74,6 +79,8 @@ The **business** collection contains information on *business users* and there b
 - **businessName** - The name of the business, is not unique
 - **type** - The type associated with this business
 - **description** - Short description of the business, will be displayed on the mobile application
+- **location** - Mongo GeoJSON object, requires 2sphere index
+- **address** - Address name of the business
 - **displayImage** - Equivalent to a profile photo
 - **images** - List of image resource url
 - **placement** - Array of placement document objects
