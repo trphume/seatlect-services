@@ -105,7 +105,7 @@ The **menu** document contains a *list of menu_item names* of a business. Busine
 
 ```json
 {
-  "name: String",
+  "name": "String",
   "description": "String",
   "items": "Array<String>",
   "default": "Boolean"
