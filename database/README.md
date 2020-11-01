@@ -29,13 +29,13 @@ The **customer** collection contains information on *general users*, these are u
 
 ```json
 {
-  _id: ObjectId [UNIQUE],
-  name: String [UNIQUE],
-  password: String,
-  dob: Date,
-  avatar: String,
-  preference: Array<String>,
-  favorite: Array<ObjectId>
+  "_id": "ObjectId [UNIQUE]",
+  "name": "String [UNIQUE]",
+  "password": "String",
+  "dob": "Date",
+  "avatar": "String",
+  "preference": "Array<String>",
+  "favorite": "Array<ObjectId>"
 }
 ```
 
@@ -53,18 +53,18 @@ The **business** collection contains information on *business users* and there b
 
 ```json
 {
-  _id: ObjectId [UNIQUE],
-  name: String [UNIQUE],
-  password: String,
-  businessName: String,
-  type: String,
-  description: String,
-  displayImage: String,
-  images: Array<String>,
-  placement: Array<placement>,
-  menu: Array<menu>,
-  menu_item: Array<menu_item>
-  policy: Array<policy>
+  "_id": "ObjectId [UNIQUE]",
+  "name": "String [UNIQUE]",
+  "password": "String",
+  "businessName": "String",
+  "type": "String",
+  "description": "String",
+  "displayImage": "String",
+  "images": "Array<String>",
+  "placement": "Array<placement>",
+  "menu": "Array<menu>",
+  "menu_item": "Array<menu_item>",
+  "policy": "Array<policy>"
 }
 ```
 
@@ -91,8 +91,8 @@ The **placement** document contains information on the *floor layout template* o
 
 ```json
 {
-  name: String,
-  default: Boolean
+  "name": "String",
+  "default": "Boolean"
 }
 ```
 
@@ -105,10 +105,10 @@ The **menu** document contains a *list of menu_item names* of a business. Busine
 
 ```json
 {
-  name: String,
-  description: String,
-  items: Array<String>,
-  default: Boolean
+  "name: String",
+  "description": "String",
+  "items": "Array<String>",
+  "default": "Boolean"
 }
 ```
 
@@ -123,10 +123,10 @@ The **menu_item** document contains information on a particular item.
 
 ```json
 {
-  name: String,
-  description: String,
-  image: String,
-  price: Double
+  "name": "String",
+  "description": "String",
+  "image": "String",
+  "price": "Double"
 }
 ```
 
@@ -141,13 +141,13 @@ The **policy** object contains information on how each schedule should be treate
 
 ```json
 {
-  name: String,
-  description: String,
-  before: 32-bit Integer,
-  freeCancelDeadline: 32-bit Integer,
-  cancelType: String,
-  cancelRate: Double,
-  price: Double
+  "name": "String",
+  "description": "String",
+  "before": "32-bit Integer",
+  "freeCancelDeadline": "32-bit Integer",
+  "cancelType": "String",
+  "cancelRate": "Double",
+  "price": "Double"
 }
 ```
 
@@ -165,13 +165,13 @@ The **reservation** collection contains information on a reservation schedule. A
 
 ```json
 {
-  _id: ObjectId [UNIQUE] [COMPOSITE 1],
-  businessId: ObjectId [COMPOSITE 1],
-  name: String,
-  date: Date,
-  placement: placement,
-  menu_item: Array<menu_item>,
-  policy: policy
+  "_id": "ObjectId [UNIQUE] [COMPOSITE 1]",
+  "businessId": "ObjectId [COMPOSITE 1]",
+  "name": "String",
+  "date": "Date",
+  "placement": "placement",
+  "menu_item": "Array<menu_item>",
+  "policy": "policy"
 }
 ```
 
@@ -189,16 +189,16 @@ The **order** collection contains information on a each reservation order made.
 
 ```json
 {
-  _id: ObjectId,
-  customerId: ObjectId,
-  businessId: ObjectId,
-  paymentDate: Date
-  reservationDate: Date,
-  seat: Array<32-bit Integer>,
-  item: Array<menu_item>,
-  basePrice: Double,
-  totalPrice: Double,
-  status: String,
+  "_id": "ObjectId",
+  "customerId": "ObjectId",
+  "businessId": "ObjectId",
+  "paymentDate": "Date",
+  "reservationDate": "Date",
+  "seat": "Array<32-bit Integer>",
+  "item": "Array<menu_item>",
+  "basePrice": "Double",
+  "totalPrice": "Double",
+  "status": "String",
 }
 ```
 
