@@ -94,16 +94,26 @@ Note that placement, menu and policy are **templates** which is used during the 
 
 The **placement** document contains information on the *floor layout template* of a business. Businesses can have several placement that they can choose to apply to their reservation schedule. The following define the schema for a placement document.
 
-**`TODO`** *Define schema and detailed description of schema fields*
-
 ```json
 {
   "name": "String",
+  "entity": {
+    "id": "String",
+    "floor": "32-bit Integer",
+    "type": "String",
+    "reserved": "Boolean"
+  },
   "default": "Boolean"
+
 }
 ```
 
 - **name** - This uniquely identifies a placement template within the array of other placement template in the business object
+- **entity** - An array of entity describing the placement layout
+  - **id** - This has to be unique and is set upon creation of entity
+  - **floor** - Indicates which floor the entity should be placed on
+  - **type** - This indicates how the system should interpret the entity, if type is RESERVE then the system interprets this as a reservable entity
+  - **reserved** - If true then the entity has already been reserved by a customer
 - **default** - If true indicates that this placement should be on display in the mobile application
 
 #### `menu`
@@ -154,7 +164,10 @@ The **policy** object contains information on how each schedule should be treate
   "freeCancelDeadline": "32-bit Integer",
   "cancelType": "String",
   "cancelRate": "Double",
-  "price": "Double"
+  "basePrice": [{
+    "type": "String",
+    "price": "Double"
+  }]
 }
 ```
 
@@ -164,7 +177,7 @@ The **policy** object contains information on how each schedule should be treate
 - **freeCancelDeadline** - Define how many days before the date can customers still cancel with full refund (eg. 2 states that any cancellation 2 days before the actual date will be fully refunded)
 - **cancelType** - Indicates the type of cancellation cost calculation, can either be percent based on total paid or some predefined amount with an upper bound of 100% paid cost
 - **cancelRate** - This defines how much the customers will have to pay either in percentage or some predefined amount
-- **price** - The base price of making a reservation (per seat)
+- **basePrice** - List of base price of making a reservation (per entity), type indicates which policy should apply to the entity
 
 ### `reservation`
 
@@ -201,9 +214,12 @@ The **order** collection contains information on a each reservation order made.
   "businessId": "ObjectId",
   "paymentDate": "Date",
   "reservationDate": "Date",
-  "seat": "Array<32-bit Integer>",
+  "reserve": "Array<32-bit Integer>",
   "item": "Array<menu_item>",
-  "basePrice": "Double",
+  "basePrice": {
+    "type": "String",
+    "price": Double
+  },
   "totalPrice": "Double",
   "status": "String",
 }
@@ -214,7 +230,7 @@ The **order** collection contains information on a each reservation order made.
 - **businessId** - This a parent reference to the business
 - **paymentDate** - When the customer paid for the reservation
 - **reservationDate** - The date of the reservation
-- **seat** - Array of seat number that was reserved
+- **reserve** - Array of reserved entity id number that was reserved by the customer
 - **item** - Array of items pre-ordered from the menu
 - **basePrice** - The base price defined in the policy for the reservation
 - **totalPrice** - The total cost of making the reservation including the items
