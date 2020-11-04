@@ -218,7 +218,7 @@ The **order** collection contains information on a each reservation order made.
   "item": "Array<menu_item>",
   "basePrice": {
     "type": "String",
-    "price": Double
+    "price": "Double"
   },
   "totalPrice": "Double",
   "status": "String",
