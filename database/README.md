@@ -44,7 +44,7 @@ The **customer** collection contains information on *general users*, these are u
 - **password** - Hashed password in string format
 - **dob** - Date of birth of the user
 - **avatar** - Link to the avatar image asset of the user
-- **preferences** - List of ids associated with a type of business
+- **preferences** - List of tags of a business type
 - **favorites** - List of ids associated with a business
 
 ### `business`
@@ -97,14 +97,19 @@ The **placement** document contains information on the *floor layout template* o
 ```json
 {
   "name": "String",
-  "entity": {
-    "id": "String",
-    "floor": "32-bit Integer",
-    "type": "String",
-    "reserved": "Boolean"
-  },
+  "entity": "Array<entity>",
   "default": "Boolean"
+}
+```
 
+Below is the **entity** document used in placement.
+
+```json
+{
+  "id": "String",
+  "floor": "32-bit Integer",
+  "type": "String",
+  "reserved": "Boolean"
 }
 ```
 
@@ -143,7 +148,7 @@ The **menu_item** document contains information on a particular item.
   "name": "String",
   "description": "String",
   "image": "String",
-  "price": "Double"
+  "price": "Decimal"
 }
 ```
 
@@ -163,11 +168,8 @@ The **policy** object contains information on how each schedule should be treate
   "before": "32-bit Integer",
   "freeCancelDeadline": "32-bit Integer",
   "cancelType": "String",
-  "cancelRate": "Double",
-  "basePrice": [{
-    "type": "String",
-    "price": "Double"
-  }]
+  "cancelRate": "Decimal",
+  "basePrice": "Decimal"
 }
 ```
 
@@ -177,7 +179,7 @@ The **policy** object contains information on how each schedule should be treate
 - **freeCancelDeadline** - Define how many days before the date can customers still cancel with full refund (eg. 2 states that any cancellation 2 days before the actual date will be fully refunded)
 - **cancelType** - Indicates the type of cancellation cost calculation, can either be percent based on total paid or some predefined amount with an upper bound of 100% paid cost
 - **cancelRate** - This defines how much the customers will have to pay either in percentage or some predefined amount
-- **basePrice** - List of base price of making a reservation (per entity), type indicates which policy should apply to the entity
+- **basePrice** - Base price for making a reservation
 
 ### `reservation`
 
@@ -216,11 +218,8 @@ The **order** collection contains information on a each reservation order made.
   "reservationDate": "Date",
   "reserve": "Array<32-bit Integer>",
   "item": "Array<menu_item>",
-  "basePrice": {
-    "type": "String",
-    "price": "Double"
-  },
-  "totalPrice": "Double",
+  "basePrice": "Decimal",
+  "totalPrice": "Decimal",
   "status": "String",
 }
 ```
