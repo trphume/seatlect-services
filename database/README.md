@@ -167,10 +167,6 @@ The **policy** object contains information on how each schedule should be treate
   "description": "String",
   "before": "32-bit Integer",
   "freeCancelDeadline": "32-bit Integer",
-<<<<<<< Updated upstream
-  "cancelType": "String",
-=======
->>>>>>> Stashed changes
   "cancelRate": "Decimal",
   "basePrice": "Decimal"
 }
@@ -180,12 +176,7 @@ The **policy** object contains information on how each schedule should be treate
 - **description** - Short description of the policy
 - **before** - How many days before the reservation will customers be able to start making reservation (eg. 7 states that customers can start making reservation 7 days before the actual date)
 - **freeCancelDeadline** - Define how many days before the date can customers still cancel with full refund (eg. 2 states that any cancellation 2 days before the actual date will be fully refunded)
-<<<<<<< Updated upstream
-- **cancelType** - Indicates the type of cancellation cost calculation, can either be percent based on total paid or some predefined amount with an upper bound of 100% paid cost
-- **cancelRate** - This defines how much the customers will have to pay either in percentage or some predefined amount
-=======
 - **cancelRate** - This defines how much the customers will have to pay in percentage of the reservation cost
->>>>>>> Stashed changes
 - **basePrice** - Base price for making a reservation
 
 ### `reservation`
