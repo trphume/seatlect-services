@@ -44,7 +44,7 @@ The **customer** collection contains information on *general users*, these are u
 - **password** - Hashed password in string format
 - **dob** - Date of birth of the user
 - **avatar** - Link to the avatar image asset of the user
-- **preferences** - List of ids associated with a type of business
+- **preferences** - List of tags of a business type
 - **favorites** - List of ids associated with a business
 
 ### `business`
@@ -97,14 +97,19 @@ The **placement** document contains information on the *floor layout template* o
 ```json
 {
   "name": "String",
-  "entity": {
-    "id": "String",
-    "floor": "32-bit Integer",
-    "type": "String",
-    "reserved": "Boolean"
-  },
+  "entity": "Array<entity>",
   "default": "Boolean"
+}
+```
 
+Below is the **entity** document used in placement.
+
+```json
+{
+  "id": "String",
+  "floor": "32-bit Integer",
+  "type": "String",
+  "reserved": "Boolean"
 }
 ```
 
@@ -143,7 +148,7 @@ The **menu_item** document contains information on a particular item.
   "name": "String",
   "description": "String",
   "image": "String",
-  "price": "Double"
+  "price": "Decimal"
 }
 ```
 
@@ -162,12 +167,8 @@ The **policy** object contains information on how each schedule should be treate
   "description": "String",
   "before": "32-bit Integer",
   "freeCancelDeadline": "32-bit Integer",
-  "cancelType": "String",
-  "cancelRate": "Double",
-  "basePrice": [{
-    "type": "String",
-    "price": "Double"
-  }]
+  "cancelRate": "Decimal",
+  "basePrice": "Decimal"
 }
 ```
 
@@ -175,9 +176,8 @@ The **policy** object contains information on how each schedule should be treate
 - **description** - Short description of the policy
 - **before** - How many days before the reservation will customers be able to start making reservation (eg. 7 states that customers can start making reservation 7 days before the actual date)
 - **freeCancelDeadline** - Define how many days before the date can customers still cancel with full refund (eg. 2 states that any cancellation 2 days before the actual date will be fully refunded)
-- **cancelType** - Indicates the type of cancellation cost calculation, can either be percent based on total paid or some predefined amount with an upper bound of 100% paid cost
-- **cancelRate** - This defines how much the customers will have to pay either in percentage or some predefined amount
-- **basePrice** - List of base price of making a reservation (per entity), type indicates which policy should apply to the entity
+- **cancelRate** - This defines how much the customers will have to pay in percentage of the reservation cost
+- **basePrice** - Base price for making a reservation
 
 ### `reservation`
 
@@ -188,7 +188,8 @@ The **reservation** collection contains information on a reservation schedule. A
   "_id": "ObjectId [UNIQUE] [COMPOSITE 1]",
   "businessId": "ObjectId [COMPOSITE 1]",
   "name": "String",
-  "date": "Date",
+  "start": "Date",
+  "end": "Date",
   "placement": "placement",
   "menu_item": "Array<menu_item>",
   "policy": "policy"
@@ -213,14 +214,12 @@ The **order** collection contains information on a each reservation order made.
   "customerId": "ObjectId",
   "businessId": "ObjectId",
   "paymentDate": "Date",
-  "reservationDate": "Date",
-  "reserve": "Array<32-bit Integer>",
+  "start": "Date",
+  "end": "Date",
+  "reserve": "Array<String>",
   "item": "Array<menu_item>",
-  "basePrice": {
-    "type": "String",
-    "price": "Double"
-  },
-  "totalPrice": "Double",
+  "basePrice": "Decimal",
+  "totalPrice": "Decimal",
   "status": "String",
 }
 ```
@@ -229,8 +228,9 @@ The **order** collection contains information on a each reservation order made.
 - **customerId** - This is a parent reference to the customer
 - **businessId** - This a parent reference to the business
 - **paymentDate** - When the customer paid for the reservation
-- **reservationDate** - The date of the reservation
-- **reserve** - Array of reserved entity id number that was reserved by the customer
+- **start** - The start date and time of the reservation
+- **end** - The end date and time of the reservation
+- **reserve** - Array of reserved seat/tables id
 - **item** - Array of items pre-ordered from the menu
 - **basePrice** - The base price defined in the policy for the reservation
 - **totalPrice** - The total cost of making the reservation including the items
