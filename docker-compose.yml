@@ -7,5 +7,6 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: password
     volumes:
       - ./database/init.js:/docker-entrypoint-initdb.d/init.js
+      - ./database/mock.js:/docker-entrypoint-initdb.d/mock.js
     ports:
       - "27017:27017"

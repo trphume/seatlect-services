@@ -1,10 +1,10 @@
 
-// Customer collection
+// customer collection
 db.createCollection('customer', { validator: { $jsonSchema: { bsonType: 'object', required: ['name', 'password', 'dob', 'avatar', 'preference', 'favorite'], properties: { name: { bsonType: 'string' }, password: { bsonType: 'string' }, dob: { bsonType: 'date' }, avatar: { bsonType: 'string' }, preference: { bsonType: 'array', items: { bsonType: 'string' } }, favorite: { bsonType: 'array', items: { bsonType: 'objectId' } } } } } });
 
 db.customer.createIndex({ name: 1 }, { unique: true });
 
-// Business collection
+// business collection
 db.createCollection('business', {
   validator: {
     $jsonSchema: {
@@ -42,7 +42,7 @@ db.createCollection('business', {
 
 db.business.createIndex({ name: 1 }, { unique: true });
 
-// Reservation collection
+// reservation collection
 db.createCollection('reservation', {
   validator: {
     $jsonSchema: {
@@ -71,7 +71,7 @@ db.createCollection('reservation', {
 
 db.reservation.createIndex({ businessId: 1 });
 
-// Order collection
+// order collection
 db.createCollection('order', {
   validator: {
     $jsonSchema: {
