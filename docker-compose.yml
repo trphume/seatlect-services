@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  mongo:
+    image: mongo:4.4.0
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - ./database/init.js:/docker-entrypoint-initdb.d/init.js
+    ports:
+      - "27017:27017"

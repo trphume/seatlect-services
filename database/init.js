@@ -40,7 +40,7 @@ db.createCollection('business', {
   }
 });
 
-db.business.createCollection({ name: 1 }, { unique: true });
+db.business.createIndex({ name: 1 }, { unique: true });
 
 // Reservation collection
 db.createCollection('reservation', {
