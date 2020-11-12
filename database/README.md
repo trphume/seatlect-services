@@ -11,6 +11,7 @@
       - [`policy`](#policy)
     - [`reservation`](#reservation)
     - [`order`](#order)
+      - [`preorder`](#preorder)
   - [**Scripts**](#scripts)
 
 ## **Overview**
@@ -57,7 +58,7 @@ The **business** collection contains information on *business users* and there b
   "name": "String [UNIQUE]",
   "password": "String",
   "businessName": "String",
-  "type": "String",
+  "type": "Array<String>",
   "description": "String",
   "location": {
     "type": "<GeoJSON Point>",
@@ -77,7 +78,7 @@ The **business** collection contains information on *business users* and there b
 - **name** - The name of the user, is used on authentication
 - **password** - Hashed password in string format
 - **businessName** - The name of the business, is not unique
-- **type** - The type associated with this business
+- **type** - The array of types associated with this business
 - **description** - Short description of the business, will be displayed on the mobile application
 - **location** - Mongo GeoJSON object, requires 2sphere index
 - **address** - Address name of the business
@@ -217,7 +218,7 @@ The **order** collection contains information on a each reservation order made.
   "start": "Date",
   "end": "Date",
   "reserve": "Array<String>",
-  "item": "Array<menu_item>",
+  "preorder": "Array<preorder>",
   "basePrice": "Decimal",
   "totalPrice": "Decimal",
   "status": "String",
@@ -231,10 +232,22 @@ The **order** collection contains information on a each reservation order made.
 - **start** - The start date and time of the reservation
 - **end** - The end date and time of the reservation
 - **reserve** - Array of reserved seat/tables id
-- **item** - Array of items pre-ordered from the menu
+- **preorder** - Array of items pre-ordered from the menu
 - **basePrice** - The base price defined in the policy for the reservation
 - **totalPrice** - The total cost of making the reservation including the items
 - **status** - The status of the order, can be paid, used, expired or cancelled
+
+#### `preorder`
+
+The **preorder** document contains information on a particular item and quantity ordered.
+
+```json
+{
+  "name": "String",
+  "quantity": "32-bit Integer",
+  "price": "Decimal"
+}
+```
 
 ## **Scripts**
 
