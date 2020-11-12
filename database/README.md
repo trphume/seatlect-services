@@ -57,7 +57,7 @@ The **business** collection contains information on *business users* and there b
   "name": "String [UNIQUE]",
   "password": "String",
   "businessName": "String",
-  "type": "String",
+  "type": "Array<String>",
   "description": "String",
   "location": {
     "type": "<GeoJSON Point>",
@@ -77,7 +77,7 @@ The **business** collection contains information on *business users* and there b
 - **name** - The name of the user, is used on authentication
 - **password** - Hashed password in string format
 - **businessName** - The name of the business, is not unique
-- **type** - The type associated with this business
+- **type** - The array of types associated with this business
 - **description** - Short description of the business, will be displayed on the mobile application
 - **location** - Mongo GeoJSON object, requires 2sphere index
 - **address** - Address name of the business
