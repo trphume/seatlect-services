@@ -1,10 +1,26 @@
+db.createCollection('customer', {
+  validator: {
+    $jsonSchema: {
+      bsonType: 'object', required: ['name', 'password', 'dob', 'avatar', 'preference', 'favorite'], properties: {
+        name: {
+          bsonType: 'string', minLength: 3,
+          maxLength: 20
+        }, password: { bsonType: 'string', maxLength: 60 }, dob: { bsonType: 'date' }, avatar: { bsonType: 'string' }, preference: {
+          bsonType: 'array', items: {
+            bsonType: 'string', uniqueItems: true,
+            maxItems: 5
+          }
+        }, favorite: {
+          bsonType: 'array', items: {
+            bsonType: 'objectId', uniqueItems: true,
+            maxItems: 5
+          }
+        }
+      }
+    }
+  }
+});
 
-// customer collection
-db.createCollection('customer', { validator: { $jsonSchema: { bsonType: 'object', required: ['name', 'password', 'dob', 'avatar', 'preference', 'favorite'], properties: { name: { bsonType: 'string' }, password: { bsonType: 'string' }, dob: { bsonType: 'date' }, avatar: { bsonType: 'string' }, preference: { bsonType: 'array', items: { bsonType: 'string' } }, favorite: { bsonType: 'array', items: { bsonType: 'objectId' } } } } } });
-
-db.customer.createIndex({ name: 1 }, { unique: true });
-
-// business collection
 db.createCollection('business', {
   validator: {
     $jsonSchema: {
@@ -40,11 +56,6 @@ db.createCollection('business', {
   }
 });
 
-db.business.createIndex({ name: 1 }, { unique: true });
-// db.business.createIndex({ location: "2dsphere" });
-
-// reservation collection
-
 db.createCollection('reservation', {
   validator: {
     $jsonSchema: {
@@ -71,9 +82,6 @@ db.createCollection('reservation', {
   }
 });
 
-db.reservation.createIndex({ businessId: 1 });
-
-// order collection
 db.createCollection('order', {
   validator: {
     $jsonSchema: {
@@ -87,6 +95,3 @@ db.createCollection('order', {
     }
   }
 });
-
-db.order.createIndex({ customerId: 1 });
-db.order.createIndex({ businessId: 1 });
