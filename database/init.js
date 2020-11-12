@@ -1,4 +1,3 @@
-
 db.createCollection('customer', {
   validator: {
     $jsonSchema: {
@@ -174,14 +173,14 @@ db.createCollection('reservation', {
 db.createCollection('order', {
   validator: {
     $jsonSchema: {
-      bsonType: 'object', required: ['customerId', 'businessId', 'paymentDate', 'start', 'end', 'reserve', 'item', 'basePrice', 'totalPrice', 'status'], properties: {
-        customerId: { bsonType: 'objectId' }, businessId: { bsonType: 'objectId' }, paymentDate: { bsonType: 'date' }, start: { bsonType: 'date' }, end: { bsonType: 'date' }, reserve: { bsonType: 'array', items: { bsonType: 'string' } }, item: {
+      bsonType: 'object', required: ['customerId', 'businessId', 'paymentDate', 'start', 'end', 'reserve', 'preorder', 'basePrice', 'totalPrice', 'status'], properties: {
+        customerId: { bsonType: 'objectId' }, businessId: { bsonType: 'objectId' }, paymentDate: { bsonType: 'date' }, start: { bsonType: 'date' }, end: { bsonType: 'date' }, reserve: { bsonType: 'array', items: { bsonType: 'string' } }, preorder: {
           bsonType: 'array', items: {
-            required: ['name', 'description', 'image', 'price'], properties: {
+            required: ['name', 'quantity', 'price'], properties: {
               name: {
                 bsonType: 'string', minLength: 3,
                 maxLength: 20
-              }, description: { bsonType: 'string', maxLength: 125 }, image: { bsonType: 'string' }, price: { bsonType: 'decimal', min: 0 }
+              }, quantity: { bsonType: 'int', min: 1 }, price: { bsonType: 'decimal', min: 0 }
             }
           }
         }, basePrice: { bsonType: 'decimal', min: 0 }, totalPrice: { bsonType: 'decimal', min: 0 }, status: { bsonType: 'string', enum: ['PAID', 'USED', 'EXPIRED', 'CANCELLED'] }

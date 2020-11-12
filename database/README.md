@@ -11,6 +11,7 @@
       - [`policy`](#policy)
     - [`reservation`](#reservation)
     - [`order`](#order)
+      - [`preorder`](#preorder)
   - [**Scripts**](#scripts)
 
 ## **Overview**
@@ -217,7 +218,7 @@ The **order** collection contains information on a each reservation order made.
   "start": "Date",
   "end": "Date",
   "reserve": "Array<String>",
-  "item": "Array<menu_item>",
+  "preorder": "Array<preorder>",
   "basePrice": "Decimal",
   "totalPrice": "Decimal",
   "status": "String",
@@ -231,10 +232,22 @@ The **order** collection contains information on a each reservation order made.
 - **start** - The start date and time of the reservation
 - **end** - The end date and time of the reservation
 - **reserve** - Array of reserved seat/tables id
-- **item** - Array of items pre-ordered from the menu
+- **preorder** - Array of items pre-ordered from the menu
 - **basePrice** - The base price defined in the policy for the reservation
 - **totalPrice** - The total cost of making the reservation including the items
 - **status** - The status of the order, can be paid, used, expired or cancelled
+
+#### `preorder`
+
+The **preorder** document contains information on a particular item and quantity ordered.
+
+```json
+{
+  "name": "String",
+  "quantity": "32-bit Integer",
+  "price": "Decimal"
+}
+```
 
 ## **Scripts**
 
