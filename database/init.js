@@ -5,11 +5,12 @@ db.createCollection('customer', { validator: { $jsonSchema: { bsonType: 'object'
 db.customer.createIndex({ name: 1 }, { unique: true });
 
 // business collection
+
 db.createCollection('business', {
   validator: {
     $jsonSchema: {
       bsonType: 'object', required: ['name', 'password', 'businessName', 'type', 'description', 'location', 'address', 'displayImage', 'images', 'placement', 'menu', 'menu_item', 'policy'], properties: {
-        name: { bsonType: 'string' }, password: { bsonType: 'string' }, businessName: { bsonType: 'string' }, type: { bsonType: 'string' }, description: { bsonType: 'string' }, location: {
+        name: { bsonType: 'string' }, password: { bsonType: 'string' }, businessName: { bsonType: 'string' }, type: { bsonType: 'array', items: { bsonType: 'string' } }, description: { bsonType: 'string' }, location: {
           bsonType: 'object',
           required: ['type', 'coordinates'], properties: { type: { bsonType: 'string' }, coordinates: { bsonType: 'array', items: { bsonType: 'double' } } }
         }, address: { bsonType: 'string' }, displayImage: { bsonType: 'string' }, images: { bsonType: 'array', items: { bsonType: 'string' } }, placement: {
@@ -41,6 +42,7 @@ db.createCollection('business', {
 });
 
 db.business.createIndex({ name: 1 }, { unique: true });
+// db.business.createIndex({ location: "2dsphere" });
 
 // reservation collection
 db.createCollection('reservation', {
