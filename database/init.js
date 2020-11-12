@@ -5,7 +5,6 @@ db.createCollection('customer', { validator: { $jsonSchema: { bsonType: 'object'
 db.customer.createIndex({ name: 1 }, { unique: true });
 
 // business collection
-
 db.createCollection('business', {
   validator: {
     $jsonSchema: {
@@ -18,7 +17,7 @@ db.createCollection('business', {
             required: ['name', 'entity', 'default'], properties: {
               name: { bsonType: 'string' }, entity: {
                 bsonType: 'array', items: {
-                  required: ['id', 'floor', 'type', 'reserved'], properties: { id: { bsonType: 'string' }, floor: { bsonType: 'int' }, type: { bsonType: 'string' }, reserved: { bsonType: 'bool' } }
+                  required: ['id', 'floor', 'type', 'reserved'], properties: { id: { bsonType: 'string' }, floor: { bsonType: 'int' }, type: { bsonType: 'string' }, reserved: { bsonType: 'bool' }, x: { bsonType: 'double' }, y: { bsonType: 'double' } }
                 }
               }, default: { bsonType: 'bool' }
             }
@@ -45,6 +44,7 @@ db.business.createIndex({ name: 1 }, { unique: true });
 // db.business.createIndex({ location: "2dsphere" });
 
 // reservation collection
+
 db.createCollection('reservation', {
   validator: {
     $jsonSchema: {
@@ -54,7 +54,7 @@ db.createCollection('reservation', {
           required: ['name', 'entity', 'default'], properties: {
             name: { bsonType: 'string' }, entity: {
               bsonType: 'array', items: {
-                required: ['id', 'floor', 'type', 'reserved'], properties: { id: { bsonType: 'string' }, floor: { bsonType: 'int' }, type: { bsonType: 'string' }, reserved: { bsonType: 'bool' } }
+                required: ['id', 'floor', 'type', 'reserved'], properties: { id: { bsonType: 'string' }, floor: { bsonType: 'int' }, type: { bsonType: 'string' }, reserved: { bsonType: 'bool' }, x: { bsonType: 'double' }, y: { bsonType: 'double' } }
               }
             }, default: { bsonType: 'bool' }
           }
