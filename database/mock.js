@@ -1,9 +1,20 @@
 // All password in the mock api is 'ExamplePassword123'
 // Uses Bcrypt with 12 round for encryption
 
+
+// Ids
+jakeId = ObjectId('5facaf3bd646b77f40481343');
+samuelId = ObjectId('5facaf7a35c1e1db56597485');
+gunId = ObjectId('5facaf818b4f49b3cf1f1792');
+
+brightioId = ObjectId('5facafef6b28446f285d7ae4');
+beerBurgerId = ObjectId('5facaff31c6d49b2c7256bf3');
+ironBuffetId = ObjectId('5facaff9e4d46967c9c2a558');
+
 // customer collection
 db.customer.insertMany([
   {
+    _id: jakeId,
     name: 'Jake',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     dob: new Date('2000-10-15'),
@@ -12,6 +23,7 @@ db.customer.insertMany([
     favorite: []
   },
   {
+    _id: samuelId,
     name: 'Samuel',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     dob: new Date('1999-07-10'),
@@ -20,6 +32,7 @@ db.customer.insertMany([
     favorite: []
   },
   {
+    _id: gunId,
     name: 'Gun',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     dob: new Date('2004-02-22'),
@@ -33,6 +46,7 @@ db.customer.insertMany([
 // business collection
 db.business.insertMany([
   {
+    _id: brightioId,
     name: 'Brightio',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     businessName: 'Brightio',
@@ -51,6 +65,7 @@ db.business.insertMany([
     policy: []
   },
   {
+    _id: beerBurgerId,
     name: 'BeerBurger',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     businessName: 'Beer and Burger',
@@ -69,6 +84,7 @@ db.business.insertMany([
     policy: []
   },
   {
+    _id: ironBuffetId,
     name: 'IronBuffet',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     businessName: 'Iron Buffet',
