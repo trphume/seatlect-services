@@ -27,7 +27,7 @@ db.createCollection('customer', {
 db.createCollection('business', {
   validator: {
     $jsonSchema: {
-      bsonType: 'object', required: ['name', 'password', 'businessName', 'type', 'description', 'location', 'address', 'displayImage', 'images', 'placement', 'menu', 'menu_item', 'policy'], properties: {
+      bsonType: 'object', required: ['name', 'password', 'businessName', 'type', 'description', 'location', 'address', 'displayImage', 'images', 'placement', 'menu', 'policy'], properties: {
         name: {
           bsonType: 'string', minLength: 3,
           maxLength: 20
@@ -86,20 +86,16 @@ db.createCollection('business', {
                 bsonType: 'string', minLength: 3,
                 maxLength: 20
               }, description: { bsonType: 'string', maxLength: 125 }, items: {
-                bsonType: 'array', items: {
-                  bsonType: 'string', uniqueItems: true,
-                  maxItems: 100
+                bsonType: 'array', uniqueItems: true,
+                maxItems: 100, items: {
+                  required: ['name', 'description', 'image', 'price'], properties: {
+                    name: {
+                      bsonType: 'string', minLength: 3,
+                      maxLength: 20
+                    }, description: { bsonType: 'string', maxLength: 125 }, image: { bsonType: 'string' }, price: { bsonType: 'decimal', min: 0 }
+                  }
                 }
               }, default: { bsonType: 'bool' }
-            }
-          }
-        }, menu_item: {
-          bsonType: 'array', maxItems: 100, items: {
-            required: ['name', 'description', 'image', 'price'], properties: {
-              name: {
-                bsonType: 'string', minLength: 3,
-                maxLength: 20
-              }, description: { bsonType: 'string', maxLength: 125 }, image: { bsonType: 'string' }, price: { bsonType: 'decimal', min: 0 }
             }
           }
         }, policy: {
@@ -123,7 +119,7 @@ db.createCollection('business', {
 db.createCollection('reservation', {
   validator: {
     $jsonSchema: {
-      bsonType: 'object', required: ['businessId', 'name', 'start', 'end', 'placement', 'menu_item', 'policy'], properties: {
+      bsonType: 'object', required: ['businessId', 'name', 'start', 'end', 'placement', 'menu', 'policy'], properties: {
         businessId: { bsonType: 'objectId' }, name: {
           bsonType: 'string', minLength: 3,
           maxLength: 20
@@ -144,7 +140,7 @@ db.createCollection('reservation', {
               }
             }, default: { bsonType: 'bool' }
           }
-        }, menu_item: {
+        }, menu: {
           bsonType: 'array', items: {
             required: ['name', 'description', 'image', 'price'], properties: {
               name: {

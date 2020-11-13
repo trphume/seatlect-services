@@ -61,7 +61,6 @@ db.business.insertMany([
     images: [],
     placement: [],
     menu: [],
-    menu_item: [],
     policy: []
   },
   {
@@ -80,7 +79,6 @@ db.business.insertMany([
     images: [],
     placement: [],
     menu: [],
-    menu_item: [],
     policy: []
   },
   {
@@ -99,7 +97,6 @@ db.business.insertMany([
     images: [],
     placement: [],
     menu: [],
-    menu_item: [],
     policy: []
   }
 ]);

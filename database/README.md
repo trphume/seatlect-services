@@ -69,7 +69,6 @@ The **business** collection contains information on *business users* and there b
   "images": "Array<String>",
   "placement": "Array<placement>",
   "menu": "Array<menu>",
-  "menu_item": "Array<menu_item>",
   "policy": "Array<policy>"
 }
 ```
@@ -124,20 +123,20 @@ Below is the **entity** document used in placement.
 
 #### `menu`
 
-The **menu** document contains a *list of menu_item names* of a business. Businesses can have several menu that they choose to apply to their reservation schedule. The following define the schema for a placement document.
+The **menu** document contains a *list of menu_item* of a business. Businesses can have several menu that they choose to apply to their reservation schedule. The following define the schema for a placement document.
 
 ```json
 {
   "name": "String",
   "description": "String",
-  "items": "Array<String>",
+  "items": "Array<menu_item>",
   "default": "Boolean"
 }
 ```
 
 - **name** - This uniquely identifies a menu template within the array of other menu in the business object
 - **description** - Short description of the menu template
-- **items** - Array of menu_item name which can be found in menu_items array in the business object
+- **items** - Array of menu_item objects
 - **default** - If true indicates that this menu should be on display in the mobile application
 
 #### `menu_item`
@@ -192,7 +191,7 @@ The **reservation** collection contains information on a reservation schedule. A
   "start": "Date",
   "end": "Date",
   "placement": "placement",
-  "menu_item": "Array<menu_item>",
+  "menu": "Array<menu_item>",
   "policy": "policy"
 }
 ```
@@ -202,7 +201,7 @@ The **reservation** collection contains information on a reservation schedule. A
 - **name** - The name of the reservation (backend should handle setting a default if not specified)
 - **date** - Date and time period of the reservation
 - **placement** - Placement document object
-- **menu_item** - List of items (not to be confused with menu document type)
+- **menu** - List of items (not to be confused with menu document type)
 - **policy** - Policy document object
 
 ### `order`
