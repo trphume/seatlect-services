@@ -4,6 +4,7 @@
   - [**Overview**](#overview)
   - [**HTTP**](#http)
   - [**gRPC**](#grpc)
+    - [`authentication`](#authentication)
 
 ## **Overview**
 
@@ -18,3 +19,9 @@ This section describes our HTTP API platform.
 ## **gRPC**
 
 This section describes our gRPC API platform.
+
+### `authentication`
+
+- **SignIn** - This endpoint attempts to authenticate the user with the given credentials. If successful, it returns token (refresh and jwt) and information on the user
+- **SignUp** - This endpoints create a new user. If successful, it returns token (refresh and jwt) and information on the user
+- **FetchJWT** - This endpoints uses a refresh token to fetch a new jwt token
