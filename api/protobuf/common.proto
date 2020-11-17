@@ -1,7 +1,7 @@
 syntax = "proto3";
 package seatlect;
 
-option go_package = "internal/genproto/entitypb";
+option go_package = "internal/genproto/commonpb";
 
 import "google/protobuf/timestamp.proto";
 

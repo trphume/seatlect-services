@@ -4,7 +4,7 @@ package seatlect;
 option go_package = "internal/genproto/authpb";
 
 import "google/protobuf/timestamp.proto";
-import "api/protobuf/entity.proto";
+import "api/protobuf/common.proto";
 
 service AuthService {
   rpc SignIn (SignInRequest) returns (SignInResponse);

@@ -10,7 +10,7 @@ import (
 	timestamp "github.com/golang/protobuf/ptypes/timestamp"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	entitypb "internal/genproto/entitypb"
+	commonpb "internal/genproto/commonpb"
 	reflect "reflect"
 	sync "sync"
 )
@@ -85,7 +85,7 @@ type SignInResponse struct {
 
 	RefreshToken string         `protobuf:"bytes,1,opt,name=refreshToken,proto3" json:"refreshToken,omitempty"`
 	JwtToken     string         `protobuf:"bytes,2,opt,name=jwtToken,proto3" json:"jwtToken,omitempty"`
-	User         *entitypb.User `protobuf:"bytes,3,opt,name=user,proto3" json:"user,omitempty"`
+	User         *commonpb.User `protobuf:"bytes,3,opt,name=user,proto3" json:"user,omitempty"`
 }
 
 func (x *SignInResponse) Reset() {
@@ -134,7 +134,7 @@ func (x *SignInResponse) GetJwtToken() string {
 	return ""
 }
 
-func (x *SignInResponse) GetUser() *entitypb.User {
+func (x *SignInResponse) GetUser() *commonpb.User {
 	if x != nil {
 		return x.User
 	}
@@ -212,7 +212,7 @@ type SignUpResponse struct {
 
 	RefreshToken string         `protobuf:"bytes,1,opt,name=refreshToken,proto3" json:"refreshToken,omitempty"`
 	JwtToken     string         `protobuf:"bytes,2,opt,name=jwtToken,proto3" json:"jwtToken,omitempty"`
-	User         *entitypb.User `protobuf:"bytes,3,opt,name=user,proto3" json:"user,omitempty"`
+	User         *commonpb.User `protobuf:"bytes,3,opt,name=user,proto3" json:"user,omitempty"`
 }
 
 func (x *SignUpResponse) Reset() {
@@ -261,7 +261,7 @@ func (x *SignUpResponse) GetJwtToken() string {
 	return ""
 }
 
-func (x *SignUpResponse) GetUser() *entitypb.User {
+func (x *SignUpResponse) GetUser() *commonpb.User {
 	if x != nil {
 		return x.User
 	}
@@ -362,7 +362,7 @@ var file_api_protobuf_auth_proto_rawDesc = []byte{
 	0x65, 0x63, 0x74, 0x1a, 0x1f, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f, 0x70, 0x72, 0x6f, 0x74,
 	0x6f, 0x62, 0x75, 0x66, 0x2f, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x2e, 0x70,
 	0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x19, 0x61, 0x70, 0x69, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62,
-	0x75, 0x66, 0x2f, 0x65, 0x6e, 0x74, 0x69, 0x74, 0x79, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22,
+	0x75, 0x66, 0x2f, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22,
 	0x47, 0x0a, 0x0d, 0x53, 0x69, 0x67, 0x6e, 0x49, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
 	0x12, 0x1a, 0x0a, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01,
 	0x28, 0x09, 0x52, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x1a, 0x0a, 0x08,
@@ -431,7 +431,7 @@ var file_api_protobuf_auth_proto_goTypes = []interface{}{
 	(*SignUpResponse)(nil),      // 3: seatlect.SignUpResponse
 	(*FetchJWTRequest)(nil),     // 4: seatlect.FetchJWTRequest
 	(*FetchJWTResponse)(nil),    // 5: seatlect.FetchJWTResponse
-	(*entitypb.User)(nil),       // 6: seatlect.User
+	(*commonpb.User)(nil),       // 6: seatlect.User
 	(*timestamp.Timestamp)(nil), // 7: google.protobuf.Timestamp
 }
 var file_api_protobuf_auth_proto_depIdxs = []int32{

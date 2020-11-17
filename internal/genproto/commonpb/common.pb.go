@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.25.0-devel
 // 	protoc        v3.13.0
-// source: api/protobuf/entity.proto
+// source: api/protobuf/common.proto
 
-package entitypb
+package commonpb
 
 import (
 	timestamp "github.com/golang/protobuf/ptypes/timestamp"
@@ -36,7 +36,7 @@ type User struct {
 func (x *User) Reset() {
 	*x = User{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_protobuf_entity_proto_msgTypes[0]
+		mi := &file_api_protobuf_common_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -49,7 +49,7 @@ func (x *User) String() string {
 func (*User) ProtoMessage() {}
 
 func (x *User) ProtoReflect() protoreflect.Message {
-	mi := &file_api_protobuf_entity_proto_msgTypes[0]
+	mi := &file_api_protobuf_common_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -62,7 +62,7 @@ func (x *User) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use User.ProtoReflect.Descriptor instead.
 func (*User) Descriptor() ([]byte, []int) {
-	return file_api_protobuf_entity_proto_rawDescGZIP(), []int{0}
+	return file_api_protobuf_common_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *User) GetUsername() string {
@@ -119,7 +119,7 @@ type Business struct {
 func (x *Business) Reset() {
 	*x = Business{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_protobuf_entity_proto_msgTypes[1]
+		mi := &file_api_protobuf_common_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -132,7 +132,7 @@ func (x *Business) String() string {
 func (*Business) ProtoMessage() {}
 
 func (x *Business) ProtoReflect() protoreflect.Message {
-	mi := &file_api_protobuf_entity_proto_msgTypes[1]
+	mi := &file_api_protobuf_common_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -145,7 +145,7 @@ func (x *Business) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Business.ProtoReflect.Descriptor instead.
 func (*Business) Descriptor() ([]byte, []int) {
-	return file_api_protobuf_entity_proto_rawDescGZIP(), []int{1}
+	return file_api_protobuf_common_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *Business) GetXId() []byte {
@@ -223,7 +223,7 @@ type Latlng struct {
 func (x *Latlng) Reset() {
 	*x = Latlng{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_protobuf_entity_proto_msgTypes[2]
+		mi := &file_api_protobuf_common_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -236,7 +236,7 @@ func (x *Latlng) String() string {
 func (*Latlng) ProtoMessage() {}
 
 func (x *Latlng) ProtoReflect() protoreflect.Message {
-	mi := &file_api_protobuf_entity_proto_msgTypes[2]
+	mi := &file_api_protobuf_common_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -249,7 +249,7 @@ func (x *Latlng) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Latlng.ProtoReflect.Descriptor instead.
 func (*Latlng) Descriptor() ([]byte, []int) {
-	return file_api_protobuf_entity_proto_rawDescGZIP(), []int{2}
+	return file_api_protobuf_common_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *Latlng) GetLatitude() float64 {
@@ -280,7 +280,7 @@ type MenuItem struct {
 func (x *MenuItem) Reset() {
 	*x = MenuItem{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_protobuf_entity_proto_msgTypes[3]
+		mi := &file_api_protobuf_common_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -293,7 +293,7 @@ func (x *MenuItem) String() string {
 func (*MenuItem) ProtoMessage() {}
 
 func (x *MenuItem) ProtoReflect() protoreflect.Message {
-	mi := &file_api_protobuf_entity_proto_msgTypes[3]
+	mi := &file_api_protobuf_common_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -306,7 +306,7 @@ func (x *MenuItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MenuItem.ProtoReflect.Descriptor instead.
 func (*MenuItem) Descriptor() ([]byte, []int) {
-	return file_api_protobuf_entity_proto_rawDescGZIP(), []int{3}
+	return file_api_protobuf_common_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *MenuItem) GetName() string {
@@ -349,7 +349,7 @@ type Decimal struct {
 func (x *Decimal) Reset() {
 	*x = Decimal{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_protobuf_entity_proto_msgTypes[4]
+		mi := &file_api_protobuf_common_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -362,7 +362,7 @@ func (x *Decimal) String() string {
 func (*Decimal) ProtoMessage() {}
 
 func (x *Decimal) ProtoReflect() protoreflect.Message {
-	mi := &file_api_protobuf_entity_proto_msgTypes[4]
+	mi := &file_api_protobuf_common_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -375,7 +375,7 @@ func (x *Decimal) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Decimal.ProtoReflect.Descriptor instead.
 func (*Decimal) Descriptor() ([]byte, []int) {
-	return file_api_protobuf_entity_proto_rawDescGZIP(), []int{4}
+	return file_api_protobuf_common_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *Decimal) GetHigh() int64 {
@@ -392,11 +392,11 @@ func (x *Decimal) GetLow() int64 {
 	return 0
 }
 
-var File_api_protobuf_entity_proto protoreflect.FileDescriptor
+var File_api_protobuf_common_proto protoreflect.FileDescriptor
 
-var file_api_protobuf_entity_proto_rawDesc = []byte{
-	0x0a, 0x19, 0x61, 0x70, 0x69, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x65,
-	0x6e, 0x74, 0x69, 0x74, 0x79, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x08, 0x73, 0x65, 0x61,
+var file_api_protobuf_common_proto_rawDesc = []byte{
+	0x0a, 0x19, 0x61, 0x70, 0x69, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x63,
+	0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x08, 0x73, 0x65, 0x61,
 	0x74, 0x6c, 0x65, 0x63, 0x74, 0x1a, 0x1f, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f, 0x70, 0x72,
 	0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70,
 	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0xb8, 0x01, 0x0a, 0x04, 0x55, 0x73, 0x65, 0x72, 0x12,
@@ -445,24 +445,24 @@ var file_api_protobuf_entity_proto_rawDesc = []byte{
 	0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x68, 0x69, 0x67, 0x68, 0x12, 0x10, 0x0a, 0x03, 0x6c,
 	0x6f, 0x77, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x03, 0x6c, 0x6f, 0x77, 0x42, 0x1c, 0x5a,
 	0x1a, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x2f, 0x67, 0x65, 0x6e, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x2f, 0x65, 0x6e, 0x74, 0x69, 0x74, 0x79, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x2f, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f,
 	0x74, 0x6f, 0x33,
 }
 
 var (
-	file_api_protobuf_entity_proto_rawDescOnce sync.Once
-	file_api_protobuf_entity_proto_rawDescData = file_api_protobuf_entity_proto_rawDesc
+	file_api_protobuf_common_proto_rawDescOnce sync.Once
+	file_api_protobuf_common_proto_rawDescData = file_api_protobuf_common_proto_rawDesc
 )
 
-func file_api_protobuf_entity_proto_rawDescGZIP() []byte {
-	file_api_protobuf_entity_proto_rawDescOnce.Do(func() {
-		file_api_protobuf_entity_proto_rawDescData = protoimpl.X.CompressGZIP(file_api_protobuf_entity_proto_rawDescData)
+func file_api_protobuf_common_proto_rawDescGZIP() []byte {
+	file_api_protobuf_common_proto_rawDescOnce.Do(func() {
+		file_api_protobuf_common_proto_rawDescData = protoimpl.X.CompressGZIP(file_api_protobuf_common_proto_rawDescData)
 	})
-	return file_api_protobuf_entity_proto_rawDescData
+	return file_api_protobuf_common_proto_rawDescData
 }
 
-var file_api_protobuf_entity_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
-var file_api_protobuf_entity_proto_goTypes = []interface{}{
+var file_api_protobuf_common_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_api_protobuf_common_proto_goTypes = []interface{}{
 	(*User)(nil),                // 0: seatlect.User
 	(*Business)(nil),            // 1: seatlect.Business
 	(*Latlng)(nil),              // 2: seatlect.Latlng
@@ -470,7 +470,7 @@ var file_api_protobuf_entity_proto_goTypes = []interface{}{
 	(*Decimal)(nil),             // 4: seatlect.Decimal
 	(*timestamp.Timestamp)(nil), // 5: google.protobuf.Timestamp
 }
-var file_api_protobuf_entity_proto_depIdxs = []int32{
+var file_api_protobuf_common_proto_depIdxs = []int32{
 	5, // 0: seatlect.User.dob:type_name -> google.protobuf.Timestamp
 	1, // 1: seatlect.User.favorite:type_name -> seatlect.Business
 	2, // 2: seatlect.Business.location:type_name -> seatlect.Latlng
@@ -483,13 +483,13 @@ var file_api_protobuf_entity_proto_depIdxs = []int32{
 	0, // [0:5] is the sub-list for field type_name
 }
 
-func init() { file_api_protobuf_entity_proto_init() }
-func file_api_protobuf_entity_proto_init() {
-	if File_api_protobuf_entity_proto != nil {
+func init() { file_api_protobuf_common_proto_init() }
+func file_api_protobuf_common_proto_init() {
+	if File_api_protobuf_common_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_api_protobuf_entity_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_api_protobuf_common_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*User); i {
 			case 0:
 				return &v.state
@@ -501,7 +501,7 @@ func file_api_protobuf_entity_proto_init() {
 				return nil
 			}
 		}
-		file_api_protobuf_entity_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_api_protobuf_common_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Business); i {
 			case 0:
 				return &v.state
@@ -513,7 +513,7 @@ func file_api_protobuf_entity_proto_init() {
 				return nil
 			}
 		}
-		file_api_protobuf_entity_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_api_protobuf_common_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Latlng); i {
 			case 0:
 				return &v.state
@@ -525,7 +525,7 @@ func file_api_protobuf_entity_proto_init() {
 				return nil
 			}
 		}
-		file_api_protobuf_entity_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_api_protobuf_common_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*MenuItem); i {
 			case 0:
 				return &v.state
@@ -537,7 +537,7 @@ func file_api_protobuf_entity_proto_init() {
 				return nil
 			}
 		}
-		file_api_protobuf_entity_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+		file_api_protobuf_common_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Decimal); i {
 			case 0:
 				return &v.state
@@ -554,18 +554,18 @@ func file_api_protobuf_entity_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_api_protobuf_entity_proto_rawDesc,
+			RawDescriptor: file_api_protobuf_common_proto_rawDesc,
 			NumEnums:      0,
 			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_api_protobuf_entity_proto_goTypes,
-		DependencyIndexes: file_api_protobuf_entity_proto_depIdxs,
-		MessageInfos:      file_api_protobuf_entity_proto_msgTypes,
+		GoTypes:           file_api_protobuf_common_proto_goTypes,
+		DependencyIndexes: file_api_protobuf_common_proto_depIdxs,
+		MessageInfos:      file_api_protobuf_common_proto_msgTypes,
 	}.Build()
-	File_api_protobuf_entity_proto = out.File
-	file_api_protobuf_entity_proto_rawDesc = nil
-	file_api_protobuf_entity_proto_goTypes = nil
-	file_api_protobuf_entity_proto_depIdxs = nil
+	File_api_protobuf_common_proto = out.File
+	file_api_protobuf_common_proto_rawDesc = nil
+	file_api_protobuf_common_proto_goTypes = nil
+	file_api_protobuf_common_proto_depIdxs = nil
 }
