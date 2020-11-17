@@ -18,7 +18,7 @@ This section describes our HTTP API platform.
 
 ## **gRPC**
 
-This section describes our gRPC API platform.
+This section describes our gRPC API platform. The protocol buffer definition are located in the `/protobuf` directory. For ease of use, the makefile provides commands to easily generate the files. The generated files will be found (starting from the root directory) at `internal/genproto`.
 
 ### `authentication`
 
