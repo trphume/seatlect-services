@@ -98,7 +98,6 @@ The **placement** document contains information on the *floor layout template* o
 {
   "name": "String",
   "entity": "Array<entity>",
-  "default": "Boolean"
 }
 ```
 
@@ -119,7 +118,6 @@ Below is the **entity** document used in placement.
   - **floor** - Indicates which floor the entity should be placed on
   - **type** - This indicates how the system should interpret the entity, if type is RESERVE then the system interprets this as a reservable entity
   - **reserved** - If true then the entity has already been reserved by a customer
-- **default** - If true indicates that this placement should be on display in the mobile application
 
 #### `menu`
 

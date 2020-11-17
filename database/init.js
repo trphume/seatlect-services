@@ -63,7 +63,7 @@ db.createCollection('business', {
           }
         }, placement: {
           bsonType: 'array', maxItems: 5, items: {
-            required: ['name', 'entity', 'default'], properties: {
+            required: ['name', 'entity'], properties: {
               name: {
                 bsonType: 'string', minLength: 3,
                 maxLength: 20
@@ -76,7 +76,7 @@ db.createCollection('business', {
                     }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE', 'STAIRS', 'TOILET', 'STAGE', 'BLOCK'] }, reserved: { bsonType: 'bool' }, x: { bsonType: 'double' }, y: { bsonType: 'double' }
                   }
                 }
-              }, default: { bsonType: 'bool' }
+              }
             }
           }
         }, menu: {
@@ -125,7 +125,7 @@ db.createCollection('reservation', {
           maxLength: 20
         }, start: { bsonType: 'date' }, end: { bsonType: 'date' }, placement: {
           bsonType: 'object',
-          required: ['name', 'entity', 'default'], properties: {
+          required: ['name', 'entity'], properties: {
             name: {
               bsonType: 'string', minLength: 3,
               maxLength: 20
@@ -138,7 +138,7 @@ db.createCollection('reservation', {
                   }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE', 'STAIRS', 'TOILET', 'STAGE', 'BLOCK'] }, reserved: { bsonType: 'bool' }, x: { bsonType: 'double' }, y: { bsonType: 'double' }
                 }
               }
-            }, default: { bsonType: 'bool' }
+            }
           }
         }, menu: {
           bsonType: 'array', items: {
