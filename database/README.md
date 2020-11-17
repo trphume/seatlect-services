@@ -31,7 +31,7 @@ The **customer** collection contains information on *general users*, these are u
 ```json
 {
   "_id": "ObjectId [UNIQUE]",
-  "name": "String [UNIQUE]",
+  "username": "String [UNIQUE]",
   "password": "String",
   "dob": "Date",
   "avatar": "String",
@@ -41,7 +41,7 @@ The **customer** collection contains information on *general users*, these are u
 ```
 
 - **_id** - This is MongoDB default uniquely generated id
-- **name** - The name of the user, is used on authentication
+- **username** - The name of the user, is used on authentication
 - **password** - Hashed password in string format
 - **dob** - Date of birth of the user
 - **avatar** - Link to the avatar image asset of the user
@@ -55,7 +55,7 @@ The **business** collection contains information on *business users* and there b
 ```json
 {
   "_id": "ObjectId [UNIQUE]",
-  "name": "String [UNIQUE]",
+  "username": "String [UNIQUE]",
   "password": "String",
   "businessName": "String",
   "type": "Array<String>",
@@ -74,7 +74,7 @@ The **business** collection contains information on *business users* and there b
 ```
 
 - **_id** - This is MongoDB default uniquely generated id
-- **name** - The name of the user, is used on authentication
+- **username** - The name of the user, is used on authentication
 - **password** - Hashed password in string format
 - **businessName** - The name of the business, is not unique
 - **type** - The array of types associated with this business
