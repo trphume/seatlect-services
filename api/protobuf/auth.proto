@@ -3,6 +3,9 @@ package seatlect;
 
 option go_package = "github.com/tphume/seatlect-services/api/authpb";
 
+import "google/protobuf/timestamp.proto";
+import "api/protobuf/entity.proto";
+
 service AuthService {
   rpc SignIn (SignInRequest) returns (SignInResponse);
   rpc SignUp (SignUpRequest) returns (SignUpResponse);
@@ -18,24 +21,20 @@ message SignInRequest {
 message SignInResponse {
   string refreshToken = 1;
   string jwtToken = 2;
-  // TODO: dob
-  string avatar = 4;
-  repeated string preference = 5;
+  User user = 3;
 }
 
 // For SignUp endpoint
 message SignUpRequest {
   string username = 1;
   string password = 2;
-  // TODO: dob
+  google.protobuf.Timestamp dob = 3;
 }
 
 message SignUpResponse {
   string refreshToken = 1;
   string jwtToken = 2;
-  // TODO: dob
-  string avatar = 4;
-  repeated string preference = 5;
+  User user = 3;
 }
 
 // For FetchJWT endpoint
@@ -45,18 +44,4 @@ message FetchJWTRequest {
 
 message FetchJWTResponse {
   string jwtToken = 1;
-}
-
-// Common types
-message business {
-  bytes _id = 1;
-  string name = 2;
-  repeated string type = 3;
-  string description = 4;
-  // TODO: location
-  string addresse = 5;
-  string displayImage = 6;
-  repeated string images = 7;
-  // TODO: placement
-  // TODO: menu
 }
