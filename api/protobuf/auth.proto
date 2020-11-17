@@ -1,7 +1,7 @@
 syntax = "proto3";
 package seatlect;
 
-option go_package = "github.com/tphume/seatlect-services/api/authpb";
+option go_package = "internal/genproto/authpb";
 
 import "google/protobuf/timestamp.proto";
 import "api/protobuf/entity.proto";
