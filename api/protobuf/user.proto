@@ -1,12 +1,12 @@
 syntax = "proto3";
 package seatlect;
 
-option go_package = "internal/genproto/authpb";
+option go_package = "internal/genproto/userpb";
 
 import "google/protobuf/timestamp.proto";
 import "api/protobuf/common.proto";
 
-service AuthService {
+service UserService {
   rpc SignIn (SignInRequest) returns (SignInResponse);
   rpc SignUp (SignUpRequest) returns (SignUpResponse);
   rpc FetchJWT (FetchJWTRequest) returns (FetchJWTResponse);
