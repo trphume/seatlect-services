@@ -9,7 +9,6 @@ import "api/protobuf/common.proto";
 service UserService {
   rpc SignIn (SignInRequest) returns (SignInResponse);
   rpc SignUp (SignUpRequest) returns (SignUpResponse);
-  rpc FetchJWT (FetchJWTRequest) returns (FetchJWTResponse);
 }
 
 // For SigIn endpoint
@@ -35,13 +34,4 @@ message SignUpResponse {
   string refreshToken = 1;
   string jwtToken = 2;
   User user = 3;
-}
-
-// For FetchJWT endpoint
-message FetchJWTRequest {
-
-}
-
-message FetchJWTResponse {
-  string jwtToken = 1;
 }

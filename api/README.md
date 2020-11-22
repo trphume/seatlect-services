@@ -5,6 +5,7 @@
   - [**HTTP**](#http)
   - [**gRPC**](#grpc)
     - [`user`](#user)
+    - [`token`](#token)
 
 ## **Overview**
 
@@ -24,4 +25,7 @@ This section describes our gRPC API platform. The protocol buffer definition are
 
 - **SignIn** - This endpoint attempts to authenticate the user with the given credentials. If successful, it returns token (refresh and jwt) and information on the user
 - **SignUp** - This endpoints create a new user. If successful, it returns token (refresh and jwt) and information on the user
+
+### `token`
+
 - **FetchJWT** - This endpoints uses a refresh token to fetch a new jwt token
