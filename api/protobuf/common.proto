@@ -3,11 +3,9 @@ package seatlect;
 
 option go_package = "internal/genproto/commonpb";
 
-import "google/protobuf/timestamp.proto";
-
 message User {
   string username = 1;
-  google.protobuf.Timestamp dob = 2;
+  string dob = 2;
   string avatar = 3;
   repeated string preference = 4;
   repeated Business favorite = 5;

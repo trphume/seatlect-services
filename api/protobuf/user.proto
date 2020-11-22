@@ -3,8 +3,7 @@ package seatlect;
 
 option go_package = "internal/genproto/userpb";
 
-import "google/protobuf/timestamp.proto";
-import "api/protobuf/common.proto";
+import "common.proto";
 
 service UserService {
   rpc SignIn (SignInRequest) returns (SignInResponse);
@@ -27,7 +26,7 @@ message SignInResponse {
 message SignUpRequest {
   string username = 1;
   string password = 2;
-  google.protobuf.Timestamp dob = 3;
+  string dob = 3;
 }
 
 message SignUpResponse {

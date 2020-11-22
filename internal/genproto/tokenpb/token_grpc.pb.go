@@ -93,5 +93,5 @@ var _TokenService_serviceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "api/protobuf/token.proto",
+	Metadata: "token.proto",
 }

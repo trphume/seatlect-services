@@ -129,5 +129,5 @@ var _UserService_serviceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "api/protobuf/user.proto",
+	Metadata: "user.proto",
 }
