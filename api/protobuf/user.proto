@@ -17,8 +17,7 @@ message SignInRequest {
 }
 
 message SignInResponse {
-  string refreshToken = 1;
-  string jwtToken = 2;
+  string token = 1;
   User user = 3;
 }
 
@@ -30,7 +29,6 @@ message SignUpRequest {
 }
 
 message SignUpResponse {
-  string refreshToken = 1;
-  string jwtToken = 2;
+  string token = 1;
   User user = 3;
 }

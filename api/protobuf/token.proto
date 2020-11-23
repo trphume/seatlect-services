@@ -4,14 +4,14 @@ package seatlect;
 option go_package = "internal/genproto/tokenpb";
 
 service TokenService {
-  rpc FetchJWT (FetchJWTRequest) returns (FetchJWTResponse);
+  rpc FetchToken (FetchTokenRequest) returns (FetchTokenResponse);
 }
 
 // For FetchJWT endpoint
-message FetchJWTRequest {
+message FetchTokenRequest {
 
 }
 
-message FetchJWTResponse {
+message FetchTokenResponse {
   string jwtToken = 1;
 }
