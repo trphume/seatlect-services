@@ -1,0 +1,17 @@
+syntax = "proto3";
+package seatlect;
+
+option go_package = "internal/genproto/tokenpb";
+
+service TokenService {
+  rpc FetchToken (FetchTokenRequest) returns (FetchTokenResponse);
+}
+
+// For FetchJWT endpoint
+message FetchTokenRequest {
+
+}
+
+message FetchTokenResponse {
+  string jwtToken = 1;
+}

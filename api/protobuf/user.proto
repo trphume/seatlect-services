@@ -1,0 +1,34 @@
+syntax = "proto3";
+package seatlect;
+
+option go_package = "internal/genproto/userpb";
+
+import "common.proto";
+
+service UserService {
+  rpc SignIn (SignInRequest) returns (SignInResponse);
+  rpc SignUp (SignUpRequest) returns (SignUpResponse);
+}
+
+// For SigIn endpoint
+message SignInRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message SignInResponse {
+  string token = 1;
+  User user = 3;
+}
+
+// For SignUp endpoint
+message SignUpRequest {
+  string username = 1;
+  string password = 2;
+  string dob = 3;
+}
+
+message SignUpResponse {
+  string token = 1;
+  User user = 3;
+}

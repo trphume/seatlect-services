@@ -116,7 +116,7 @@ Below is the **entity** document used in placement.
 - **entity** - An array of entity describing the placement layout
   - **id** - This has to be unique and is set upon creation of entity
   - **floor** - Indicates which floor the entity should be placed on
-  - **type** - This indicates how the system should interpret the entity, if type is RESERVE then the system interprets this as a reservable entity
+  - **type** - This indicates how the system should interpret the entity for example, TABLE or SEAT
   - **reserved** - If true then the entity has already been reserved by a customer
 
 #### `menu`

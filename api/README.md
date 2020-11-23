@@ -4,7 +4,8 @@
   - [**Overview**](#overview)
   - [**HTTP**](#http)
   - [**gRPC**](#grpc)
-    - [`authentication`](#authentication)
+    - [`user`](#user)
+    - [`token`](#token)
 
 ## **Overview**
 
@@ -20,8 +21,11 @@ This section describes our HTTP API platform.
 
 This section describes our gRPC API platform. The protocol buffer definition are located in the `/protobuf` directory. For ease of use, the makefile provides commands to easily generate the files. The generated files will be found (starting from the root directory) at `internal/genproto`.
 
-### `authentication`
+### `user`
 
 - **SignIn** - This endpoint attempts to authenticate the user with the given credentials. If successful, it returns token (refresh and jwt) and information on the user
 - **SignUp** - This endpoints create a new user. If successful, it returns token (refresh and jwt) and information on the user
+
+### `token`
+
 - **FetchJWT** - This endpoints uses a refresh token to fetch a new jwt token

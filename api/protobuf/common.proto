@@ -1,13 +1,11 @@
 syntax = "proto3";
 package seatlect;
 
-option go_package = "internal/genproto/entitypb";
-
-import "google/protobuf/timestamp.proto";
+option go_package = "internal/genproto/commonpb";
 
 message User {
   string username = 1;
-  google.protobuf.Timestamp dob = 2;
+  string dob = 2;
   string avatar = 3;
   repeated string preference = 4;
   repeated Business favorite = 5;
@@ -19,7 +17,7 @@ message Business {
   repeated string type = 3;
   string description = 4;
   Latlng location = 5;
-  string addresse = 6;
+  string address = 6;
   string displayImage = 7;
   repeated string images = 8;
   repeated MenuItem menu = 9;
@@ -34,10 +32,5 @@ message MenuItem {
   string name = 1;
   string description = 2;
   string image = 3;
-  Decimal price = 4;
-}
-
-message Decimal {
-  int64 high = 1;
-  int64 low = 2;
+  string price = 4;
 }
