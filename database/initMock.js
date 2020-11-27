@@ -15,7 +15,7 @@ ironBuffetId = ObjectId('5facaff9e4d46967c9c2a558');
 db.customer.insertMany([
   {
     _id: jakeId,
-    name: 'Jake',
+    username: 'Jake',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     dob: new Date('2000-10-15'),
     avatar: '',
@@ -24,7 +24,7 @@ db.customer.insertMany([
   },
   {
     _id: samuelId,
-    name: 'Samuel',
+    username: 'Samuel',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     dob: new Date('1999-07-10'),
     avatar: '',
@@ -33,7 +33,7 @@ db.customer.insertMany([
   },
   {
     _id: gunId,
-    name: 'Gun',
+    username: 'Gun',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     dob: new Date('2004-02-22'),
     avatar: '',
@@ -47,7 +47,7 @@ db.customer.insertMany([
 db.business.insertMany([
   {
     _id: brightioId,
-    name: 'Brightio',
+    username: 'Brightio',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     businessName: 'Brightio',
     type: ['CONTEMPORARY', 'BAR', 'JAPANESE', 'FRENCH', 'LIVE MUSIC'],
@@ -61,11 +61,10 @@ db.business.insertMany([
     images: [],
     placement: [],
     menu: [],
-    policy: []
   },
   {
     _id: beerBurgerId,
-    name: 'BeerBurger',
+    username: 'BeerBurger',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     businessName: 'Beer and Burger',
     type: ['PUB', 'FAST CASUAL', 'BURGER', 'LIVE MUSIC'],
@@ -79,11 +78,10 @@ db.business.insertMany([
     images: [],
     placement: [],
     menu: [],
-    policy: []
   },
   {
     _id: ironBuffetId,
-    name: 'IronBuffet',
+    username: 'IronBuffet',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     businessName: 'Iron Buffet',
     type: ['STEAK', 'BUFFET'],
@@ -97,6 +95,5 @@ db.business.insertMany([
     images: [],
     placement: [],
     menu: [],
-    policy: []
   }
 ]);

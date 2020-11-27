@@ -8,7 +8,6 @@
       - [`placement`](#placement)
       - [`menu`](#menu)
       - [`menu_item`](#menu_item)
-      - [`policy`](#policy)
     - [`reservation`](#reservation)
     - [`order`](#order)
       - [`preorder`](#preorder)
@@ -69,7 +68,6 @@ The **business** collection contains information on *business users* and there b
   "images": "Array<String>",
   "placement": "Array<placement>",
   "menu": "Array<menu>",
-  "policy": "Array<policy>"
 }
 ```
 
@@ -86,9 +84,8 @@ The **business** collection contains information on *business users* and there b
 - **placement** - Array of placement document objects
 - **menu** -Array of menu document objects
 - **menu_item** - Array of menu_item document
-- **policy** - Array of policy document
 
-Note that placement, menu and policy are **templates** which is used during the **creation of reservation document**. Templates are used as a base for information to be contained in a reservation. They can then be **modified** before finalization of a reservation object creation.
+Note that placement and menu are **templates** which is used during the **creation of reservation document**. Templates are used as a base for information to be contained in a reservation. They can then be **modified** before finalization of a reservation object creation.
 
 #### `placement`
 
@@ -105,19 +102,25 @@ Below is the **entity** document used in placement.
 
 ```json
 {
-  "id": "String",
+  "name": "String",
   "floor": "32-bit Integer",
   "type": "String",
+  "price": "Decimal",
   "reserved": "Boolean"
+  "x": "Double",
+  "y": "Double"
 }
 ```
 
 - **name** - This uniquely identifies a placement template within the array of other placement template in the business object
 - **entity** - An array of entity describing the placement layout
-  - **id** - This has to be unique and is set upon creation of entity
+  - **name** - This has to be unique and is set upon creation of entity
   - **floor** - Indicates which floor the entity should be placed on
   - **type** - This indicates how the system should interpret the entity for example, TABLE or SEAT
+  - **price** - The price of of reservation
   - **reserved** - If true then the entity has already been reserved by a customer
+  - **x** - x coords
+  - **y** - y coords
 
 #### `menu`
 
@@ -146,7 +149,8 @@ The **menu_item** document contains information on a particular item.
   "name": "String",
   "description": "String",
   "image": "String",
-  "price": "Decimal"
+  "price": "Decimal",
+  "max": "32-bit Integer"
 }
 ```
 
@@ -154,28 +158,7 @@ The **menu_item** document contains information on a particular item.
 - **description** - Short description of the item
 - **image** - Image resource url
 - **price** - The price of a single order of this item
-
-#### `policy`
-
-The **policy** object contains information on how each schedule should be treated. It defines the behavior and constraint of the reservation (eg. refund period, reservation cost). Policies can be attached to a reservation schedule and businesses can own more than one policy.
-
-```json
-{
-  "name": "String",
-  "description": "String",
-  "before": "32-bit Integer",
-  "freeCancelDeadline": "32-bit Integer",
-  "cancelRate": "Decimal",
-  "basePrice": "Decimal"
-}
-```
-
-- **name** - This uniquely identifies a policy within the array of other policy in the business object
-- **description** - Short description of the policy
-- **before** - How many days before the reservation will customers be able to start making reservation (eg. 7 states that customers can start making reservation 7 days before the actual date)
-- **freeCancelDeadline** - Define how many days before the date can customers still cancel with full refund (eg. 2 states that any cancellation 2 days before the actual date will be fully refunded)
-- **cancelRate** - This defines how much the customers will have to pay in percentage of the reservation cost
-- **basePrice** - Base price for making a reservation
+- **max** - Max number of order per person
 
 ### `reservation`
 
@@ -190,17 +173,16 @@ The **reservation** collection contains information on a reservation schedule. A
   "end": "Date",
   "placement": "placement",
   "menu": "Array<menu_item>",
-  "policy": "policy"
 }
 ```
 
 - **_id** - This is MongoDB default uniquely generated id
 - **businessId** - This is a parent reference to the business
 - **name** - The name of the reservation (backend should handle setting a default if not specified)
-- **date** - Date and time period of the reservation
+- **start** - Start time of the reservation
+- **end** - End time of the reservation
 - **placement** - Placement document object
 - **menu** - List of items (not to be confused with menu document type)
-- **policy** - Policy document object
 
 ### `order`
 
@@ -214,9 +196,8 @@ The **order** collection contains information on a each reservation order made.
   "paymentDate": "Date",
   "start": "Date",
   "end": "Date",
-  "reserve": "Array<String>",
+  "reserve": "Array<entity>",
   "preorder": "Array<preorder>",
-  "basePrice": "Decimal",
   "totalPrice": "Decimal",
   "status": "String",
 }
@@ -228,9 +209,8 @@ The **order** collection contains information on a each reservation order made.
 - **paymentDate** - When the customer paid for the reservation
 - **start** - The start date and time of the reservation
 - **end** - The end date and time of the reservation
-- **reserve** - Array of reserved seat/tables id
+- **reserve** - Array of reserved seat/tables entity documents
 - **preorder** - Array of items pre-ordered from the menu
-- **basePrice** - The base price defined in the policy for the reservation
 - **totalPrice** - The total cost of making the reservation including the items
 - **status** - The status of the order, can be paid, used, expired or cancelled
 
