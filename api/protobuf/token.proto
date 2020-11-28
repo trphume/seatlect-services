@@ -13,5 +13,5 @@ message FetchTokenRequest {
 }
 
 message FetchTokenResponse {
-  string jwtToken = 1;
+  string token = 1;
 }
