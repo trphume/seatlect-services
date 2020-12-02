@@ -69,11 +69,11 @@ db.createCollection('business', {
                 maxLength: 20
               }, entity: {
                 bsonType: 'array', items: {
-                  required: ['name', 'floor', 'type', 'reserved', 'price', 'x', 'y'], properties: {
+                  required: ['name', 'floor', 'type', 'reserve', 'price', 'x', 'y'], properties: {
                     name: {
                       bsonType: 'string', minLength: 1,
                       maxLength: 2
-                    }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE', 'STAIRS', 'TOILET', 'STAGE', 'BLOCK'] }, reserved: { bsonType: 'bool' }, price: { bsonType: 'decimal' }, x: { bsonType: 'double' }, y: { bsonType: 'double' }
+                    }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE'] }, reserve: { bsonType: 'objectId' }, price: { bsonType: 'decimal' }, x: { bsonType: 'double' }, y: { bsonType: 'double' }
                   }
                 }
               }
@@ -119,11 +119,11 @@ db.createCollection('reservation', {
               maxLength: 20
             }, entity: {
               bsonType: 'array', items: {
-                required: ['name', 'floor', 'type', 'reserved', 'price', 'x', 'y'], properties: {
+                required: ['name', 'floor', 'type', 'reserve', 'price', 'x', 'y'], properties: {
                   name: {
                     bsonType: 'string', minLength: 1,
                     maxLength: 2
-                  }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE', 'STAIRS', 'TOILET', 'STAGE', 'BLOCK'] }, reserved: { bsonType: 'bool' }, price: { bsonType: 'decimal' }, x: { bsonType: 'double' }, y: { bsonType: 'double' }
+                  }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE'] }, reserve: { bsonType: 'objectId' }, price: { bsonType: 'decimal' }, x: { bsonType: 'double' }, y: { bsonType: 'double' }
                 }
               }
             }
@@ -149,11 +149,11 @@ db.createCollection('order', {
       bsonType: 'object', required: ['customerId', 'businessId', 'paymentDate', 'start', 'end', 'reserve', 'preorder', 'totalPrice', 'status'], properties: {
         customerId: { bsonType: 'objectId' }, businessId: { bsonType: 'objectId' }, paymentDate: { bsonType: 'date' }, start: { bsonType: 'date' }, end: { bsonType: 'date' }, reserve: {
           bsonType: 'array', items: {
-            required: ['name', 'floor', 'type', 'reserved', 'price', 'x', 'y'], properties: {
+            required: ['name', 'floor', 'type', 'reserve', 'price', 'x', 'y'], properties: {
               name: {
                 bsonType: 'string', minLength: 1,
                 maxLength: 2
-              }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE', 'STAIRS', 'TOILET', 'STAGE', 'BLOCK'] }, reserved: { bsonType: 'bool' }, price: { bsonType: 'decimal' }, x: { bsonType: 'double' }, y: { bsonType: 'double' }
+              }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE'] }, reserve: { bsonType: 'objectId' }, price: { bsonType: 'decimal' }, x: { bsonType: 'double' }, y: { bsonType: 'double' }
             }
           }
         }, preorder: {

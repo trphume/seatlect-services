@@ -106,7 +106,7 @@ Below is the **entity** document used in placement.
   "floor": "32-bit Integer",
   "type": "String",
   "price": "Decimal",
-  "reserved": "Boolean"
+  "reserve": "ObjectId",
   "x": "Double",
   "y": "Double"
 }
@@ -118,7 +118,7 @@ Below is the **entity** document used in placement.
   - **floor** - Indicates which floor the entity should be placed on
   - **type** - This indicates how the system should interpret the entity for example, TABLE or SEAT
   - **price** - The price of of reservation
-  - **reserved** - If true then the entity has already been reserved by a customer
+  - **reserve** - Contain id of user who has reserve the seat
   - **x** - x coords
   - **y** - y coords
 
