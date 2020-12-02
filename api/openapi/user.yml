@@ -32,38 +32,6 @@ paths:
           description: Unknown error occurred
 components:
   schemas:
-    User:
-      type: object
-      properties:
-        _id:
-          type: string
-        username:
-          type: string
-        password:
-          type: string
-        businessName:
-          type: string
-        type:
-          type: array
-          items:
-            type: string
-        description:
-          type: string
-        location:
-          type: object
-          properties:
-            latitude:
-              type: string
-            longitude:
-              type: string
-        address:
-          type: string
-        displayImage:
-          type: string
-        images:
-          type: array
-          items:
-            type: string
     LoginRequest:
       type: object
       properties:
@@ -79,5 +47,3 @@ components:
       properties:
         token:
           type: string
-        user:
-          $ref: "#/components/schemas/User"
