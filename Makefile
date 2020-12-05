@@ -1,8 +1,8 @@
-.PHONY: gen_proto gen_proto_common gen_proto_user gen_proto_token gen_client gen_client_common clean_proto
+.PHONY: gen_proto gen_proto_common gen_proto_user gen_proto_token gen_proto_business gen_client gen_client_common clean_proto
 .PHONY: gen_openapi gen_openapi_user  gen_openapi_business clean_openapi
 
 # This section contains commands for working with proto files
-gen_proto: gen_proto_common gen_proto_user gen_proto_token
+gen_proto: gen_proto_common gen_proto_user gen_proto_token gen_proto_business
 
 gen_proto_common:
 	@protoc --go_out=. -I=api/protobuf common.proto
@@ -13,11 +13,14 @@ gen_proto_user:
 gen_proto_token:
 	@protoc --go_out=. --go-grpc_out=. -I=api/protobuf token.proto
 
+gen_proto_business:
+	@protoc --go_out=. --go-grpc_out=. -I=api/protobuf business.proto
+
 clean_proto:
 	@rm -rf internal/genproto/
 
 # This requires the seatlect_mobile repo to be adjacent to this project repository
-gen_client: gen_client_common gen_client_user gen_client_token
+gen_client: gen_client_common gen_client_user gen_client_token gen_client_business
 
 gen_client_common:
 	@protoc --dart_out=grpc:../seatlect_mobile/packages/genproto/lib/src -I=api/protobuf common.proto
@@ -27,6 +30,9 @@ gen_client_user:
 
 gen_client_token:
 	@protoc --dart_out=grpc:../seatlect_mobile/packages/genproto/lib/src -I=api/protobuf token.proto
+
+gen_client_business:
+	@protoc --dart_out=grpc:../seatlect_mobile/packages/genproto/lib/src -I=api/protobuf business.proto
 
 
 # This section contains commands for working with openapi files

@@ -1,0 +1,39 @@
+syntax = "proto3";
+package seatlect;
+
+option go_package = "internal/genproto/businesspb";
+
+import "common.proto";
+
+service BusinessService {
+  rpc ListBusiness (ListBusinessRequest) returns (ListBusinessResponse);
+}
+
+// For List business endpoint - the parameters are optional
+message ListBusinessRequest {
+  int32 limit = 1;
+  Sort sort = 2;
+  string name = 3;
+  repeated string type = 4;
+  Latlng location = 5;
+  int32 startPrice = 6;
+  int32 endPrice = 7;
+  string startDate= 8;
+  string endDate = 9;
+}
+
+message ListBusinessResponse {
+  repeated Business businesses = 1;
+}
+
+// Helper definitions
+enum Sort {
+  NAME_ASC = 0;
+  NAME_DESC = 1;
+  LOCATION_ASC = 2;
+  LOCATION_DESC = 3;
+  PRICE_ASC = 4;
+  PRICE_DESC = 5;
+  DATE_ASC = 6;
+  DATE_DESC = 7;
+}
