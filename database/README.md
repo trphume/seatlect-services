@@ -8,6 +8,7 @@
       - [`placement`](#placement)
       - [`menu`](#menu)
       - [`menu_item`](#menu_item)
+      - [`policy`](#policy)
     - [`reservation`](#reservation)
     - [`order`](#order)
       - [`preorder`](#preorder)
@@ -68,6 +69,7 @@ The **business** collection contains information on *business users* and there b
   "images": "Array<String>",
   "placement": "Array<placement>",
   "menu": "Array<menu>",
+  "policy": "policy"
 }
 ```
 
@@ -84,6 +86,7 @@ The **business** collection contains information on *business users* and there b
 - **placement** - Array of placement document objects
 - **menu** -Array of menu document objects
 - **menu_item** - Array of menu_item document
+- **policy** - Business policy object
 
 Note that placement and menu are **templates** which is used during the **creation of reservation document**. Templates are used as a base for information to be contained in a reservation. They can then be **modified** before finalization of a reservation object creation.
 
@@ -106,7 +109,8 @@ Below is the **entity** document used in placement.
   "floor": "32-bit Integer",
   "type": "String",
   "price": "Decimal",
-  "reserve": "ObjectId",
+  "user": "ObjectId",
+  "status": "String",
   "x": "Double",
   "y": "Double"
 }
@@ -118,7 +122,8 @@ Below is the **entity** document used in placement.
   - **floor** - Indicates which floor the entity should be placed on
   - **type** - This indicates how the system should interpret the entity for example, TABLE or SEAT
   - **price** - The price of of reservation
-  - **reserve** - Contain id of user who has reserve the seat
+  - **user** - Contain id of user who has reserve the seat
+  - **status** - Contain the status of the entity - EMPTY,TAKEN,PROCESSING
   - **x** - x coords
   - **y** - y coords
 
@@ -159,6 +164,18 @@ The **menu_item** document contains information on a particular item.
 - **image** - Image resource url
 - **price** - The price of a single order of this item
 - **max** - Max number of order per person
+
+#### `policy`
+
+The **policy** document contains information on a particular business.
+
+```json
+{
+  "minAge": "32-bit Integer"
+}
+```
+
+- **minAge** - Minimum age of a user that are allowed reserve a seat or table with the business
 
 ### `reservation`
 

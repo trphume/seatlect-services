@@ -10,6 +10,7 @@ gunId = ObjectId('5facaf818b4f49b3cf1f1792');
 brightioId = ObjectId('5facafef6b28446f285d7ae4');
 beerBurgerId = ObjectId('5facaff31c6d49b2c7256bf3');
 ironBuffetId = ObjectId('5facaff9e4d46967c9c2a558');
+specialTaleId = ObjectId('5fcde2ec209efa45620a08b6');
 
 // customer collection
 db.customer.insertMany([
@@ -61,6 +62,7 @@ db.business.insertMany([
     images: [],
     placement: [],
     menu: [],
+    policy: { minAge: 0 }
   },
   {
     _id: beerBurgerId,
@@ -78,6 +80,7 @@ db.business.insertMany([
     images: [],
     placement: [],
     menu: [],
+    policy: { minAge: 0 }
   },
   {
     _id: ironBuffetId,
@@ -95,5 +98,24 @@ db.business.insertMany([
     images: [],
     placement: [],
     menu: [],
+    policy: { minAge: 0 }
+  },
+  {
+    _id: specialTaleId,
+    username: 'SpecialTale',
+    password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
+    businessName: 'SpecialTale',
+    type: ['COCKTAIL', 'BAR', 'LIVE MUSIC'],
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    location: {
+      type: 'Point',
+      coordinates: [14.723117, 99.780103]
+    },
+    address: 'this is honestly, just some made up address',
+    displayImage: '',
+    images: [],
+    placement: [],
+    menu: [],
+    policy: { minAge: 21 }
   }
 ]);
