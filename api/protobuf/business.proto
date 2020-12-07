@@ -14,7 +14,7 @@ message ListBusinessRequest {
   int32 limit = 1;
   Sort sort = 2;
   string name = 3;
-  repeated string type = 4;
+  repeated string tags = 4;
   Latlng location = 5;
   int32 startPrice = 6;
   int32 endPrice = 7;
