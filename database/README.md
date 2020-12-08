@@ -108,6 +108,7 @@ Below is the **entity** document used in placement.
   "name": "String",
   "floor": "32-bit Integer",
   "type": "String",
+  "space": "32-bit Integer",
   "price": "Decimal",
   "user": "ObjectId",
   "status": "String",
@@ -121,6 +122,7 @@ Below is the **entity** document used in placement.
   - **name** - This has to be unique and is set upon creation of entity
   - **floor** - Indicates which floor the entity should be placed on
   - **type** - This indicates how the system should interpret the entity for example, TABLE or SEAT
+  - **space** - This indicates how many person is allowed for this entity (eg. table for 4 person)
   - **price** - The price of of reservation
   - **user** - Contain id of user who has reserve the seat
   - **status** - Contain the status of the entity - EMPTY,TAKEN,PROCESSING
