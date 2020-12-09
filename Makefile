@@ -39,10 +39,10 @@ gen_client_business:
 gen_openapi: gen_openapi_user gen_openapi_business
 
 gen_openapi_user:
-	@oapi-codegen -o internal/gen_openapi/user_api/user_api.gen.go -package user_api api/openapi/user.yml
+	@oapi-codegen -o internal/gen_openapi/user_api/user_api.gen.go -package user_api -generate "types,server,spec" api/openapi/user.yml
 
 gen_openapi_business:
-	@oapi-codegen -o internal/gen_openapi/business_api/business_api.gen.go -package business_api api/openapi/business.yml
+	@oapi-codegen -o internal/gen_openapi/business_api/business_api.gen.go -package business_api -generate "types,server,spec" api/openapi/business.yml
 
 clean_openapi:
 	@rm -rf internal/gen_openapi
