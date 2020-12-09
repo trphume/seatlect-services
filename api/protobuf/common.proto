@@ -8,13 +8,13 @@ message User {
   string dob = 2;
   string avatar = 3;
   repeated string preference = 4;
-  repeated Business favorite = 5;
+  repeated string favorite = 5;
 }
 
 message Business {
-  bytes _id = 1;
+  string _id = 1;
   string name = 2;
-  repeated string type = 3;
+  repeated string tags = 3;
   string description = 4;
   Latlng location = 5;
   string address = 6;

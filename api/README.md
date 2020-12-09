@@ -6,6 +6,7 @@
   - [**gRPC**](#grpc)
     - [`user`](#user)
     - [`token`](#token)
+    - [`business`](#business)
 
 ## **Overview**
 
@@ -29,3 +30,7 @@ This section describes our gRPC API platform. The protocol buffer definition are
 ### `token`
 
 - **FetchJWT** - This endpoints uses a refresh token to fetch a new jwt token
+
+### `business`
+
+- **ListBusiness** - This endpoint list (and sort) the business given some sort of search parameters, view the proto file for more information
