@@ -8,6 +8,8 @@ import "common.proto";
 service UserService {
   rpc SignIn (SignInRequest) returns (SignInResponse);
   rpc SignUp (SignUpRequest) returns (SignUpResponse);
+  rpc AddFavorite(AddFavoriteRequest) returns (AddFavoriteResponse);
+  rpc RemoveFavorite(RemoveFavoriteRequest) returns (RemoveFavoriteResponse);
 }
 
 // For SigIn endpoint
@@ -32,3 +34,17 @@ message SignUpResponse {
   string token = 1;
   User user = 3;
 }
+
+// For Add to favorite endpoint
+message AddFavoriteRequest {
+  string businessId = 1;
+}
+
+message AddFavoriteResponse {}
+
+// For Remove favorite endpoint
+message RemoveFavoriteRequest {
+  string businessId = 1;
+}
+
+message RemoveFavoriteResponse {}

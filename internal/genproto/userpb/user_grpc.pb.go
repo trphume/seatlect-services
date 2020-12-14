@@ -19,6 +19,8 @@ const _ = grpc.SupportPackageIsVersion7
 type UserServiceClient interface {
 	SignIn(ctx context.Context, in *SignInRequest, opts ...grpc.CallOption) (*SignInResponse, error)
 	SignUp(ctx context.Context, in *SignUpRequest, opts ...grpc.CallOption) (*SignUpResponse, error)
+	AddFavorite(ctx context.Context, in *AddFavoriteRequest, opts ...grpc.CallOption) (*AddFavoriteResponse, error)
+	RemoveFavorite(ctx context.Context, in *RemoveFavoriteRequest, opts ...grpc.CallOption) (*RemoveFavoriteResponse, error)
 }
 
 type userServiceClient struct {
@@ -47,12 +49,32 @@ func (c *userServiceClient) SignUp(ctx context.Context, in *SignUpRequest, opts 
 	return out, nil
 }
 
+func (c *userServiceClient) AddFavorite(ctx context.Context, in *AddFavoriteRequest, opts ...grpc.CallOption) (*AddFavoriteResponse, error) {
+	out := new(AddFavoriteResponse)
+	err := c.cc.Invoke(ctx, "/seatlect.UserService/AddFavorite", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) RemoveFavorite(ctx context.Context, in *RemoveFavoriteRequest, opts ...grpc.CallOption) (*RemoveFavoriteResponse, error) {
+	out := new(RemoveFavoriteResponse)
+	err := c.cc.Invoke(ctx, "/seatlect.UserService/RemoveFavorite", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
 type UserServiceServer interface {
 	SignIn(context.Context, *SignInRequest) (*SignInResponse, error)
 	SignUp(context.Context, *SignUpRequest) (*SignUpResponse, error)
+	AddFavorite(context.Context, *AddFavoriteRequest) (*AddFavoriteResponse, error)
+	RemoveFavorite(context.Context, *RemoveFavoriteRequest) (*RemoveFavoriteResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -65,6 +87,12 @@ func (UnimplementedUserServiceServer) SignIn(context.Context, *SignInRequest) (*
 }
 func (UnimplementedUserServiceServer) SignUp(context.Context, *SignUpRequest) (*SignUpResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SignUp not implemented")
+}
+func (UnimplementedUserServiceServer) AddFavorite(context.Context, *AddFavoriteRequest) (*AddFavoriteResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddFavorite not implemented")
+}
+func (UnimplementedUserServiceServer) RemoveFavorite(context.Context, *RemoveFavoriteRequest) (*RemoveFavoriteResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveFavorite not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -115,6 +143,42 @@ func _UserService_SignUp_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_AddFavorite_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddFavoriteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).AddFavorite(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/seatlect.UserService/AddFavorite",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).AddFavorite(ctx, req.(*AddFavoriteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_RemoveFavorite_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveFavoriteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).RemoveFavorite(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/seatlect.UserService/RemoveFavorite",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).RemoveFavorite(ctx, req.(*RemoveFavoriteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _UserService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "seatlect.UserService",
 	HandlerType: (*UserServiceServer)(nil),
@@ -126,6 +190,14 @@ var _UserService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SignUp",
 			Handler:    _UserService_SignUp_Handler,
+		},
+		{
+			MethodName: "AddFavorite",
+			Handler:    _UserService_AddFavorite_Handler,
+		},
+		{
+			MethodName: "RemoveFavorite",
+			Handler:    _UserService_RemoveFavorite_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
