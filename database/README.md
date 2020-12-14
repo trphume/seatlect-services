@@ -10,6 +10,7 @@
       - [`menu_item`](#menu_item)
       - [`policy`](#policy)
     - [`reservation`](#reservation)
+      - [`reservation_seat`](#reservation_seat)
     - [`order`](#order)
       - [`preorder`](#preorder)
   - [**Scripts**](#scripts)
@@ -69,6 +70,7 @@ The **business** collection contains information on *business users* and there b
   "images": "Array<String>",
   "placement": "Array<placement>",
   "menu": "Array<menu>",
+  "displayMenu: ": "string",
   "policy": "policy"
 }
 ```
@@ -85,7 +87,7 @@ The **business** collection contains information on *business users* and there b
 - **images** - List of image resource url
 - **placement** - Array of placement document objects
 - **menu** -Array of menu document objects
-- **menu_item** - Array of menu_item document
+- **displayMenu** - The menu to display to the customer
 - **policy** - Business policy object
 
 Note that placement and menu are **templates** which is used during the **creation of reservation document**. Templates are used as a base for information to be contained in a reservation. They can then be **modified** before finalization of a reservation object creation.
@@ -97,35 +99,31 @@ The **placement** document contains information on the *floor layout template* o
 ```json
 {
   "name": "String",
-  "entity": "Array<entity>",
+  "seats": "Array<seat>",
 }
 ```
 
-Below is the **entity** document used in placement.
+Below is the **seat** document used in placement.
 
 ```json
 {
-  "name": "String",
+  "id": "String",
   "floor": "32-bit Integer",
   "type": "String",
   "space": "32-bit Integer",
   "price": "Decimal",
-  "user": "ObjectId",
-  "status": "String",
   "x": "Double",
   "y": "Double"
 }
 ```
 
 - **name** - This uniquely identifies a placement template within the array of other placement template in the business object
-- **entity** - An array of entity describing the placement layout
-  - **name** - This has to be unique and is set upon creation of entity
+- **seat** - An array of entity describing the placement layout
+  - **id** - This has to be unique and is set upon creation of entity
   - **floor** - Indicates which floor the entity should be placed on
   - **type** - This indicates how the system should interpret the entity for example, TABLE or SEAT
   - **space** - This indicates how many person is allowed for this entity (eg. table for 4 person)
   - **price** - The price of of reservation
-  - **user** - Contain id of user who has reserve the seat
-  - **status** - Contain the status of the entity - EMPTY,TAKEN,PROCESSING
   - **x** - x coords
   - **y** - y coords
 
@@ -138,14 +136,12 @@ The **menu** document contains a *list of menu_item* of a business. Businesses c
   "name": "String",
   "description": "String",
   "items": "Array<menu_item>",
-  "default": "Boolean"
 }
 ```
 
 - **name** - This uniquely identifies a menu template within the array of other menu in the business object
 - **description** - Short description of the menu template
 - **items** - Array of menu_item objects
-- **default** - If true indicates that this menu should be on display in the mobile application
 
 #### `menu_item`
 
@@ -190,7 +186,7 @@ The **reservation** collection contains information on a reservation schedule. A
   "name": "String",
   "start": "Date",
   "end": "Date",
-  "placement": "placement",
+  "placement": "reservation_seat",
   "menu": "Array<menu_item>",
 }
 ```
@@ -203,6 +199,37 @@ The **reservation** collection contains information on a reservation schedule. A
 - **placement** - Placement document object
 - **menu** - List of items (not to be confused with menu document type)
 
+#### `reservation_seat`
+
+Below is the **reservation_seat** document used in placement.
+
+```json
+{
+  "id": "String",
+  "floor": "32-bit Integer",
+  "type": "String",
+  "space": "32-bit Integer",
+  "price": "Decimal",
+  "x": "Double",
+  "y": "Double",
+  "user": "string",
+  "status": "string"
+}
+```
+
+- **name** - This uniquely identifies a placement template within the array of other placement template in the business object
+- **seat** - An array of entity describing the placement layout
+  - **id** - This has to be unique and is set upon creation of entity
+  - **floor** - Indicates which floor the entity should be placed on
+  - **type** - This indicates how the system should interpret the entity for example, TABLE or SEAT
+  - **space** - This indicates how many person is allowed for this entity (eg. table for 4 person)
+  - **price** - The price of of reservation
+  - **user** - Contain id of user who has reserve the seat
+  - **x** - x coords
+  - **y** - y coords
+  - **user** - Contains the user id
+  - **status** The status of the reservation_seat
+
 ### `order`
 
 The **order** collection contains information on a each reservation order made.
@@ -210,12 +237,12 @@ The **order** collection contains information on a each reservation order made.
 ```json
 {
   "_id": "ObjectId",
+  "reservationId": "ObjectId",
   "customerId": "ObjectId",
   "businessId": "ObjectId",
-  "paymentDate": "Date",
   "start": "Date",
   "end": "Date",
-  "reserve": "Array<entity>",
+  "seats": "Array<seat>",
   "preorder": "Array<preorder>",
   "totalPrice": "Decimal",
   "status": "String",
@@ -223,9 +250,9 @@ The **order** collection contains information on a each reservation order made.
 ```
 
 - **_id** - This is MongoDB default uniquely generated id
+- **reservationId** - This is a parent reference to the reservation
 - **customerId** - This is a parent reference to the customer
 - **businessId** - This a parent reference to the business
-- **paymentDate** - When the customer paid for the reservation
 - **start** - The start date and time of the reservation
 - **end** - The end date and time of the reservation
 - **reserve** - Array of reserved seat/tables entity documents
@@ -240,8 +267,10 @@ The **preorder** document contains information on a particular item and quantity
 ```json
 {
   "name": "String",
-  "quantity": "32-bit Integer",
+  "description": "string",
+  "image": "string",
   "price": "Decimal"
+  "quantity": "32-bit Integer",
 }
 ```
 
