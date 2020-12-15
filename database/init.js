@@ -13,12 +13,7 @@ db.createCollection('customer', {
             bsonType: 'string', uniqueItems: true,
             maxItems: 5
           }
-        }, favorite: {
-          bsonType: 'array', items: {
-            bsonType: 'objectId', uniqueItems: true,
-            maxItems: 5
-          }
-        }
+        }, favorite: { bsonType: 'array', items: { bsonType: 'objectId', uniqueItems: true } }
       }
     }
   }
@@ -27,7 +22,7 @@ db.createCollection('customer', {
 db.createCollection('business', {
   validator: {
     $jsonSchema: {
-      bsonType: 'object', required: ['username', 'password', 'businessName', 'tags', 'description', 'location', 'address', 'displayImage', 'images', 'placement', 'menu', 'policy'], properties: {
+      bsonType: 'object', required: ['username', 'password', 'businessName', 'tags', 'description', 'location', 'address', 'displayImage', 'images', 'placement', 'menu', 'displayMenu', 'policy'], properties: {
         username: {
           bsonType: 'string', minLength: 3,
           maxLength: 20
@@ -52,17 +47,17 @@ db.createCollection('business', {
           }
         }, placement: {
           bsonType: 'array', maxItems: 5, items: {
-            required: ['name', 'entity'], properties: {
+            required: ['name', 'seats'], properties: {
               name: {
                 bsonType: 'string', minLength: 3,
                 maxLength: 20
-              }, entity: {
+              }, seats: {
                 bsonType: 'array', items: {
-                  required: ['name', 'floor', 'type', 'space', 'price', 'user', 'status', 'x', 'y'], properties: {
+                  required: ['name', 'floor', 'type', 'space', 'price', 'x', 'y'], properties: {
                     name: {
                       bsonType: 'string', minLength: 1,
                       maxLength: 2
-                    }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE'] }, space: { bsonType: 'int', min: 1 }, price: { bsonType: 'decimal' }, user: { bsonType: 'objectId' }, status: { bsonType: 'string', enum: ['EMPTY', 'TAKEN', 'IN PROGRESS'] }, x: { bsonType: 'double' }, y: { bsonType: 'double' }
+                    }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE'] }, space: { bsonType: 'int', min: 1 }, price: { bsonType: 'decimal' }, x: { bsonType: 'double' }, y: { bsonType: 'double' }
                   }
                 }
               }
@@ -70,7 +65,7 @@ db.createCollection('business', {
           }
         }, menu: {
           bsonType: 'array', maxItems: 5, items: {
-            required: ['name', 'description', 'items', 'default'], properties: {
+            required: ['name', 'description', 'items'], properties: {
               name: {
                 bsonType: 'string', minLength: 3,
                 maxLength: 20
@@ -84,10 +79,10 @@ db.createCollection('business', {
                     }, description: { bsonType: 'string', maxLength: 125 }, image: { bsonType: 'string' }, price: { bsonType: 'decimal', min: 0 }, max: { bsonType: 'int' }
                   }
                 }
-              }, default: { bsonType: 'bool' }
+              }
             }
           }
-        }, policy: {
+        }, displayMenu: { bsonType: 'string' }, policy: {
           bsonType: 'object',
           required: ['minAge'], properties: { minAge: { bsonType: 'int', min: 0 } }
         }
@@ -104,20 +99,12 @@ db.createCollection('reservation', {
           bsonType: 'string', minLength: 3,
           maxLength: 20
         }, start: { bsonType: 'date' }, end: { bsonType: 'date' }, placement: {
-          bsonType: 'object',
-          required: ['name', 'entity'], properties: {
-            name: {
-              bsonType: 'string', minLength: 3,
-              maxLength: 20
-            }, entity: {
-              bsonType: 'array', items: {
-                required: ['name', 'floor', 'type', 'space', 'price', 'user', 'status', 'x', 'y'], properties: {
-                  name: {
-                    bsonType: 'string', minLength: 1,
-                    maxLength: 2
-                  }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE'] }, space: { bsonType: 'int', min: 1 }, price: { bsonType: 'decimal' }, user: { bsonType: 'objectId' }, status: { bsonType: 'string', enum: ['EMPTY', 'TAKEN', 'IN PROGRESS'] }, x: { bsonType: 'double' }, y: { bsonType: 'double' }
-                }
-              }
+          bsonType: 'array', items: {
+            required: ['name', 'floor', 'type', 'space', 'price', 'user', 'status', 'x', 'y'], properties: {
+              name: {
+                bsonType: 'string', minLength: 1,
+                maxLength: 2
+              }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE'] }, space: { bsonType: 'int', min: 1 }, price: { bsonType: 'decimal' }, user: { bsonType: 'objectId' }, status: { bsonType: 'string', enum: ['EMPTY', 'TAKEN', 'IN PROGRESS'] }, x: { bsonType: 'double' }, y: { bsonType: 'double' }
             }
           }
         }, menu: {
@@ -138,23 +125,23 @@ db.createCollection('reservation', {
 db.createCollection('order', {
   validator: {
     $jsonSchema: {
-      bsonType: 'object', required: ['customerId', 'businessId', 'paymentDate', 'start', 'end', 'reserve', 'preorder', 'totalPrice', 'status'], properties: {
-        customerId: { bsonType: 'objectId' }, businessId: { bsonType: 'objectId' }, paymentDate: { bsonType: 'date' }, start: { bsonType: 'date' }, end: { bsonType: 'date' }, reserve: {
+      bsonType: 'object', required: ['reservationId', 'customerId', 'businessId', 'start', 'end', 'seats', 'preorder', 'totalPrice', 'status'], properties: {
+        reservationId: { bsonType: 'objectId' }, customerId: { bsonType: 'objectId' }, businessId: { bsonType: 'objectId' }, start: { bsonType: 'date' }, end: { bsonType: 'date' }, seats: {
           bsonType: 'array', items: {
-            required: ['name', 'floor', 'type', 'space', 'price', 'user', 'status', 'x', 'y'], properties: {
+            required: ['name', 'floor', 'type', 'space', 'price', 'x', 'y'], properties: {
               name: {
                 bsonType: 'string', minLength: 1,
                 maxLength: 2
-              }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE'] }, space: { bsonType: 'int', min: 1 }, price: { bsonType: 'decimal' }, user: { bsonType: 'objectId' }, status: { bsonType: 'string', enum: ['EMPTY', 'TAKEN', 'IN PROGRESS'] }, x: { bsonType: 'double' }, y: { bsonType: 'double' }
+              }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE'] }, space: { bsonType: 'int', min: 1 }, price: { bsonType: 'decimal' }, x: { bsonType: 'double' }, y: { bsonType: 'double' }
             }
           }
         }, preorder: {
           bsonType: 'array', items: {
-            required: ['name', 'quantity', 'price'], properties: {
+            required: ['name', 'description', 'image', 'quantity', 'price'], properties: {
               name: {
                 bsonType: 'string', minLength: 3,
                 maxLength: 20
-              }, quantity: { bsonType: 'int', min: 1 }, price: { bsonType: 'decimal', min: 0 }
+              }, description: { bsonType: 'string' }, image: { bsonType: 'string' }, quantity: { bsonType: 'int', min: 1 }, price: { bsonType: 'decimal', min: 0 }
             }
           }
         }, totalPrice: { bsonType: 'decimal', min: 0 }, status: { bsonType: 'string', enum: ['PAID', 'USED', 'EXPIRED', 'CANCELLED'] }

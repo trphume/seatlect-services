@@ -51,18 +51,19 @@ db.business.insertMany([
     username: 'Brightio',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     businessName: 'Brightio',
-    tags: [BAR', 'JAPANESE', 'LIVE MUSIC'],
+    tags: ['BAR', 'JAPANESE', 'LIVE MUSIC'],
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      location: {
-        type: 'Point',
-        coordinates: [13.727892, 100.769652]
-      },
-      address: 'Keki Ngam 4, Chalong Krung 1, Latkrabang, Bangkok, 10520',
-      displayImage: '',
-      images: [],
-      placement: [],
-      menu: [],
-      policy: { minAge: 0 }
+    location: {
+      type: 'Point',
+      coordinates: [13.727892, 100.769652]
+    },
+    address: 'Keki Ngam 4, Chalong Krung 1, Latkrabang, Bangkok, 10520',
+    displayImage: '',
+    images: [],
+    placement: [],
+    menu: [],
+    displayMenu: '',
+    policy: { minAge: 0 }
   },
   {
     _id: beerBurgerId,
@@ -80,6 +81,7 @@ db.business.insertMany([
     images: [],
     placement: [],
     menu: [],
+    displayMenu: '',
     policy: { minAge: 0 }
   },
   {
@@ -98,6 +100,7 @@ db.business.insertMany([
     images: [],
     placement: [],
     menu: [],
+    displayMenu: '',
     policy: { minAge: 0 }
   },
   {
@@ -116,6 +119,7 @@ db.business.insertMany([
     images: [],
     placement: [],
     menu: [],
+    displayMenu: '',
     policy: { minAge: 21 }
   }
 ]);
