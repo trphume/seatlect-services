@@ -246,6 +246,7 @@ The **order** collection contains information on a each reservation order made.
   "preorder": "Array<preorder>",
   "totalPrice": "Decimal",
   "status": "String",
+  "image": "String"
 }
 ```
 
@@ -259,6 +260,7 @@ The **order** collection contains information on a each reservation order made.
 - **preorder** - Array of items pre-ordered from the menu
 - **totalPrice** - The total cost of making the reservation including the items
 - **status** - The status of the order, can be paid, used, expired or cancelled
+- **image** - Business display image
 
 #### `preorder`
 
