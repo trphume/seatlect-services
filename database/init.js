@@ -121,11 +121,10 @@ db.createCollection('reservation', {
     }
   }
 });
-
 db.createCollection('order', {
   validator: {
     $jsonSchema: {
-      bsonType: 'object', required: ['reservationId', 'customerId', 'businessId', 'start', 'end', 'seats', 'preorder', 'totalPrice', 'status', 'image'], properties: {
+      bsonType: 'object', required: ['reservationId', 'customerId', 'businessId', 'start', 'end', 'seats', 'preorder', 'totalPrice', 'status', 'image', 'extraSpace'], properties: {
         reservationId: { bsonType: 'objectId' }, customerId: { bsonType: 'objectId' }, businessId: { bsonType: 'objectId' }, start: { bsonType: 'date' }, end: { bsonType: 'date' }, seats: {
           bsonType: 'array', items: {
             required: ['name', 'floor', 'type', 'space', 'price', 'x', 'y'], properties: {
@@ -144,7 +143,7 @@ db.createCollection('order', {
               }, description: { bsonType: 'string' }, image: { bsonType: 'string' }, quantity: { bsonType: 'int', min: 1 }, price: { bsonType: 'decimal', min: 0 }
             }
           }
-        }, totalPrice: { bsonType: 'decimal', min: 0 }, status: { bsonType: 'string', enum: ['PAID', 'USED', 'EXPIRED', 'CANCELLED'] }, image: { bsonType: 'string' }
+        }, totalPrice: { bsonType: 'decimal', min: 0 }, status: { bsonType: 'string', enum: ['PAID', 'USED', 'EXPIRED', 'CANCELLED'] }, image: { bsonType: 'string' }, extraSpace: { bsonType: 'int' }
       }
     }
   }
