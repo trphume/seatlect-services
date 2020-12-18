@@ -34,3 +34,25 @@ message MenuItem {
   string image = 3;
   string price = 4;
 }
+
+message Order {
+  string _id =  1;
+  string reservationId = 2;
+  string businessId = 3;
+  string start = 4;
+  string end = 5;
+  repeated string seats = 6;
+  repeated Preorder preorder = 7;
+  string price = 8;
+  string totalPrice = 9;
+  string status = 10;
+  string image = 11;
+}
+
+message Preorder {
+  string name = 1;
+  string description = 2;
+  string image = 3;
+  string price = 4;
+  int32 quantity = 5;
+}
