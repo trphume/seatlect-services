@@ -59,7 +59,7 @@ message Preorder {
 }
 
 message OrderSeat {
-  string id = 1;
+  string name = 1;
   int32 space = 4;
   string price = 5;
 }
