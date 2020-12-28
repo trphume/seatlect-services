@@ -15,12 +15,13 @@ message ListBusinessRequest {
   int32 limit = 1;
   Sort sort = 2;
   string name = 3;
-  repeated string tags = 4;
-  Latlng location = 5;
-  int32 startPrice = 6;
-  int32 endPrice = 7;
-  string startDate= 8;
-  string endDate = 9;
+  string type = 4;
+  repeated string tags = 5;
+  Latlng location = 6;
+  int32 startPrice = 7;
+  int32 endPrice = 8;
+  string startDate= 9;
+  string endDate = 10;
 }
 
 message ListBusinessResponse {

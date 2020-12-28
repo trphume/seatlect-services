@@ -7,20 +7,20 @@ message User {
   string username = 1;
   string dob = 2;
   string avatar = 3;
-  repeated string preference = 4;
-  repeated string favorite = 5;
+  repeated string favorite = 4;
 }
 
 message Business {
   string _id = 1;
   string name = 2;
-  repeated string tags = 3;
-  string description = 4;
-  Latlng location = 5;
-  string address = 6;
-  string displayImage = 7;
-  repeated string images = 8;
-  repeated MenuItem menu = 9;
+  string type = 3;
+  repeated string tags = 4;
+  string description = 5;
+  Latlng location = 6;
+  string address = 7;
+  string displayImage = 8;
+  repeated string images = 9;
+  repeated MenuItem menu = 10;
 }
 
 message Order {
