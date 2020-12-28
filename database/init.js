@@ -1,19 +1,14 @@
 db.createCollection('customer', {
   validator: {
     $jsonSchema: {
-      bsonType: 'object', required: ['username', 'password', 'dob', 'avatar', 'preference', 'favorite'], properties: {
+      bsonType: 'object', required: ['username', 'password', 'dob', 'avatar', 'favorite'], properties: {
         username: {
           bsonType: 'string', minLength: 3,
           maxLength: 20
         }, password: {
           bsonType: 'string', minLength: 60,
           maxLength: 60
-        }, dob: { bsonType: 'date' }, avatar: { bsonType: 'string' }, preference: {
-          bsonType: 'array', items: {
-            bsonType: 'string', uniqueItems: true,
-            maxItems: 5
-          }
-        }, favorite: { bsonType: 'array', items: { bsonType: 'objectId', uniqueItems: true } }
+        }, dob: { bsonType: 'date' }, avatar: { bsonType: 'string' }, favorite: { bsonType: 'array', items: { bsonType: 'objectId', uniqueItems: true } }
       }
     }
   }
@@ -22,7 +17,7 @@ db.createCollection('customer', {
 db.createCollection('business', {
   validator: {
     $jsonSchema: {
-      bsonType: 'object', required: ['username', 'password', 'businessName', 'tags', 'description', 'location', 'address', 'displayImage', 'images', 'placement', 'menu', 'displayMenu', 'policy'], properties: {
+      bsonType: 'object', required: ['username', 'password', 'businessName', 'type', 'tags', 'description', 'location', 'address', 'displayImage', 'images', 'placement', 'menu', 'displayMenu', 'policy'], properties: {
         username: {
           bsonType: 'string', minLength: 3,
           maxLength: 20
@@ -32,7 +27,7 @@ db.createCollection('business', {
         }, businessName: {
           bsonType: 'string', minLength: 3,
           maxLength: 50
-        }, tags: {
+        }, type: { bsonType: 'string' }, tags: {
           bsonType: 'array', items: {
             bsonType: 'string', uniqueItems: true,
             maxItems: 5
@@ -47,39 +42,20 @@ db.createCollection('business', {
           }
         }, placement: {
           bsonType: 'array', maxItems: 5, items: {
-            required: ['name', 'seats'], properties: {
+            required: ['name', 'floor', 'type', 'space', 'price', 'x', 'y'], properties: {
               name: {
-                bsonType: 'string', minLength: 3,
-                maxLength: 20
-              }, seats: {
-                bsonType: 'array', items: {
-                  required: ['name', 'floor', 'type', 'space', 'price', 'x', 'y'], properties: {
-                    name: {
-                      bsonType: 'string', minLength: 1,
-                      maxLength: 2
-                    }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE'] }, space: { bsonType: 'int', min: 1 }, price: { bsonType: 'decimal' }, x: { bsonType: 'double' }, y: { bsonType: 'double' }
-                  }
-                }
-              }
+                bsonType: 'string', minLength: 1,
+                maxLength: 2
+              }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE'] }, space: { bsonType: 'int', min: 1 }, price: { bsonType: 'decimal' }, x: { bsonType: 'double' }, y: { bsonType: 'double' }
             }
           }
         }, menu: {
           bsonType: 'array', maxItems: 5, items: {
-            required: ['name', 'description', 'items'], properties: {
+            required: ['name', 'description', 'image', 'price', 'max'], properties: {
               name: {
                 bsonType: 'string', minLength: 3,
                 maxLength: 20
-              }, description: { bsonType: 'string', maxLength: 125 }, items: {
-                bsonType: 'array', uniqueItems: true,
-                maxItems: 100, items: {
-                  required: ['name', 'description', 'image', 'price', 'max'], properties: {
-                    name: {
-                      bsonType: 'string', minLength: 3,
-                      maxLength: 20
-                    }, description: { bsonType: 'string', maxLength: 125 }, image: { bsonType: 'string' }, price: { bsonType: 'decimal', min: 0 }, max: { bsonType: 'int' }
-                  }
-                }
-              }
+              }, description: { bsonType: 'string', maxLength: 125 }, image: { bsonType: 'string' }, price: { bsonType: 'decimal', min: 0 }, max: { bsonType: 'int' }
             }
           }
         }, displayMenu: { bsonType: 'string' }, policy: {
@@ -121,6 +97,7 @@ db.createCollection('reservation', {
     }
   }
 });
+
 db.createCollection('order', {
   validator: {
     $jsonSchema: {

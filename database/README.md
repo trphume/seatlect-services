@@ -1,6 +1,8 @@
-# Database
+# Database - Outdated
 
-- [Database](#database)
+Keeping this document up to date is a pain, use moon modeler to view the schema instead
+
+- [Database - Outdated](#database---outdated)
   - [**Overview**](#overview)
   - [**MongoDB Schema**](#mongodb-schema)
     - [`customer`](#customer)
@@ -36,7 +38,6 @@ The **customer** collection contains information on *general users*, these are u
   "password": "String",
   "dob": "Date",
   "avatar": "String",
-  "preference": "Array<String>",
   "favorite": "Array<ObjectId>"
 }
 ```
@@ -46,7 +47,6 @@ The **customer** collection contains information on *general users*, these are u
 - **password** - Hashed password in string format
 - **dob** - Date of birth of the user
 - **avatar** - Link to the avatar image asset of the user
-- **preferences** - List of tags of a business type
 - **favorites** - List of ids associated with a business
 
 ### `business`
@@ -59,6 +59,7 @@ The **business** collection contains information on *business users* and there b
   "username": "String [UNIQUE]",
   "password": "String",
   "businessName": "String",
+  "type": "String",
   "tags": "Array<String>",
   "description": "String",
   "location": {
@@ -68,7 +69,7 @@ The **business** collection contains information on *business users* and there b
   "address": "String",
   "displayImage": "String",
   "images": "Array<String>",
-  "placement": "Array<placement>",
+  "placement": "placement",
   "menu": "Array<menu>",
   "displayMenu: ": "string",
   "policy": "policy"
@@ -79,13 +80,14 @@ The **business** collection contains information on *business users* and there b
 - **username** - The name of the user, is used on authentication
 - **password** - Hashed password in string format
 - **businessName** - The name of the business, is not unique
+- **type** - Can either be Restaurant, Bar, and Theatre
 - **tags** - The array of tags associated with this business
 - **description** - Short description of the business, will be displayed on the mobile application
 - **location** - Mongo GeoJSON object, requires 2sphere index
 - **address** - Address name of the business
 - **displayImage** - Equivalent to a profile photo
 - **images** - List of image resource url
-- **placement** - Array of placement document objects
+- **placement** - Placement document object
 - **menu** -Array of menu document objects
 - **displayMenu** - The menu to display to the customer
 - **policy** - Business policy object

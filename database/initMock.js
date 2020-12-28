@@ -20,7 +20,6 @@ db.customer.insertMany([
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     dob: new Date('2000-10-15'),
     avatar: '',
-    preference: [],
     favorite: []
   },
   {
@@ -29,7 +28,6 @@ db.customer.insertMany([
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     dob: new Date('1999-07-10'),
     avatar: '',
-    preference: [],
     favorite: []
   },
   {
@@ -38,7 +36,6 @@ db.customer.insertMany([
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     dob: new Date('2004-02-22'),
     avatar: '',
-    preference: [],
     favorite: []
   },
 ]);
@@ -51,11 +48,12 @@ db.business.insertMany([
     username: 'Brightio',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     businessName: 'Brightio',
+    type: 'Bar',
     tags: ['BAR', 'JAPANESE', 'LIVE MUSIC'],
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     location: {
       type: 'Point',
-      coordinates: [13.727892, 100.769652]
+      coordinates: [100.769652, 13.727892]
     },
     address: 'Keki Ngam 4, Chalong Krung 1, Latkrabang, Bangkok, 10520',
     displayImage: '',
@@ -70,11 +68,12 @@ db.business.insertMany([
     username: 'BeerBurger',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     businessName: 'Beer and Burger',
+    type: 'Restaurant',
     tags: ['BEER', 'BURGER', 'LIVE MUSIC'],
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     location: {
       type: 'Point',
-      coordinates: [13.727830, 100.765001]
+      coordinates: [100.765001, 13.727830]
     },
     address: '611 Chalong Krung 1, Latkrabang, Bangkok, 10520',
     displayImage: '',
@@ -89,11 +88,12 @@ db.business.insertMany([
     username: 'IronBuffet',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     businessName: 'Iron Buffet',
+    type: 'Restaurant',
     tags: ['STEAK', 'BUFFET'],
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     location: {
       type: 'Point',
-      coordinates: [13.723117, 100.780103]
+      coordinates: [100.780103, 13.723117]
     },
     address: '44 Chalong Krung 1, Latkrabang, Bangkok 10520',
     displayImage: '',
@@ -108,11 +108,12 @@ db.business.insertMany([
     username: 'SpecialTale',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     businessName: 'SpecialTale',
+    type: 'Bar',
     tags: ['COCKTAIL', 'BAR', 'LIVE MUSIC'],
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     location: {
       type: 'Point',
-      coordinates: [14.723117, 99.780103]
+      coordinates: [99.780103, 14.723117]
     },
     address: 'this is honestly, just some made up address',
     displayImage: '',
