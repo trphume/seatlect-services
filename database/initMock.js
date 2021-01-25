@@ -60,7 +60,6 @@ db.business.insertMany([
     images: [],
     placement: [],
     menu: [],
-    displayMenu: '',
     policy: { minAge: 0 }
   },
   {
@@ -80,7 +79,6 @@ db.business.insertMany([
     images: [],
     placement: [],
     menu: [],
-    displayMenu: '',
     policy: { minAge: 0 }
   },
   {
@@ -100,7 +98,6 @@ db.business.insertMany([
     images: [],
     placement: [],
     menu: [],
-    displayMenu: '',
     policy: { minAge: 0 }
   },
   {
@@ -120,7 +117,6 @@ db.business.insertMany([
     images: [],
     placement: [],
     menu: [],
-    displayMenu: '',
     policy: { minAge: 21 }
   }
 ]);
