@@ -22,6 +22,7 @@ type LoginRequest struct {
 
 // LoginResponse defines model for LoginResponse.
 type LoginResponse struct {
+	Id    *string `json:"_id,omitempty"`
 	Token *string `json:"token,omitempty"`
 }
 
@@ -87,15 +88,15 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/6xTsW7cMAz9FYHtaJydtB2qrQU6FOhQFMgUZNDJ9FmJLCoknUNw8L8Xkt1eL8nYTZbI",
-	"9x4fn0/gacqUMKmAPYH4ESdXjz/oENIvfJxRtHxnpoysAetrdiJH4r6c9TkjWBDlkA6wNDALcnITvvG4",
-	"NMD4OAfGHuztubI5I941f5pof49eC+ImRjIlwddqlB4wvc32AqpchTRQKe5RPIesgRJY+Jb6TCGpGYhN",
-	"0SWGBqMjmiPuzX6WkFDETC65A06Y1OTodCCeoAENGgvNjSBDA0/IsqJe7bpdVyagjMnlABY+7LrddR1Y",
-	"x6q+rWxtLDPW2Wh1/FJftaAKM8egozmEJ1y/i4HGpd78tbDSsSud33uw8JNEizSpILDuAEW/Uv9cmDwl",
-	"xVRJXc4x+Nra3gulcyrK6T3jABbetefYtFtm2ovALJebVp6xXqwbrGNfd93/5t7yUckv3fsy64hJN3Rz",
-	"dGJk9h5FhjmW/Xzsrl57/qJrcCFi/6/9nrEvBS5KAfm0jnQJcpMeEh2TQWZiQ97PXDxZlipTkEtawN6e",
-	"YOYIFkbVbNs2kndxJFF7ysS6tC6H9ukKmle58C6aFaZEz3Fw+7j9pcRbkgY3RwULn7uuK9R3y+8AAAD/",
-	"/5MG1Xb7AwAA",
+	"H4sIAAAAAAAC/6xTwW7cOgz8FYHvHY21k7aH6tYCPRTooSiQUxAUWpleK5FFhaSzCBb+90Ky2+0mOfYm",
+	"S+TMcDg+gacpU8KkAvYE4kecXD1+o0NIP/BxRtHynZkysgasr9mJHIn7ctbnjGBBlEM6wNLALMjJTfjG",
+	"49IA4+McGHuwt+fK5ox41/xuov09ei2ImxjJlARfq/kZ3hai9IDpbRUvKMpVSAOV4h7Fc8gaKIGFL6nP",
+	"FJKagdgUvWJoMDqiOeLe7GcJCUXM5JI74IRJTY5OB+IJGtCgsdDcCDI08IQsK+rVrtt1RSJlTC4HsPBu",
+	"1+2uqxE61qnaytbGMnudmdZNXOqr1lRh5hh0NIfwhOt3Mda41Js/1lY6dqXzaw8WvpNokSYVBNbdoOhn",
+	"6p8Lk6ekmCqpyzkGX1vbe6F0Tks5/c84gIX/2nOc2i1L7UWQlssEKM9YL9bN1rGvu+5fc2+5qeSX7n2a",
+	"dcSkG7o5OjEye48iwxzLft53V689f9E1uBCx/9t+z9iXAhelgHxYR7oEuUkPiY7JIDOxIe9nLp4sS5Up",
+	"yCUtYG9PMHMEC6Nqtm0bybs4kqg9ZWJdWpdD+3QFzatceBfNClOi5zi4fdz+XuItSYObo4KFj13XFeq7",
+	"5VcAAAD//2PIeNQTBAAA",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code

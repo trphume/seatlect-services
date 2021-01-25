@@ -36,6 +36,8 @@ components:
         businessName:
           type: string
         type:
+          type: string
+        tags:
           type: array
           items:
             type: string
@@ -56,3 +58,8 @@ components:
           type: array
           items:
             type: string
+        policy:
+          type: object
+          properties:
+            minAge:
+              type: integer

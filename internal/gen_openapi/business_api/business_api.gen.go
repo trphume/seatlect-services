@@ -28,7 +28,11 @@ type Business struct {
 		Latitude  *string `json:"latitude,omitempty"`
 		Longitude *string `json:"longitude,omitempty"`
 	} `json:"location,omitempty"`
-	Type *[]string `json:"type,omitempty"`
+	Policy *struct {
+		MinAge *int `json:"minAge,omitempty"`
+	} `json:"policy,omitempty"`
+	Tags *[]string `json:"tags,omitempty"`
+	Type *string   `json:"type,omitempty"`
 }
 
 // ServerInterface represents all server handlers.
@@ -94,14 +98,14 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/4xTTW/bMAz9Kwa3YxC53Wk6FgWGAMP+wFAMik3HLGRJo+gAQZD/PlC2k6b1gJ708aj3",
-	"SD7qDE0cUgwYJIM9Q256HFzZPo2ZAuayTxwTshCW0x9qdZFTQrCQhSkc4LIB17Y8P/iA7We2X27A1YAW",
-	"c8OUhGJYxykn7067wR3WCUiRIk6Cw3oW84Vjdic9+9i4RfG+Ru+EZGzXpXwMh/+hN5W4f8VGbrKfT+wj",
-	"h15R6GJ5TOIVuxq0gSNyLmXAw7be1soYEwaXCCx829bbR9hActIXdbOYYc7LbtdeFDmg6HLnBfxAqRat",
-	"SpPgoTSt2p+q3TMUKS43u3YKX6KfruxFnt2AgpzB/n6vsXuuYldJj9WbqkgRzRo2EMrcwP4tI+PfkRhb",
-	"sMIjbubhXfPkRYNziiFP7j7WtS5NDIKhlOxS8jQNg3nN00Tc+L4ydmDhi7n9FjN/FXNNuJh0X9Zq2xiF",
-	"CY/YVnlsGsy5G71X1wtBRj4uPRrZg4VeJFljdFZ9H7PYc4osF+MSmeMDvNf8qXHVRKOj4Zjc3k9168PJ",
-	"4M6NXsDC97quVfrl8i8AAP//C0X0mwsEAAA=",
+	"H4sIAAAAAAAC/5RT3YrbPBB9FTPfdxki7/aquuuyUAKlL1CWotgTZxZZUkfjgAl59zKynWx2XWiv9DOj",
+	"c+bozJyhiX2KAYNksGfIzRF7V7ZPQ6aAuewTx4QshOX0k1pdZEwIFrIwhQ4uG3Bty/ODD7H9jPbd9bia",
+	"0GJumJJQDOtxysm7cde7bh2ANFLISbBfr2K+cMxu1LOPjVsY7zV6JyRDu07lY+j+FL2xxP0rNqL5KXpq",
+	"xo8kPYUvd2ooCHbI6yjiun+UN53/okS9onCIJZnEa+zq/wZOyLn8Ejxs622t0DFhcInAwqdtvX2EDSQn",
+	"x1KWWbw252W3ay8a6VB0ubMavqJUC1elRXBfPKn2Y7V7hkLF5WbXTulL9tMVvdCz61GQM9gf7zl2z1U8",
+	"VHLE6o0q0ohWDRsIpS1h/xaR8ddAjC1Y4QE382ys/eeLJucUQ558faxrXZoYBEOR7FLyNPWaec1Tw93w",
+	"/mc8gIX/zG0YzTyJ5lpwMele1uq3MQoTnrCt8tA0mPNh8H7U5wqQkU/LHw3swcJRJFljdBT8MWax5xRZ",
+	"LsYlMqcHeM/5TfOqCUZbwzG5vZ9068PJ4IMbvICFz3VdK/XL5XcAAAD//6qcj3VqBAAA",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code
