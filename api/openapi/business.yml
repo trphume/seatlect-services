@@ -31,8 +31,6 @@ components:
     Business:
       type: object
       properties:
-        _id:
-          type: string
         businessName:
           type: string
         type:
