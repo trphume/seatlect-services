@@ -42,11 +42,11 @@ db.createCollection('business', {
           }
         }, placement: {
           bsonType: 'array', maxItems: 5, items: {
-            required: ['name', 'floor', 'type', 'space', 'price', 'x', 'y'], properties: {
+            required: ['name', 'floor', 'type', 'space', 'price', 'x', 'y', 'width', 'height', 'rotation'], properties: {
               name: {
                 bsonType: 'string', minLength: 1,
                 maxLength: 2
-              }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE'] }, space: { bsonType: 'int', min: 1 }, price: { bsonType: 'decimal' }, x: { bsonType: 'double' }, y: { bsonType: 'double' }
+              }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE'] }, space: { bsonType: 'int', min: 1 }, price: { bsonType: 'decimal' }, x: { bsonType: 'double' }, y: { bsonType: 'double' }, width: { bsonType: 'double' }, height: { bsonType: 'double' }, rotation: { bsonType: 'double' }
             }
           }
         }, menu: {
@@ -76,11 +76,11 @@ db.createCollection('reservation', {
           maxLength: 20
         }, start: { bsonType: 'date' }, end: { bsonType: 'date' }, placement: {
           bsonType: 'array', items: {
-            required: ['name', 'floor', 'type', 'space', 'price', 'user', 'status', 'x', 'y'], properties: {
+            required: ['name', 'floor', 'type', 'space', 'price', 'user', 'status', 'x', 'y', 'width', 'height', 'rotation'], properties: {
               name: {
                 bsonType: 'string', minLength: 1,
                 maxLength: 2
-              }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE'] }, space: { bsonType: 'int', min: 1 }, price: { bsonType: 'decimal' }, user: { bsonType: 'objectId' }, status: { bsonType: 'string', enum: ['EMPTY', 'TAKEN', 'IN PROGRESS'] }, x: { bsonType: 'double' }, y: { bsonType: 'double' }
+              }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE'] }, space: { bsonType: 'int', min: 1 }, price: { bsonType: 'decimal' }, user: { bsonType: 'objectId' }, status: { bsonType: 'string', enum: ['EMPTY', 'TAKEN', 'IN PROGRESS'] }, x: { bsonType: 'double' }, y: { bsonType: 'double' }, width: { bsonType: 'double' }, height: { bsonType: 'double' }, rotation: { bsonType: 'double' }
             }
           }
         }, menu: {
@@ -104,11 +104,11 @@ db.createCollection('order', {
       bsonType: 'object', required: ['reservationId', 'customerId', 'businessId', 'start', 'end', 'seats', 'preorder', 'totalPrice', 'status', 'image', 'extraSpace'], properties: {
         reservationId: { bsonType: 'objectId' }, customerId: { bsonType: 'objectId' }, businessId: { bsonType: 'objectId' }, start: { bsonType: 'date' }, end: { bsonType: 'date' }, seats: {
           bsonType: 'array', items: {
-            required: ['name', 'floor', 'type', 'space', 'price', 'x', 'y'], properties: {
+            required: ['name', 'floor', 'type', 'space', 'price', 'x', 'y', 'width', 'height', 'rotation'], properties: {
               name: {
                 bsonType: 'string', minLength: 1,
                 maxLength: 2
-              }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE'] }, space: { bsonType: 'int', min: 1 }, price: { bsonType: 'decimal' }, x: { bsonType: 'double' }, y: { bsonType: 'double' }
+              }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE'] }, space: { bsonType: 'int', min: 1 }, price: { bsonType: 'decimal' }, x: { bsonType: 'double' }, y: { bsonType: 'double' }, width: { bsonType: 'double' }, height: { bsonType: 'double' }, rotation: { bsonType: 'double' }
             }
           }
         }, preorder: {
@@ -124,4 +124,6 @@ db.createCollection('order', {
       }
     }
   }
-});  
+});
+
+db.createCollection('admin', { validator: { $jsonSchema: { bsonType: 'object', required: ['username', 'password'], properties: { username: { bsonType: 'string' }, password: { bsonType: 'string' } } } } });  
