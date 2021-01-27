@@ -66,7 +66,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UpdateDisplayImageResponse"
-  /business/{businessId}/image:
+  /business/{businessId}/images:
     post:
       description: Append a new image to Business images
       parameters:
@@ -82,12 +82,30 @@ paths:
             schema:
               $ref: "#/components/schemas/ImageUpload"
       responses:
-        "200":
+        "201":
           description: Image appended
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AppendImageResponse"
+  /business/{businessId}/images/{pos}:
+    delete:
+      description: Delete an image in Business given its position
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+            description: ID of the Business
+        - in: path
+          name: pos
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: "Image deleted from Business"
 
 components:
   schemas:
