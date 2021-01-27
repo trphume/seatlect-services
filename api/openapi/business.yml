@@ -26,6 +26,25 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Business"
+    patch:
+      description: Update Business information by ID
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+            description: ID of the Business
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateBusiness"
+      responses:
+        "200":
+          description: Business information updated successfully
+
 components:
   schemas:
     Business:
@@ -56,6 +75,33 @@ components:
           type: array
           items:
             type: string
+        policy:
+          type: object
+          properties:
+            minAge:
+              type: integer
+    UpdateBusiness:
+      type: object
+      properties:
+        businessName:
+          type: string
+        type:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+        location:
+          type: object
+          properties:
+            latitude:
+              type: string
+            longitude:
+              type: string
+        address:
+          type: string
         policy:
           type: object
           properties:
