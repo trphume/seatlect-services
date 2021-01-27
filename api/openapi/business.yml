@@ -40,10 +40,27 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UpdateBusiness"
+              $ref: "#/components/schemas/UpdateBusinessResponse"
       responses:
         "200":
           description: Business information updated successfully
+  /business/{businessId}/displayImage:
+    put:
+      description: Update Business displayImage by ID
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+            description: ID of the Business
+      responses:
+        "200":
+          description: Business information updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateDisplayImageResponse"
 
 components:
   schemas:
@@ -80,7 +97,7 @@ components:
           properties:
             minAge:
               type: integer
-    UpdateBusiness:
+    UpdateBusinessResponse:
       type: object
       properties:
         businessName:
@@ -107,3 +124,8 @@ components:
           properties:
             minAge:
               type: integer
+    UpdateDisplayImageResponse:
+      type: object
+      properties:
+        displayImage:
+          type: string
