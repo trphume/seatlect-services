@@ -8,16 +8,48 @@ import (
 	"compress/gzip"
 	"encoding/base64"
 	"fmt"
+	"net/http"
 	"strings"
 
+	"github.com/deepmap/oapi-codegen/pkg/runtime"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/labstack/echo/v4"
 )
+
+// Business defines model for Business.
+type Business struct {
+	Address      *string   `json:"address,omitempty"`
+	BusinessName *string   `json:"businessName,omitempty"`
+	Description  *string   `json:"description,omitempty"`
+	DisplayImage *string   `json:"displayImage,omitempty"`
+	Images       *[]string `json:"images,omitempty"`
+	Location     *struct {
+		Latitude  *string `json:"latitude,omitempty"`
+		Longitude *string `json:"longitude,omitempty"`
+	} `json:"location,omitempty"`
+	Policy *struct {
+		MinAge *int `json:"minAge,omitempty"`
+	} `json:"policy,omitempty"`
+	Status *int      `json:"status,omitempty"`
+	Tags   *[]string `json:"tags,omitempty"`
+	Type   *string   `json:"type,omitempty"`
+}
+
+// ListBusinessResponse defines model for ListBusinessResponse.
+type ListBusinessResponse struct {
+	Businesses *[]Business `json:"businesses,omitempty"`
+}
 
 // LoginRequest defines model for LoginRequest.
 type LoginRequest struct {
 	Password string `json:"password"`
 	Username string `json:"username"`
+}
+
+// GetAdminBusinessParams defines parameters for GetAdminBusiness.
+type GetAdminBusinessParams struct {
+	Status int `json:"status"`
+	Page   int `json:"page"`
 }
 
 // PostAdminLoginJSONBody defines parameters for PostAdminLogin.
@@ -29,6 +61,9 @@ type PostAdminLoginJSONRequestBody PostAdminLoginJSONBody
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 
+	// (GET /admin/business)
+	GetAdminBusiness(ctx echo.Context, params GetAdminBusinessParams) error
+
 	// (POST /admin/login)
 	PostAdminLogin(ctx echo.Context) error
 }
@@ -36,6 +71,31 @@ type ServerInterface interface {
 // ServerInterfaceWrapper converts echo contexts to parameters.
 type ServerInterfaceWrapper struct {
 	Handler ServerInterface
+}
+
+// GetAdminBusiness converts echo context to params.
+func (w *ServerInterfaceWrapper) GetAdminBusiness(ctx echo.Context) error {
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetAdminBusinessParams
+	// ------------- Required query parameter "status" -------------
+
+	err = runtime.BindQueryParameter("form", true, true, "status", ctx.QueryParams(), &params.Status)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter status: %s", err))
+	}
+
+	// ------------- Required query parameter "page" -------------
+
+	err = runtime.BindQueryParameter("form", true, true, "page", ctx.QueryParams(), &params.Page)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter page: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.GetAdminBusiness(ctx, params)
+	return err
 }
 
 // PostAdminLogin converts echo context to params.
@@ -75,6 +135,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 		Handler: si,
 	}
 
+	router.GET(baseURL+"/admin/business", wrapper.GetAdminBusiness)
 	router.POST(baseURL+"/admin/login", wrapper.PostAdminLogin)
 
 }
@@ -82,14 +143,18 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/4RSTW/UMBD9K9bAMdpkSzngW5E4IHFAIE5VD64z2bg4M+54sqtqlf+O7E1ZVovUmxPP",
-	"e/M+fATPU2JC0gz2CNmPOLl6/Ma7QD/wecas5TsJJxQNWG+Ty/nA0pezviQEC1kl0A6WBuaMQm7C/1wu",
-	"DQg+z0GwB3t/nmzOjA/NK4gfn9ArLAUVaODC12P2EpIGJrDwhfrEgdQMLOYnOo3o1bh+CmQmR26HE5Ka",
-	"FJ0OLBM0oEFj4b4rM9DAHiWfuLabrojnhORSAAsfNt3mpirTsZpuK3EbSzI1BD5Fc6mpBrdqOAQdzS7s",
-	"kcyrVeOoN3/N1n3iCvRrDxa+c9YqrbLAKS3M+pn7l7LKMylS3epSisFXaPuUmc79ldN7wQEsvGvPBbdr",
-	"u+1FtctlJyoz1h85MeVT2Tfd7bXNu1lHJF0VmIPLJs/eY87DHEuQt932TdTgQsT+35i8YF8GXMyF5GPX",
-	"XZP8ot/EBzIowmLY+1mK9mWpXjJKKRXs/RFmiWBhVE22bSN7F0fOao+JRZfWpdDut9BcFehdNCea8kKc",
-	"BPcY13fPslY+uDkqWPjUdV1Z/bD8CQAA///ol3H2TQMAAA==",
+	"H4sIAAAAAAAC/6xVTW/jOAz9K4J2j0btdruH9a0FFosCi8WigzkVPTA27bAjSypFJQiC/PeBZKdJas9H",
+	"gTnVqqjHR75HZq8bN3hn0UrQ9V6HZo0D5M/7GMhiyN+enUcWwnyCtuXpQnYeda2DMNleHwq9ml79BwMu",
+	"BrQYGiYv5OzyPQVvYPcwQL8MQOkmJyfBYZnF9A9ghl06G9fAMeNlLQaEJLbLqYyz/bduT1nc6gUbSfHe",
+	"GWp28yQD2buLasgK9sjLKEFAYliKLrRA/8HSx/NP0f+XghxVf8TgnQ04L+ao8DsNfmfsdK1/K0+GKic3",
+	"lW9WmvFbpOF6so/4GjHIPL2HELaO28XiY0C2y847FJrxNRJjq+unU2RxQnyekUmvyHYu4V0YV/9tW+/I",
+	"iuocq08IYrARBe1AVg1goccBrShvQDrHgy60kJiEfZdidKE3yGHEur6qEnnn0YInXes/rqqrm8xM1rno",
+	"MgOXq7OR7FHmrP5BUYaCKNepk05qtVOjqRTYVnnoUdk4rJB1zsp5Nh7aESDze1MskWAYUJCDrp/2mlKe",
+	"14i804Uee3107HmHhSMW0zpZNv4yVCL3MaDnFD2aNTfmpqrSn8ZZQZt7BN4bGhdA+RLGLXAC/J5xFyci",
+	"u+Ky748oTLjB9q3796fuh9g0GEIXjUmOT68nPU1yeja1Cwtq5kGYPLUlWaueNmjV0bqTmJN53yv5vwuj",
+	"lBllaikGuXft7tf153xUD5czloQ7zLS5nZd5F2WNViYGagvnLUuDcVtd//BVB2SwPW9Tw9imADB57/w5",
+	"2uIS5LP9Yt3WKmR2rFzTRE7cD6NKAXlztH1ko2u9FvF1WaafE7N2Qeq9dyyHEjyVm2tdzARswKgRJk08",
+	"MMHKTHvM8SR5B9GIrvVfVVWl1M+HrwEAAP//OPpoIJYHAAA=",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code

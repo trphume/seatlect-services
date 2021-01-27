@@ -26,9 +26,65 @@ paths:
           description: Authentication failed with given credentials
         "500":
           description: Unknown error occurred
+  /admin/business:
+    get:
+      description: Get list of businesses by status and page number
+      parameters:
+        - in: query
+          name: status
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: page
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Retrieved list of Businesses successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListBusinessResponse"
 
 components:
   schemas:
+    Business:
+      type: object
+      properties:
+        businessName:
+          type: string
+        status:
+          type: integer
+        type:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+        location:
+          type: object
+          properties:
+            latitude:
+              type: string
+            longitude:
+              type: string
+        address:
+          type: string
+        displayImage:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        policy:
+          type: object
+          properties:
+            minAge:
+              type: integer
     LoginRequest:
       type: object
       properties:
@@ -39,3 +95,10 @@ components:
       required:
         - "username"
         - "password"
+    ListBusinessResponse:
+      type: object
+      properties:
+        businesses:
+          type: array
+          items:
+            $ref: "#/components/schemas/Business"
