@@ -9,6 +9,27 @@ servers:
       port:
         default: "9000"
 paths:
+  /business:
+    get:
+      description: Get list of businesses by status and page number
+      parameters:
+        - in: query
+          name: status
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: page
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Retrieved list of Businesses successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListBusinessResponse"
   /business/{businessId}:
     get:
       description: Get Business information by ID
@@ -145,6 +166,13 @@ components:
     ImageUpload:
       type: string
       format: Binary
+    ListBusinessResponse:
+      type: object
+      properties:
+        businesses:
+          type: array
+          items:
+            $ref: "#/components/schemas/Business"
     UpdateBusinessResponse:
       type: object
       properties:
