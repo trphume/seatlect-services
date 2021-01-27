@@ -127,6 +127,24 @@ paths:
       responses:
         "204":
           description: "Image deleted from Business"
+  /business/{businessId}/status:
+    patch:
+      description: Update the Business status field
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+            description: ID of the Business
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateStatusRequest"
+      responses:
+        "204":
+          description: "Status updated"
 
 components:
   schemas:
@@ -210,3 +228,8 @@ components:
       properties:
         image:
           type: string
+    UpdateStatusRequest:
+      type: object
+      properties:
+        status:
+          type: integer

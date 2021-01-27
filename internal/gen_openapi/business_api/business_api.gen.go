@@ -68,6 +68,11 @@ type UpdateDisplayImageResponse struct {
 	DisplayImage *string `json:"displayImage,omitempty"`
 }
 
+// UpdateStatusRequest defines model for UpdateStatusRequest.
+type UpdateStatusRequest struct {
+	Status *int `json:"status,omitempty"`
+}
+
 // GetBusinessParams defines parameters for GetBusiness.
 type GetBusinessParams struct {
 	Status int `json:"status"`
@@ -77,8 +82,14 @@ type GetBusinessParams struct {
 // PatchBusinessBusinessIdJSONBody defines parameters for PatchBusinessBusinessId.
 type PatchBusinessBusinessIdJSONBody UpdateBusinessResponse
 
+// PatchBusinessBusinessIdStatusJSONBody defines parameters for PatchBusinessBusinessIdStatus.
+type PatchBusinessBusinessIdStatusJSONBody UpdateStatusRequest
+
 // PatchBusinessBusinessIdRequestBody defines body for PatchBusinessBusinessId for application/json ContentType.
 type PatchBusinessBusinessIdJSONRequestBody PatchBusinessBusinessIdJSONBody
+
+// PatchBusinessBusinessIdStatusRequestBody defines body for PatchBusinessBusinessIdStatus for application/json ContentType.
+type PatchBusinessBusinessIdStatusJSONRequestBody PatchBusinessBusinessIdStatusJSONBody
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
@@ -100,6 +111,9 @@ type ServerInterface interface {
 
 	// (DELETE /business/{businessId}/images/{pos})
 	DeleteBusinessBusinessIdImagesPos(ctx echo.Context, businessId string, pos int) error
+
+	// (PATCH /business/{businessId}/status)
+	PatchBusinessBusinessIdStatus(ctx echo.Context, businessId string) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -220,6 +234,22 @@ func (w *ServerInterfaceWrapper) DeleteBusinessBusinessIdImagesPos(ctx echo.Cont
 	return err
 }
 
+// PatchBusinessBusinessIdStatus converts echo context to params.
+func (w *ServerInterfaceWrapper) PatchBusinessBusinessIdStatus(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "businessId" -------------
+	var businessId string
+
+	err = runtime.BindStyledParameter("simple", false, "businessId", ctx.Param("businessId"), &businessId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter businessId: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.PatchBusinessBusinessIdStatus(ctx, businessId)
+	return err
+}
+
 // This is a simple interface which specifies echo.Route addition functions which
 // are present on both echo.Echo and echo.Group, since we want to allow using
 // either of them for path registration
@@ -254,27 +284,29 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.PUT(baseURL+"/business/:businessId/displayImage", wrapper.PutBusinessBusinessIdDisplayImage)
 	router.POST(baseURL+"/business/:businessId/images", wrapper.PostBusinessBusinessIdImages)
 	router.DELETE(baseURL+"/business/:businessId/images/:pos", wrapper.DeleteBusinessBusinessIdImagesPos)
+	router.PATCH(baseURL+"/business/:businessId/status", wrapper.PatchBusinessBusinessIdStatus)
 
 }
 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/+yXz2vrOBDH/xWh3aOJ3e5e1reGwBIoSyn0tPSg2BNHRZZUaZwlBP/viyQ7dmLlR3db",
-	"3oP3TnH0Y2Y0n++M5T0tVK2VBImW5ntqiw3UzD8+aA2yXNasgmewWkkLblgbpcEgB7+Iu2n3gDsNNKcW",
-	"DZcVbdukH1GrNyiQtgmdN5ZLsHZqhZWl6SZO7CR01e36i9UQXVCCLQzXyJWMz3OrBdstz0SahDOE0yDU",
-	"8Si6AWYM27n/QhWs93h8FsGQY1PGXQklq3OzsZRpJXixmzqpuXw4Og2XCBWYuBVk1QePF/7fFKLP64sW",
-	"ipVux1qZmiHN6ZxLZnY0mTp75BZ7LZxXVs/9hMyvBtY0p7+kg27TTrTpQWCTE8UCf9ElQ7geyJeK86eO",
-	"jnEsRsV6HsmVkp6ad0NcrpVfzFG4uYNaEroFYz0EejfLZpkLR2mQTHOa099m2eyeJlQz3Hjv6WrUyCpA",
-	"H9GYM/0TkAhukag1GXRMVjtikWFjCZMl0awCIpt6BYZ6f8YrYVkGA6PwNDOsBgRjaf73nnLn4r0BX13S",
-	"K48GuzShBt4bbqCkOZoGkq6hxwnHTbm4Pmbo1a0OrHxO7rPM/RRKIkifHqa14EHp6ZsNch8MXqrpaLPw",
-	"PI9T/gxoOGyhPCR+PiTeNkUB1q4bIVwzcLsPENN9/7Qs24tEe4PEKcl1Oa6kY7pcXOI3P1ifkjz2sVy4",
-	"sHEDZMTeE3LSGwCtxhavYjoUxVdSGjrvlEw0beaA65SNL7RiM0UQGsRHKDw5Q7dw+O9JvoFglMN7Axbn",
-	"qtx9GoIzrzOf0eP427gQbqDWeB/l7fWUnnZq3eB1suNN59A2kQIbvzy+Z8j+wplqWd1Od3zLajumX1TL",
-	"F17Ekeru1hF/pl4glzUx3Le1shE5hA8PwoiEfzq7qEZ1H7ZPFKFsRBLLfvEPJYa7TxND7CMwooJQqswv",
-	"vg1/utfKtiGhAhCmqV34ccJkpwEuBw1UfAuScLREK8v9hlM9hO3nFPGkvrUokqg/rez/vXv9HgnIJzAk",
-	"uiRro2oyfmM7WBbMts9DYwTN6QZR52nqvlDERlnM91oZbFOmebq9o6cSeHTrSDDjrtTMcLYSfZ2brs7X",
-	"rBHu6/CPLMuc69f23wAAAP//OQhR3IIQAAA=",
+	"H4sIAAAAAAAC/+xXTY/bNhD9KwTbo7Dypr1UtxgLFAaCItggpyIHWhrJDCiSS45cGIb+e0FSsiSLsrVt",
+	"Fi3anCzzY2b43psZ8kxzVWslQaKl2Zna/AA185/vtQZZ7GpWwTNYraQFN6yN0mCQg1/E3bT7wJMGmlGL",
+	"hsuKtm3Sj6j9V8iRtgndNpZLsHZuhRWF6Sau7CR03+36jdUQXVCAzQ3XyJWMz3OrBTvtFiJNwhnCaRDq",
+	"eBTdADOGndx/oXLWe5yeRTDk2BRxV0LJamk2BplWguenuZOay/eT03CJUIGJW0FWvfJ44f+qED2un7VQ",
+	"rHA7SmVqhjSjWy6ZOdFk7uwDt9hrYVlZPe9XzPxooKQZ/SEddJt2ok0vApudKBb4Z10whPuBvKk4v+to",
+	"SsfTKFmXKbmT0svmPyHDxj7DSwMW53atn14HhxvislR+NUfh5i4CTOgRjPW80seHzcPGhaA0SKY5zehP",
+	"D5uHdzShmuHBu0v3o9pYgQ9tIh36KyAR3CJRJRlSg+xPJARNmCyIZhUQ2dR7MNT7M15cuyIYGIWnmWE1",
+	"IBhLs9/PlDsXLw34hJVezD0YCTXw0nADBc3QNJB0PSKOUtyUi+t1hr641YF+j8m7zcb95EoiSA8P01rw",
+	"kDzpVxsyaDB4q0xE64/ncwr5M6DhcITiAvx2AN42eQ7Wlo0Qrr643RcS03P/tSvam4z2BolTkiucXEnH",
+	"6e7pFn/bi/U5k1MfuycXNh6AjLj3DDnpDQTtxxbv0nTJs7dkaSjmc2aisJkLXdfc+ETLD3MKQlF4DQsf",
+	"naE1PPx1kFcwGOXB17StKk7fjIKFDukRncbfxoWwgrXG+yjW51N6Xfx1g/eZHW9aoraJJNi4H/2bSfZ3",
+	"2FTLaj2744tb23H6Rrl8o7dHsrtbR/yZeoHc1sRwhdfKRuQQ3jKEEQl/dHZRjfI+bJ8pQtmIJHb94v+V",
+	"GB6/mRhi78qICkKqMr94Hf3pWSvbBkAFIMyhffLjhMlOA1wOGqj4ESThaIlWlvsN13oI25cU8VH906JI",
+	"ov60sn/37vVzJCAPYAC6IKVRNRl37GWuhjv27aY8Pmt/xy05iGJtT/7U31//s515+pqJpm2EubBrUlfb",
+	"hFowxx6hxgia0QOiztLUvVDFQVnMzloZbFOmeXp8pNf5+sGtI8GMe/8ww9le9EXZdEW5ZI1AmtFfNpuN",
+	"c/2l/TMAAP//ahDpj4ISAAA=",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code
