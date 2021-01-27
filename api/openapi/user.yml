@@ -10,7 +10,7 @@ servers:
       port:
         default: "9000"
 paths:
-  /users/login:
+  /user/login:
     post:
       description: Login user with given username and password
       requestBody:

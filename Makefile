@@ -42,7 +42,7 @@ gen_client_order:
 	@protoc --dart_out=grpc:../seatlect_mobile/packages/genproto/lib/src -I=api/protobuf order.proto
 
 # This section contains commands for working with openapi files
-gen_openapi: gen_openapi_user gen_openapi_business
+gen_openapi: gen_openapi_user gen_openapi_business gen_openapi_admin
 
 gen_openapi_user:
 	@oapi-codegen -o internal/gen_openapi/user_api/user_api.gen.go -package user_api -generate "types,server,spec" api/openapi/user.yml
