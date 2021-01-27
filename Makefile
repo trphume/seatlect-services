@@ -1,6 +1,6 @@
 .PHONY: gen_proto clean_proto gen_proto_common gen_proto_user gen_proto_token gen_proto_business gen_proto_order
 .PHONY: gen_client clean_openapi gen_client_common gen_client_business gen_client_order
-.PHONY: gen_openapi gen_openapi_user  gen_openapi_business clean_openapi
+.PHONY: gen_openapi gen_openapi_user  gen_openapi_business gen_openapi_admin clean_openapi
 
 # This section contains commands for working with proto files
 gen_proto: gen_proto_common gen_proto_user gen_proto_token gen_proto_business gen_proto_order
@@ -49,6 +49,9 @@ gen_openapi_user:
 
 gen_openapi_business:
 	@oapi-codegen -o internal/gen_openapi/business_api/business_api.gen.go -package business_api -generate "types,server,spec" api/openapi/business.yml
+
+gen_openapi_admin:
+	@oapi-codegen -o internal/gen_openapi/admin_api/admin_api.gen.go -package admin_api -generate "types,server,spec" api/openapi/admin.yml
 
 clean_openapi:
 	@rm -rf internal/gen_openapi
