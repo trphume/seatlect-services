@@ -47,5 +47,3 @@ components:
       properties:
         _id:
           type: string
-        token:
-          type: string

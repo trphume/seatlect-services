@@ -14,11 +14,23 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// LoginRequest defines model for LoginRequest.
+type LoginRequest struct {
+	Password string `json:"password"`
+	Username string `json:"username"`
+}
+
+// PostAdminLoginJSONBody defines parameters for PostAdminLogin.
+type PostAdminLoginJSONBody LoginRequest
+
+// PostAdminLoginRequestBody defines body for PostAdminLogin for application/json ContentType.
+type PostAdminLoginJSONRequestBody PostAdminLoginJSONBody
+
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 
-	// (GET /test)
-	GetTest(ctx echo.Context) error
+	// (POST /admin/login)
+	PostAdminLogin(ctx echo.Context) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -26,12 +38,12 @@ type ServerInterfaceWrapper struct {
 	Handler ServerInterface
 }
 
-// GetTest converts echo context to params.
-func (w *ServerInterfaceWrapper) GetTest(ctx echo.Context) error {
+// PostAdminLogin converts echo context to params.
+func (w *ServerInterfaceWrapper) PostAdminLogin(ctx echo.Context) error {
 	var err error
 
 	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.GetTest(ctx)
+	err = w.Handler.PostAdminLogin(ctx)
 	return err
 }
 
@@ -63,18 +75,21 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 		Handler: si,
 	}
 
-	router.GET(baseURL+"/test", wrapper.GetTest)
+	router.POST(baseURL+"/admin/login", wrapper.PostAdminLogin)
 
 }
 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/2SPMU8DMQyF/0r05qiXlolsDAghscGGGMydr42Ui6PE7XK6/47cYwIvtuT3nj+vGGWp",
-	"UrhoR1w3j1RmQVwxcR9bqpqkIOK5TFVSUTdLc+9MmnlUR9OSiluo0JkXLupqJp2lLfDQpJkR8WQaeNy4",
-	"9T3reAjYPKRyoZoQ8XAIhxM8KunFKDAod7XhzPcmlRsZyeuEiBfWD9t7NO5VSue76RTCf24TOv6Fx2bl",
-	"0bkZDeLnimvLiLio1jgMWUbKF+ka1ypNt4FqGm5H+D+pb6Zze4y9Ri3Rd94xzLhzzHTNiojHEIKd/tp+",
-	"AgAA//9OgQWtbgEAAA==",
+	"H4sIAAAAAAAC/4RSTW/UMBD9K9bAMdpkSzngW5E4IHFAIE5VD64z2bg4M+54sqtqlf+O7E1ZVovUmxPP",
+	"e/M+fATPU2JC0gz2CNmPOLl6/Ma7QD/wecas5TsJJxQNWG+Ty/nA0pezviQEC1kl0A6WBuaMQm7C/1wu",
+	"DQg+z0GwB3t/nmzOjA/NK4gfn9ArLAUVaODC12P2EpIGJrDwhfrEgdQMLOYnOo3o1bh+CmQmR26HE5Ka",
+	"FJ0OLBM0oEFj4b4rM9DAHiWfuLabrojnhORSAAsfNt3mpirTsZpuK3EbSzI1BD5Fc6mpBrdqOAQdzS7s",
+	"kcyrVeOoN3/N1n3iCvRrDxa+c9YqrbLAKS3M+pn7l7LKMylS3epSisFXaPuUmc79ldN7wQEsvGvPBbdr",
+	"u+1FtctlJyoz1h85MeVT2Tfd7bXNu1lHJF0VmIPLJs/eY87DHEuQt932TdTgQsT+35i8YF8GXMyF5GPX",
+	"XZP8ot/EBzIowmLY+1mK9mWpXjJKKRXs/RFmiWBhVE22bSN7F0fOao+JRZfWpdDut9BcFehdNCea8kKc",
+	"BPcY13fPslY+uDkqWPjUdV1Z/bD8CQAA///ol3H2TQMAAA==",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code

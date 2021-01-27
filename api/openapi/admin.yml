@@ -10,8 +10,32 @@ servers:
       port:
         default: "9000"
 paths:
-  /test:
-    get:
+  /admin/login:
+    post:
+      description: Login admin with given username and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
       responses:
-        "200":
-          description: Test endpoint
+        "204":
+          description: Authentication was successful
+        "401":
+          description: Authentication failed with given credentials
+        "500":
+          description: Unknown error occurred
+
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - "username"
+        - "password"
