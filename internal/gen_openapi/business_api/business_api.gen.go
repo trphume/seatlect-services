@@ -16,9 +16,13 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// AppendImageResponse defines model for AppendImageResponse.
+type AppendImageResponse struct {
+	Image *string `json:"image,omitempty"`
+}
+
 // Business defines model for Business.
 type Business struct {
-	Id           *string   `json:"_id,omitempty"`
 	Address      *string   `json:"address,omitempty"`
 	BusinessName *string   `json:"businessName,omitempty"`
 	Description  *string   `json:"description,omitempty"`
@@ -35,11 +39,53 @@ type Business struct {
 	Type *string   `json:"type,omitempty"`
 }
 
+// ImageUpload defines model for ImageUpload.
+type ImageUpload string
+
+// UpdateBusinessResponse defines model for UpdateBusinessResponse.
+type UpdateBusinessResponse struct {
+	Address      *string `json:"address,omitempty"`
+	BusinessName *string `json:"businessName,omitempty"`
+	Description  *string `json:"description,omitempty"`
+	Location     *struct {
+		Latitude  *string `json:"latitude,omitempty"`
+		Longitude *string `json:"longitude,omitempty"`
+	} `json:"location,omitempty"`
+	Policy *struct {
+		MinAge *int `json:"minAge,omitempty"`
+	} `json:"policy,omitempty"`
+	Tags *[]string `json:"tags,omitempty"`
+	Type *string   `json:"type,omitempty"`
+}
+
+// UpdateDisplayImageResponse defines model for UpdateDisplayImageResponse.
+type UpdateDisplayImageResponse struct {
+	DisplayImage *string `json:"displayImage,omitempty"`
+}
+
+// PatchBusinessBusinessIdJSONBody defines parameters for PatchBusinessBusinessId.
+type PatchBusinessBusinessIdJSONBody UpdateBusinessResponse
+
+// PatchBusinessBusinessIdRequestBody defines body for PatchBusinessBusinessId for application/json ContentType.
+type PatchBusinessBusinessIdJSONRequestBody PatchBusinessBusinessIdJSONBody
+
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 
 	// (GET /business/{businessId})
 	GetBusinessBusinessId(ctx echo.Context, businessId string) error
+
+	// (PATCH /business/{businessId})
+	PatchBusinessBusinessId(ctx echo.Context, businessId string) error
+
+	// (PUT /business/{businessId}/displayImage)
+	PutBusinessBusinessIdDisplayImage(ctx echo.Context, businessId string) error
+
+	// (POST /business/{businessId}/images)
+	PostBusinessBusinessIdImages(ctx echo.Context, businessId string) error
+
+	// (DELETE /business/{businessId}/images/{pos})
+	DeleteBusinessBusinessIdImagesPos(ctx echo.Context, businessId string, pos int) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -60,6 +106,78 @@ func (w *ServerInterfaceWrapper) GetBusinessBusinessId(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshalled arguments
 	err = w.Handler.GetBusinessBusinessId(ctx, businessId)
+	return err
+}
+
+// PatchBusinessBusinessId converts echo context to params.
+func (w *ServerInterfaceWrapper) PatchBusinessBusinessId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "businessId" -------------
+	var businessId string
+
+	err = runtime.BindStyledParameter("simple", false, "businessId", ctx.Param("businessId"), &businessId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter businessId: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.PatchBusinessBusinessId(ctx, businessId)
+	return err
+}
+
+// PutBusinessBusinessIdDisplayImage converts echo context to params.
+func (w *ServerInterfaceWrapper) PutBusinessBusinessIdDisplayImage(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "businessId" -------------
+	var businessId string
+
+	err = runtime.BindStyledParameter("simple", false, "businessId", ctx.Param("businessId"), &businessId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter businessId: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.PutBusinessBusinessIdDisplayImage(ctx, businessId)
+	return err
+}
+
+// PostBusinessBusinessIdImages converts echo context to params.
+func (w *ServerInterfaceWrapper) PostBusinessBusinessIdImages(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "businessId" -------------
+	var businessId string
+
+	err = runtime.BindStyledParameter("simple", false, "businessId", ctx.Param("businessId"), &businessId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter businessId: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.PostBusinessBusinessIdImages(ctx, businessId)
+	return err
+}
+
+// DeleteBusinessBusinessIdImagesPos converts echo context to params.
+func (w *ServerInterfaceWrapper) DeleteBusinessBusinessIdImagesPos(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "businessId" -------------
+	var businessId string
+
+	err = runtime.BindStyledParameter("simple", false, "businessId", ctx.Param("businessId"), &businessId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter businessId: %s", err))
+	}
+
+	// ------------- Path parameter "pos" -------------
+	var pos int
+
+	err = runtime.BindStyledParameter("simple", false, "pos", ctx.Param("pos"), &pos)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter pos: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.DeleteBusinessBusinessIdImagesPos(ctx, businessId, pos)
 	return err
 }
 
@@ -92,20 +210,29 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	}
 
 	router.GET(baseURL+"/business/:businessId", wrapper.GetBusinessBusinessId)
+	router.PATCH(baseURL+"/business/:businessId", wrapper.PatchBusinessBusinessId)
+	router.PUT(baseURL+"/business/:businessId/displayImage", wrapper.PutBusinessBusinessIdDisplayImage)
+	router.POST(baseURL+"/business/:businessId/images", wrapper.PostBusinessBusinessIdImages)
+	router.DELETE(baseURL+"/business/:businessId/images/:pos", wrapper.DeleteBusinessBusinessIdImagesPos)
 
 }
 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/5RT3YrbPBB9FTPfdxki7/aquuuyUAKlL1CWotgTZxZZUkfjgAl59zKynWx2XWiv9DOj",
-	"c+bozJyhiX2KAYNksGfIzRF7V7ZPQ6aAuewTx4QshOX0k1pdZEwIFrIwhQ4uG3Bty/ODD7H9jPbd9bia",
-	"0GJumJJQDOtxysm7cde7bh2ANFLISbBfr2K+cMxu1LOPjVsY7zV6JyRDu07lY+j+FL2xxP0rNqL5KXpq",
-	"xo8kPYUvd2ooCHbI6yjiun+UN53/okS9onCIJZnEa+zq/wZOyLn8Ejxs622t0DFhcInAwqdtvX2EDSQn",
-	"x1KWWbw252W3ay8a6VB0ubMavqJUC1elRXBfPKn2Y7V7hkLF5WbXTulL9tMVvdCz61GQM9gf7zl2z1U8",
-	"VHLE6o0q0ohWDRsIpS1h/xaR8ddAjC1Y4QE382ys/eeLJucUQ558faxrXZoYBEOR7FLyNPWaec1Tw93w",
-	"/mc8gIX/zG0YzTyJ5lpwMele1uq3MQoTnrCt8tA0mPNh8H7U5wqQkU/LHw3swcJRJFljdBT8MWax5xRZ",
-	"LsYlMqcHeM/5TfOqCUZbwzG5vZ9068PJ4IMbvICFz3VdK/XL5XcAAAD//6qcj3VqBAAA",
+	"H4sIAAAAAAAC/+xWXWvbPBT+K0Lve2lit9vNfNcQGIExyqBXoxeKfeKoyJIqHWeY4P8+JNmNE8ttOlo2",
+	"2K7iSOf7ec7ROdBC1VpJkGhpfqC22EHN/OeN1iDLdc0q+AZWK2nBHWujNBjk4IW4u3Yf2GqgObVouKxo",
+	"1yXDido8QIG0S+iysVyCtVMrrCxNf3FmJ6GbXusrqyEqUIItDNfIlYzfc6sFa9czkSYhh5ANQh2Poj9g",
+	"xrDW/ReqYIPH01wEQ45NGXcllKzmbmMl00rwop06qbm8OcmGS4QKTNwKsuqV6YX/F4Xo63qnhWKl09gq",
+	"UzOkOV1yyUxLk6mzO10yhIEN89x6V1b8A3AwHuBYjbpkHpIXemlq3h1xuVVemKNwd09zIKF7MNaDQK8W",
+	"2SJz4SgNkmlOc/phkS2uaUI1w533ng6op4fha1127qYC9OGNQaefAcngi7ggHDO5kmTTkvWKelfGn6zL",
+	"ID5IL5+se/eG1YBgLM2/n/tYr4jaEtwBGWXF3Y2LmiZUeoLSzdiigceGGyhpjqaBpB+6sXreO+EAhq/A",
+	"dZa5n0JJBOlTZloLHqicPtjA56O9/w1saU7/S49TPu1HfPoUsAfpNK1o2Qyg4bCHktimKMDabSNEG9Q1",
+	"w2I3hSBw6zUo3DpDl+Dw60W+AMEoDo8NWFyqsn0zCGYmoa/oafxdnAgXoNZ4H1PMumSmn9LzJtcNvozs",
+	"WGkO2ibSYOO58yeD7JeEVMvqcnTHL2PXY/pOvfzMDI90dy9HfE4DQZ7nxHFH0spG6BCWRcKIhB+9XVSj",
+	"vg/qE0YoG6HEehD+q8hw9WZkiC3uERaEVmVe+DL404NWtgsFFYAwLe3KnxMmew5weeRAxfcgCUdLtLLc",
+	"K5zzIajPMeJW/W5SJFF/2sf14qN+3PCmr/rHSEC+gKHQJdkaVZPxi+3AsmD2Qx0aI2hOd4g6T1O33Iqd",
+	"spgftDLYpUzzdH9FzynwxcmRYMZtY8xwthFDn5u+z7esEW6j/5RlmXN93/0MAAD//5hS5/I2DgAA",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code
