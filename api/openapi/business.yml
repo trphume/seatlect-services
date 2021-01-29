@@ -187,6 +187,8 @@ components:
     ListBusinessResponse:
       type: object
       properties:
+        maxPage:
+          type: integer
         businesses:
           type: array
           items:
