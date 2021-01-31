@@ -17,26 +17,32 @@ db.customer.insertMany([
   {
     _id: jakeId,
     username: 'Jake',
+    email: 'fake1@email.com',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     dob: new Date('2000-10-15'),
     avatar: '',
-    favorite: []
+    favorite: [],
+    verified: false,
   },
   {
     _id: samuelId,
     username: 'Samuel',
+    email: 'fake2@email.com',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     dob: new Date('1999-07-10'),
     avatar: '',
-    favorite: []
+    favorite: [],
+    verified: false,
   },
   {
     _id: gunId,
     username: 'Gun',
+    email: 'fake3@email.com',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     dob: new Date('2004-02-22'),
     avatar: '',
-    favorite: []
+    favorite: [],
+    verified: false,
   },
 ]);
 
@@ -46,6 +52,7 @@ db.business.insertMany([
   {
     _id: brightioId,
     username: 'Brightio',
+    email: 'brightio@email.com',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     businessName: 'Brightio',
     type: 'Bar',
@@ -60,11 +67,13 @@ db.business.insertMany([
     images: [],
     placement: [],
     menu: [],
-    policy: { minAge: 0 }
+    policy: { minAge: 0 },
+    status: 1,
   },
   {
     _id: beerBurgerId,
     username: 'BeerBurger',
+    email: 'beerburgero@email.com',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     businessName: 'Beer and Burger',
     type: 'Restaurant',
@@ -79,11 +88,13 @@ db.business.insertMany([
     images: [],
     placement: [],
     menu: [],
-    policy: { minAge: 0 }
+    policy: { minAge: 0 },
+    status: 1,
   },
   {
     _id: ironBuffetId,
     username: 'IronBuffet',
+    email: 'ironbuffet@email.com',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     businessName: 'Iron Buffet',
     type: 'Restaurant',
@@ -98,11 +109,13 @@ db.business.insertMany([
     images: [],
     placement: [],
     menu: [],
-    policy: { minAge: 0 }
+    policy: { minAge: 0 },
+    status: 1,
   },
   {
     _id: specialTaleId,
     username: 'SpecialTale',
+    email: 'specialtale@email.com',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     businessName: 'SpecialTale',
     type: 'Bar',
@@ -117,6 +130,7 @@ db.business.insertMany([
     images: [],
     placement: [],
     menu: [],
-    policy: { minAge: 21 }
+    policy: { minAge: 21 },
+    status: 1
   }
 ]);
