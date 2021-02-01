@@ -44,11 +44,23 @@ type GetRequestParams struct {
 	Page int `json:"page"`
 }
 
+// PostRequestBusinessIdJSONBody defines parameters for PostRequestBusinessId.
+type PostRequestBusinessIdJSONBody ChangeRequest
+
+// PostRequestBusinessIdRequestBody defines body for PostRequestBusinessId for application/json ContentType.
+type PostRequestBusinessIdJSONRequestBody PostRequestBusinessIdJSONBody
+
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 
 	// (GET /request)
 	GetRequest(ctx echo.Context, params GetRequestParams) error
+
+	// (GET /request/{businessId})
+	GetRequestBusinessId(ctx echo.Context, businessId string) error
+
+	// (POST /request/{businessId})
+	PostRequestBusinessId(ctx echo.Context, businessId string) error
 
 	// (POST /request/{businessId}/approve)
 	PostRequestBusinessIdApprove(ctx echo.Context, businessId string) error
@@ -74,6 +86,38 @@ func (w *ServerInterfaceWrapper) GetRequest(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshalled arguments
 	err = w.Handler.GetRequest(ctx, params)
+	return err
+}
+
+// GetRequestBusinessId converts echo context to params.
+func (w *ServerInterfaceWrapper) GetRequestBusinessId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "businessId" -------------
+	var businessId string
+
+	err = runtime.BindStyledParameter("simple", false, "businessId", ctx.Param("businessId"), &businessId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter businessId: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.GetRequestBusinessId(ctx, businessId)
+	return err
+}
+
+// PostRequestBusinessId converts echo context to params.
+func (w *ServerInterfaceWrapper) PostRequestBusinessId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "businessId" -------------
+	var businessId string
+
+	err = runtime.BindStyledParameter("simple", false, "businessId", ctx.Param("businessId"), &businessId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter businessId: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.PostRequestBusinessId(ctx, businessId)
 	return err
 }
 
@@ -122,6 +166,8 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	}
 
 	router.GET(baseURL+"/request", wrapper.GetRequest)
+	router.GET(baseURL+"/request/:businessId", wrapper.GetRequestBusinessId)
+	router.POST(baseURL+"/request/:businessId", wrapper.PostRequestBusinessId)
 	router.POST(baseURL+"/request/:businessId/approve", wrapper.PostRequestBusinessIdApprove)
 
 }
@@ -129,16 +175,17 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/4xUzW7bPBB8FWG/7yhYStpLdUtboDAQFIGvRVDQ0lpiQJHM7sqoYfjdC1KSZUVKkRNl",
-	"7t/szNBnKF3rnUUrDMUZuGywVfHzW6NsjTt87ZAlXHhyHkk0xvBvXYVDTh6hABbStoZLCqqqCJlXY/uO",
-	"tUXmn6rF1YQKuSTtRTu7GjeuVGNwDsco0dJV+E6Zrd+LXtLxxu1fsJSQ753R5Wk5pNX2ob5toq1gjbTe",
-	"RVQdq7Rgu87HcKGI1Gn6/SGIj5pl0GaH7J1lXMGr/jypdcAp0KTsFeH/hAco4L9sckU2WCKb+2GBfgky",
-	"XGl7cHG8FhNiY3kKRySOSsLdJt/koaHzaJXXUMCnTb65hxS8kiYCy27Q1hiPmVciH8nor0TZKtHCSRkx",
-	"J0NxEtBQ2zsojqP4va2ggB8oEzivSLUoSAzFrzPoMOG1QzpBCjaaF3wgtmdRE1ZQCHWYDg9o1SLPIbuX",
-	"Ku50n+fhKJ0VtHEl5b3RvcOzF+5tPjX8lzhrdogCzFnaoZDGIyYm0OUOc8besMVdWSLzoTMm6Bu6jTJk",
-	"57FwW10y5T25Y+8/xyviPPQJiZrmzWct1Hhy132+XicNbZb6zKdtv4fNpMFkLIW0lzDYaVJwWuEjOl4f",
-	"41LGz8uNx8m3lktoYL9aUntJgZGO40IdGSigEfFFloU/PdM4luLsHUngW2fHO3gr7mPIS/o24YEp0mpv",
-	"epChsEd5UJ0RKOBLnudh9PPlbwAAAP//Mc0kDQQGAAA=",
+	"H4sIAAAAAAAC/8yWUWvbMBDHv4q47dHEbreX+a3roBTKKH0dZSj22VGxJfV0zhZCvvuQbCdxrLRlUOiT",
+	"XUl399f9/udmC4VprdGo2UG+BVessJXh9XoldY0P+NyhY79gyVgkVhi2f6vSP3hjEXJwTErXsEtAliWh",
+	"c9G9ZeeURud+yhajB0p0BSnLyujofmMKOW5O5TSSFXclngnT9bndXTKumOUTFuzPW9OoYjMv0ip9VR8n",
+	"UZqxRopnYVmHKMXYxvsxLEgiuTn8/SaJd8rxwOYBnTXaYUSv/Hsv44IToAPZvcLPhBXk8Ck9uCIdLJFO",
+	"/TBTPxfpl5SuTCivuPF7Y3gCayQXSMLFIltkPqGxqKVVkMOXRba4hASs5FUQlh6prTE8Jl4J/RCjv4TU",
+	"pVDsRBE0iyFYeDXU9g4K5Si835aQww3yQZyVJFtkJAf5ry0oX+G5Q9pAAjqYF6xvbN9FRVhCztRhMgxQ",
+	"1CKP/nSPKtzpMsv8ozCaUYcrSWsb1Ts8fXK9zQ8JX4ITs0MAMO3SAzIpXKNofLtMNe3YSbdcVxToXNU1",
+	"jefrs40Y0u0YeFvuzjK5QRZSOIuFqlRxkv4FAN/3uecophVuf/hL8ArFGANJT8s75wBreZzxVWT7uXtP",
+	"YifjNGd1fda7ggaM5YyR/3a5CIprQskopND455RzZUjIvRNmXO6N+5hgekmm3Lwnk6mm3cwQF2d7/Z/T",
+	"lEpryaz7r3mU5VV/4IjZa6MVRTik+XAj9nV+47HyG4fA99YhrccLddRADitmm6ep/wnRrIzjfGsNse+3",
+	"StcXcDp+d/6c6NP4f1eSlFw2vUgf2KusZNcw5PAtyzJf+nH3LwAA//9/XWcIUgkAAA==",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code

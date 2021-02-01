@@ -38,6 +38,41 @@ paths:
       responses:
         "204":
           description: Business information retrieved successfully
+  /request/{businessId}:
+    get:
+      description: Get a specific change request
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+          description: ID of the Business
+      responses:
+        "200":
+          description: Change request information retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChangeRequest"
+    post:
+      description: Create a new change request for a business
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+          description: ID of the Business
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangeRequest"
+      responses:
+        "201":
+          description: Create change request successfully
 components:
   schemas:
     Business:
