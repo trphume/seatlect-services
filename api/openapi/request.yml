@@ -1,0 +1,98 @@
+openapi: "3.0.2"
+info:
+  title: Request
+  version: "1.0.0"
+servers:
+  - url: http://localhost:{port}/api/v1
+    description: Local server
+    variables:
+      port:
+        default: "9000"
+paths:
+  /request:
+    get:
+      description: List business and its change request information
+      parameters:
+        - in: query
+          name: page
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Retrieve list of business and change request successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListRequestResponse"
+components:
+  schemas:
+    Business:
+      type: object
+      properties:
+        businessName:
+          type: string
+        type:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+        location:
+          type: object
+          properties:
+            latitude:
+              type: string
+            longitude:
+              type: string
+        address:
+          type: string
+        displayImage:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        policy:
+          type: object
+          properties:
+            minAge:
+              type: integer
+    ChangeRequest:
+      type: object
+      properties:
+        businessName:
+          type: string
+        type:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+        location:
+          type: object
+          properties:
+            latitude:
+              type: string
+            longitude:
+              type: string
+        address:
+          type: string
+        policy:
+          type: object
+          properties:
+            minAge:
+              type: integer
+    ListRequestResponse:
+      type: object
+      properties:
+        maxPage:
+          type: integer
+        request:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChangeRequest"
