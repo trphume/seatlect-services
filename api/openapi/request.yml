@@ -25,11 +25,26 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ListRequestResponse"
+  /request/{businessId}/approve:
+    post:
+      description: Approve a business change request
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+          description: ID of the Business
+      responses:
+        "204":
+          description: Business information retrieved successfully
 components:
   schemas:
     Business:
       type: object
       properties:
+        _id:
+          type: string
         businessName:
           type: string
         type:
@@ -63,6 +78,8 @@ components:
     ChangeRequest:
       type: object
       properties:
+        _id:
+          type: string
         businessName:
           type: string
         type:

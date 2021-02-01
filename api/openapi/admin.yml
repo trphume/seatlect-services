@@ -26,7 +26,6 @@ paths:
           description: Authentication failed with given credentials
         "500":
           description: Unknown error occurred
-
 components:
   schemas:
     LoginRequest:

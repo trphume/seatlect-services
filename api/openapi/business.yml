@@ -151,6 +151,8 @@ components:
     Business:
       type: object
       properties:
+        _id:
+          type: string
         businessName:
           type: string
         type:
@@ -196,6 +198,8 @@ components:
     UpdateBusinessResponse:
       type: object
       properties:
+        _id:
+          type: string
         businessName:
           type: string
         type:
