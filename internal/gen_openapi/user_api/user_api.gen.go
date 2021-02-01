@@ -25,17 +25,44 @@ type LoginResponse struct {
 	Id *string `json:"_id,omitempty"`
 }
 
+// RegisterRequest defines model for RegisterRequest.
+type RegisterRequest struct {
+	Address      *string `json:"address,omitempty"`
+	BusinessName *string `json:"businessName,omitempty"`
+	Description  *string `json:"description,omitempty"`
+	Email        *string `json:"email,omitempty"`
+	Location     *struct {
+		Latitude  *string `json:"latitude,omitempty"`
+		Longitude *string `json:"longitude,omitempty"`
+	} `json:"location,omitempty"`
+	Password *string `json:"password,omitempty"`
+	Policy   *struct {
+		MinAge *int `json:"minAge,omitempty"`
+	} `json:"policy,omitempty"`
+	Type     *string `json:"type,omitempty"`
+	Username *string `json:"username,omitempty"`
+}
+
 // PostUserLoginJSONBody defines parameters for PostUserLogin.
 type PostUserLoginJSONBody LoginRequest
 
+// PostUserRegisterJSONBody defines parameters for PostUserRegister.
+type PostUserRegisterJSONBody RegisterRequest
+
 // PostUserLoginRequestBody defines body for PostUserLogin for application/json ContentType.
 type PostUserLoginJSONRequestBody PostUserLoginJSONBody
+
+// PostUserRegisterRequestBody defines body for PostUserRegister for application/json ContentType.
+type PostUserRegisterJSONRequestBody PostUserRegisterJSONBody
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 
 	// (POST /user/login)
 	PostUserLogin(ctx echo.Context) error
+
+	// (POST /user/register)
+	PostUserRegister(ctx echo.Context) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -49,6 +76,15 @@ func (w *ServerInterfaceWrapper) PostUserLogin(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshalled arguments
 	err = w.Handler.PostUserLogin(ctx)
+	return err
+}
+
+// PostUserRegister converts echo context to params.
+func (w *ServerInterfaceWrapper) PostUserRegister(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.PostUserRegister(ctx)
 	return err
 }
 
@@ -81,21 +117,24 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	}
 
 	router.POST(baseURL+"/user/login", wrapper.PostUserLogin)
+	router.POST(baseURL+"/user/register", wrapper.PostUserRegister)
 
 }
 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/6xTzW7UMBB+FWvgGG3SAgd8A4kDEgeE1FNVIa8z2bg4Hndm0lW1yrsjO4Fl2x65Obbn",
-	"+/OXE3iaMiVMKmBPIH7EydXlNzqE9AMfZhQt35kpI2vAepqdyJG4L2t9yggWRDmkAywNzIKc3ISvHC4N",
-	"MD7MgbEHe3u+2ZwR75o/Q7S/R68FcRMjmZLgSzU/Q/861zOgshXSQOVyj+I5ZA2UwMKX1GcKSc1AbIoq",
-	"MTQYHdEccW/2s4SEImZyyR1wwqQmR6cD8QQNaNBYaG4EGRp4RJYV9WrX7bqinzImlwNYeLfrdtfVro5V",
-	"e1vY2lgMVmO0xn0pr/qvuswx6GgO4RHX75Kecak3f/OrbOzK5NceLHwn0aKsYsCaP4p+pv6pEHlKiqly",
-	"upxj8HWyvRdK50aU1VvGASy8ac+Vabe+tBdlWS5fWXnGurG+XjV93XX/m3vrRiW/DO/TrCMm3dDN0YmR",
-	"2XsUGeZYXud9d/Uy8mdTgwsR+3/T94x9ueCiFJAPq6VLkJv0K9ExGWQmNuT9zCWTZakyBbl0BeztCWaO",
-	"YGFUzbZtI3kXRxK1p0ysS+tyaB+voHlRC++iWWFK8RwHt4/bH0q8FWlwc1Sw8LHrukJ9t/wOAAD//1NR",
-	"bEL3AwAA",
+	"H4sIAAAAAAAC/7RVXWvcOhD9K2LufTRrJ/f2oX5LoA+FUkogTyEUrT22lcqSMjPeJSz734skbzeb9ZYW",
+	"2jdLI535OOfIO2j8GLxDJwz1DrgZcNTp85PvjbvD5wlZ4jqQD0hiMEWDZt56auO3vASEGljIuB72BUyM",
+	"5PSIC8F9AYTPkyFsoX44niyOiI/F4ZJfP2EjEXEuhoN3jOfVfDXtcq4zoDvsDQvSxcZ02xIyL/a1ntg4",
+	"ZP683FsBLXJDJojxbjGOozZ2MWJ9ow/XTguyWoxMLV645vpL0aX2f0pb8NY0L+cVjMbd9K8zGCfYIy2n",
+	"yBu/rYo3OHHLuM7HwydThQ+uDd44UZ0nFTFZ+U7JgGqLa3WgSI3a6R5HdKKC1dJ5GqEAMWJjmntGggI2",
+	"SJxRr1bVqopV+oBOBwM1/LeqVtdJmDKkOZQxW2mjFNOQfNbPaXlJqakutTUyqN5sMK9j70q7Vv0gIWWj",
+	"xPvHFmr44lliZQkDslOQ5da3iZXGO0GXcuoQrMmKKZ84yyZ7N379S9hBDf+UR3OXs7PLE1vvT/0oNGHa",
+	"yD5LTV9X1Z/OPbs4JT8d3s0kAzqZ0dVWs+KpaZC5m2xk5//q6nzkb2512lhsX0+/IWzjAW05grzLLZ2C",
+	"3Ltvzm+dQiJPyjfNRHEm+1RlZp7mt+My+YfXJcnxqIG4ypVESdOYnX6J/QPIXxLA2xfwlzSwMPXbg9MG",
+	"vUG1xjxnLfPQ9gUwUjQY1A87mMhCDYNIqMsyPnZ28Cz1LniSfamDKTdXUJx5qdFWZZjoVk1Gr+38A/I0",
+	"E9DpyQrU8L6qqpj6cf89AAD///oKyS/WBgAA",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code

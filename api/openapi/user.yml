@@ -10,6 +10,18 @@ servers:
       port:
         default: "9000"
 paths:
+  /user/register:
+    post:
+      description: Register the user with the given information
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "201":
+          description: Business have been created
   /user/login:
     post:
       description: Login user with given username and password
@@ -32,6 +44,35 @@ paths:
           description: Unknown error occurred
 components:
   schemas:
+    RegisterRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        businessName:
+          type: string
+        type:
+          type: string
+        description:
+          type: string
+        location:
+          type: object
+          properties:
+            latitude:
+              type: string
+            longitude:
+              type: string
+        address:
+          type: string
+        policy:
+          type: object
+          properties:
+            minAge:
+              type: integer
     LoginRequest:
       type: object
       properties:
