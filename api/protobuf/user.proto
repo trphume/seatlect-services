@@ -26,8 +26,9 @@ message SignInResponse {
 // For SignUp endpoint
 message SignUpRequest {
   string username = 1;
-  string password = 2;
-  string dob = 3;
+  string email = 2;
+  string password = 3;
+  string dob = 4;
 }
 
 message SignUpResponse {
