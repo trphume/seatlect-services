@@ -94,9 +94,9 @@ components:
           type: object
           properties:
             latitude:
-              type: string
+              type: number
             longitude:
-              type: string
+              type: number
         address:
           type: string
         displayImage:
@@ -129,9 +129,9 @@ components:
           type: object
           properties:
             latitude:
-              type: string
+              type: number
             longitude:
-              type: string
+              type: number
         address:
           type: string
         policy:
