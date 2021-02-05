@@ -17,7 +17,7 @@ db.createCollection('customer', {
 db.createCollection('business', {
   validator: {
     $jsonSchema: {
-      bsonType: 'object', required: ['username', 'email', 'password', 'businessName', 'type', 'tags', 'description', 'location', 'address', 'displayImage', 'images', 'placement', 'menu', 'policy', 'status', 'verified'], properties: {
+      bsonType: 'object', required: ['username', 'email', 'password', 'businessName', 'type', 'tags', 'description', 'location', 'address', 'displayImage', 'images', 'placement', 'menu', 'status', 'verified'], properties: {
         username: {
           bsonType: 'string', minLength: 3,
           maxLength: 20
@@ -58,9 +58,6 @@ db.createCollection('business', {
               }, description: { bsonType: 'string', maxLength: 125 }, image: { bsonType: 'string' }, price: { bsonType: 'decimal', min: 0 }, max: { bsonType: 'int' }
             }
           }
-        }, policy: {
-          bsonType: 'object',
-          required: ['minAge'], properties: { minAge: { bsonType: 'int', min: 0 } }
         }, status: { bsonType: 'int' }, verified: { bsonType: 'bool' }
       }
     }
@@ -127,4 +124,5 @@ db.createCollection('order', {
 });
 
 db.createCollection('admin', { validator: { $jsonSchema: { bsonType: 'object', required: ['username', 'password'], properties: { username: { bsonType: 'string' }, password: { bsonType: 'string' } } } } });
+
 db.createCollection('request', { validator: { $jsonSchema: { bsonType: 'object', required: ['businessName', 'type', 'tags', 'description', 'location', 'address'], properties: { businessName: { bsonType: 'string' }, type: { bsonType: 'string' }, tags: { bsonType: 'array', items: { bsonType: 'string' } }, description: { bsonType: 'string' }, location: { bsonType: 'object' }, address: { bsonType: 'string' } } } } });  
