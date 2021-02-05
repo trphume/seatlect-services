@@ -68,11 +68,6 @@ components:
               type: number
         address:
           type: string
-        policy:
-          type: object
-          properties:
-            minAge:
-              type: integer
     LoginRequest:
       type: object
       properties:

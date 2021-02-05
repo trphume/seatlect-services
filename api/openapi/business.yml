@@ -178,11 +178,6 @@ components:
           type: array
           items:
             type: string
-        policy:
-          type: object
-          properties:
-            minAge:
-              type: integer
     ImageUpload:
       type: string
       format: Binary
@@ -219,11 +214,6 @@ components:
               type: number
         address:
           type: string
-        policy:
-          type: object
-          properties:
-            minAge:
-              type: integer
     UpdateDisplayImageResponse:
       type: object
       properties:
