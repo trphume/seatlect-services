@@ -1,7 +1,7 @@
 syntax = "proto3";
 package seatlect;
 
-option go_package = "internal/genproto/orderpb";
+option go_package = "github.com/tphume/seatlect-services/internal/genproto/orderpb";
 
 import "common.proto";
 

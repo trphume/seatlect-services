@@ -6,19 +6,19 @@
 gen_proto: gen_proto_common gen_proto_user gen_proto_token gen_proto_business gen_proto_order
 
 gen_proto_common:
-	@protoc --go_out=. -I=api/protobuf common.proto
+	@protoc --go_out=. -I=api/protobuf --go_opt=module=github.com/tphume/seatlect-services common.proto
 
 gen_proto_user:
-	@protoc --go_out=. --go-grpc_out=. -I=api/protobuf user.proto
+	@protoc --go_out=. --go-grpc_out=. -I=api/protobuf --go_opt=module=github.com/tphume/seatlect-services --go-grpc_opt=module=github.com/tphume/seatlect-services user.proto
 
 gen_proto_token:
-	@protoc --go_out=. --go-grpc_out=. -I=api/protobuf token.proto
+	@protoc --go_out=. --go-grpc_out=. -I=api/protobuf --go_opt=module=github.com/tphume/seatlect-services --go-grpc_opt=module=github.com/tphume/seatlect-services token.proto
 
 gen_proto_business:
-	@protoc --go_out=. --go-grpc_out=. -I=api/protobuf business.proto
+	@protoc --go_out=. --go-grpc_out=. -I=api/protobuf --go_opt=module=github.com/tphume/seatlect-services --go-grpc_opt=module=github.com/tphume/seatlect-services business.proto
 
 gen_proto_order:
-	@protoc --go_out=. --go-grpc_out=. -I=api/protobuf order.proto
+	@protoc --go_out=. --go-grpc_out=. -I=api/protobuf --go_opt=module=github.com/tphume/seatlect-services --go-grpc_opt=module=github.com/tphume/seatlect-services order.proto
 
 clean_proto:
 	@rm -rf internal/genproto/
