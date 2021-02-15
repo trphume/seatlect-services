@@ -1,4 +1,4 @@
-package database
+package typedb
 
 type Business struct {
 	Id           string      `bson:"_id"`
