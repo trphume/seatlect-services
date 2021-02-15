@@ -1,14 +1,14 @@
 db.createCollection('customer', {
   validator: {
     $jsonSchema: {
-      bsonType: 'object', required: ['username', 'email', 'password', 'dob', 'avatar', 'favorite', 'verified'], properties: {
+      bsonType: 'object', required: ['username', 'email', 'password', 'dob', 'favorite', 'verified'], properties: {
         username: {
           bsonType: 'string', minLength: 3,
           maxLength: 20
         }, email: { bsonType: 'string' }, password: {
           bsonType: 'string', minLength: 60,
           maxLength: 60
-        }, dob: { bsonType: 'date' }, avatar: { bsonType: 'string' }, favorite: { bsonType: 'array', items: { bsonType: 'objectId', uniqueItems: true } }, verified: { bsonType: 'bool' }
+        }, dob: { bsonType: 'date' }, favorite: { bsonType: 'array', items: { bsonType: 'objectId', uniqueItems: true } }, verified: { bsonType: 'bool' }
       }
     }
   }
