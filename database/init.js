@@ -94,7 +94,6 @@ db.createCollection('reservation', {
     }
   }
 });
-
 db.createCollection('order', {
   validator: {
     $jsonSchema: {
@@ -116,4 +115,4 @@ db.createCollection('order', {
 
 db.createCollection('admin', { validator: { $jsonSchema: { bsonType: 'object', required: ['username', 'password'], properties: { username: { bsonType: 'string' }, password: { bsonType: 'string' } } } } });
 
-db.createCollection('request', { validator: { $jsonSchema: { bsonType: 'object', required: ['businessName', 'type', 'tags', 'description', 'location', 'address'], properties: { businessName: { bsonType: 'string' }, type: { bsonType: 'string' }, tags: { bsonType: 'array', items: { bsonType: 'string' } }, description: { bsonType: 'string' }, location: { bsonType: 'object' }, address: { bsonType: 'string' } } } } });  
+db.createCollection('request', { validator: { $jsonSchema: { bsonType: 'object', required: ['businessName', 'type', 'tags', 'description', 'location', 'address', 'createdAt'], properties: { businessName: { bsonType: 'string' }, type: { bsonType: 'string' }, tags: { bsonType: 'array', items: { bsonType: 'string' } }, description: { bsonType: 'string' }, location: { bsonType: 'object' }, address: { bsonType: 'string' }, createdAt: { bsonType: 'date' } } } } });
