@@ -1,5 +1,9 @@
 package typedb
 
+import (
+	"time"
+)
+
 type Business struct {
 	Id           string      `bson:"_id"`
 	Username     string      `bson:"username"`
@@ -17,3 +21,30 @@ type Business struct {
 	Status       int         `bson:"status"`
 	Verified     bool        `bson:"verified"`
 }
+
+type ListBusinessParams struct {
+	Limit      int32
+	Sort       BusinessSort
+	Name       string
+	Type       string
+	Tags       []string
+	Location   Location
+	StartPrice int32
+	EndPrice   int32
+	StartDate  time.Time
+	EndDate    time.Time
+}
+
+// Helper definition
+type BusinessSort int32
+
+const (
+	Sort_NAME_ASC      BusinessSort = 0
+	Sort_NAME_DESC     BusinessSort = 1
+	Sort_LOCATION_ASC  BusinessSort = 2
+	Sort_LOCATION_DESC BusinessSort = 3
+	Sort_PRICE_ASC     BusinessSort = 4
+	Sort_PRICE_DESC    BusinessSort = 5
+	Sort_DATE_ASC      BusinessSort = 6
+	Sort_DATE_DESC     BusinessSort = 7
+)
