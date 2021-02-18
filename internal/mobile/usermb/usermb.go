@@ -75,9 +75,21 @@ func (s *Server) SignUp(ctx context.Context, req *userpb.SignUpRequest) (*userpb
 	}, nil
 }
 
-func (s *Server) AddFavorite(context.Context, *userpb.AddFavoriteRequest) (*userpb.AddFavoriteResponse, error) {
-	// TODO: Implement function
-	panic("To be implemented")
+func (s *Server) AddFavorite(ctx context.Context, req *userpb.AddFavoriteRequest) (*userpb.AddFavoriteResponse, error) {
+	id := ctx.Value("id").(string)
+	if len(id) <= 0 {
+		return nil, status.Error(codes.Unauthenticated, "ID is not valid")
+	}
+
+	if err := s.repo.AppendFavorite(ctx, id, req.BusinessId); err != nil {
+		if err == commonErr.NOTFOUND {
+			return nil, status.Error(codes.NotFound, "Could not find business with that id")
+		}
+
+		return nil, status.Error(codes.Internal, "Database error")
+	}
+
+	return &userpb.AddFavoriteResponse{}, nil
 }
 
 func (s *Server) RemoveFavorite(context.Context, *userpb.RemoveFavoriteRequest) (*userpb.RemoveFavoriteResponse, error) {
@@ -94,6 +106,6 @@ type Repo interface {
 	// will return a user token
 	CreateCustomer(ctx context.Context, customer *typedb.Customer, password string) (string, error)
 
-	AppendFavorite(ctx context.Context, businessId string) error
-	RemoveFavorite(ctx context.Context, businessId string) error
+	AppendFavorite(ctx context.Context, customerId string, businessId string) error
+	RemoveFavorite(ctx context.Context, customerId string, businessId string) error
 }

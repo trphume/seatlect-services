@@ -20,10 +20,10 @@ func (c *CustomerDB) CreateCustomer(ctx context.Context, customer *typedb.Custom
 	panic("implement me")
 }
 
-func (c *CustomerDB) AppendFavorite(ctx context.Context, businessId string) error {
+func (c *CustomerDB) AppendFavorite(ctx context.Context, customerId string, businessId string) error {
 	panic("implement me")
 }
 
-func (c *CustomerDB) RemoveFavorite(ctx context.Context, businessId string) error {
+func (c *CustomerDB) RemoveFavorite(ctx context.Context, customerId string, businessId string) error {
 	panic("implement me")
 }
