@@ -15,3 +15,12 @@ func ValidPassword(password string) bool {
 
 	return true
 }
+
+func ValidEmail(email string) bool {
+	// TODO: proper regex
+	if len(email) < 3 {
+		return false
+	}
+
+	return true
+}

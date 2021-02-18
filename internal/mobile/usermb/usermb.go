@@ -9,6 +9,7 @@ import (
 	"github.com/tphume/seatlect-services/internal/validation"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"time"
 )
 
 type Server struct {
@@ -42,9 +43,36 @@ func (s *Server) SignIn(ctx context.Context, req *userpb.SignInRequest) (*userpb
 	}, nil
 }
 
-func (s *Server) SignUp(context.Context, *userpb.SignUpRequest) (*userpb.SignUpResponse, error) {
-	// TODO: Implement function
-	panic("To be implemented")
+func (s *Server) SignUp(ctx context.Context, req *userpb.SignUpRequest) (*userpb.SignUpResponse, error) {
+	if !validation.ValidUsername(req.Username) || !validation.ValidPassword(req.Password) || !validation.ValidEmail(req.Email) {
+		return nil, status.Error(codes.InvalidArgument, "Argument is not valid")
+	}
+
+	// format request to correct type
+	iso8601 := "2006-01-02T15:04:05-0700"
+	dob, err := time.Parse(iso8601, req.Dob)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "Argument is not valid")
+	}
+
+	customer := &typedb.Customer{Username: req.Username, Email: req.Email, Dob: dob}
+
+	token, err := s.repo.CreateCustomer(ctx, customer, req.Password)
+	if err != nil {
+		if err == commonErr.INTERNAL {
+			return nil, status.Error(codes.Internal, "Database error")
+		}
+
+		return nil, status.Error(codes.AlreadyExists, "User with that credentials already exist")
+	}
+
+	return &userpb.SignUpResponse{
+		Token: token,
+		User: &commonpb.User{
+			Username: customer.Username,
+			Dob:      customer.Dob.String(),
+			Favorite: customer.Favorite},
+	}, nil
 }
 
 func (s *Server) AddFavorite(context.Context, *userpb.AddFavoriteRequest) (*userpb.AddFavoriteResponse, error) {
