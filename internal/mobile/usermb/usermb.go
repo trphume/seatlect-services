@@ -92,9 +92,21 @@ func (s *Server) AddFavorite(ctx context.Context, req *userpb.AddFavoriteRequest
 	return &userpb.AddFavoriteResponse{}, nil
 }
 
-func (s *Server) RemoveFavorite(context.Context, *userpb.RemoveFavoriteRequest) (*userpb.RemoveFavoriteResponse, error) {
-	// TODO: Implement function
-	panic("To be implemented")
+func (s *Server) RemoveFavorite(ctx context.Context, req *userpb.RemoveFavoriteRequest) (*userpb.RemoveFavoriteResponse, error) {
+	id := ctx.Value("id").(string)
+	if len(id) <= 0 {
+		return nil, status.Error(codes.Unauthenticated, "ID is not valid")
+	}
+
+	if err := s.repo.RemoveFavorite(ctx, id, req.BusinessId); err != nil {
+		if err == commonErr.NOTFOUND {
+			return nil, status.Error(codes.NotFound, "Could not find business with that id")
+		}
+
+		return nil, status.Error(codes.Internal, "Database error")
+	}
+
+	return &userpb.RemoveFavoriteResponse{}, nil
 }
 
 type Repo interface {
