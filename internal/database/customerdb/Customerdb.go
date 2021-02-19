@@ -5,8 +5,10 @@ import (
 	"github.com/tphume/seatlect-services/internal/commonErr"
 	"github.com/tphume/seatlect-services/internal/database/typedb"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/crypto/bcrypt"
+	"time"
 )
 
 type CustomerDB struct {
@@ -32,11 +34,25 @@ func (c *CustomerDB) AuthenticateCustomer(ctx context.Context, customer *typedb.
 		return "", commonErr.NOTFOUND
 	}
 
-	return customer.Id, nil
+	return customer.Id.String(), nil
 }
 
 func (c *CustomerDB) CreateCustomer(ctx context.Context, customer *typedb.Customer) (string, error) {
-	panic("implement me")
+	pw, err := bcrypt.GenerateFromPassword([]byte(customer.Password), 12)
+	if err != nil {
+		return "", commonErr.INTERNAL
+	}
+
+	customer.Password = string(pw)
+	customer.Id = primitive.NewObjectIDFromTimestamp(time.Now())
+
+	_, err = c.Mongo.InsertOne(ctx, customer)
+	if err != nil {
+		// TODO: better error handling
+		return "", commonErr.INTERNAL
+	}
+
+	return customer.Id.String(), nil
 }
 
 func (c *CustomerDB) AppendFavorite(ctx context.Context, customerId string, businessId string) error {
