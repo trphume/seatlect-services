@@ -12,11 +12,12 @@ import (
 )
 
 type CustomerDB struct {
-	Mongo *mongo.Collection
+	CusCol *mongo.Collection
+	BusCol *mongo.Collection
 }
 
 func (c *CustomerDB) AuthenticateCustomer(ctx context.Context, customer *typedb.Customer) (string, error) {
-	res := c.Mongo.FindOne(ctx, bson.M{"_id": customer.Id})
+	res := c.CusCol.FindOne(ctx, bson.M{"_id": customer.Id})
 	if res.Err() != nil {
 		if res.Err() == mongo.ErrNoDocuments {
 			return "", commonErr.NOTFOUND
@@ -46,7 +47,7 @@ func (c *CustomerDB) CreateCustomer(ctx context.Context, customer *typedb.Custom
 	customer.Password = string(pw)
 	customer.Id = primitive.NewObjectIDFromTimestamp(time.Now())
 
-	_, err = c.Mongo.InsertOne(ctx, customer)
+	_, err = c.CusCol.InsertOne(ctx, customer)
 	if err != nil {
 		// TODO: better error handling
 		return "", commonErr.INTERNAL
@@ -56,7 +57,30 @@ func (c *CustomerDB) CreateCustomer(ctx context.Context, customer *typedb.Custom
 }
 
 func (c *CustomerDB) AppendFavorite(ctx context.Context, customerId string, businessId string) error {
-	panic("implement me")
+	if res := c.BusCol.FindOne(ctx, bson.M{"_id": businessId}); res.Err() != nil {
+		if res.Err() == mongo.ErrNoDocuments {
+			return commonErr.NOTFOUND
+		}
+
+		return commonErr.INTERNAL
+	}
+
+	_, err := c.CusCol.UpdateOne(
+		ctx,
+		bson.M{"_id": customerId},
+		bson.D{
+			{"$push",
+				bson.D{
+					{"favorite", businessId},
+				},
+			},
+		})
+
+	if err != nil {
+		return commonErr.INTERNAL
+	}
+
+	return nil
 }
 
 func (c *CustomerDB) RemoveFavorite(ctx context.Context, customerId string, businessId string) error {
