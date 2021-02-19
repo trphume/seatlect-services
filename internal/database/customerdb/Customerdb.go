@@ -76,6 +76,7 @@ func (c *CustomerDB) AppendFavorite(ctx context.Context, customerId string, busi
 			},
 		})
 
+	// TODO: better error handling
 	if err != nil {
 		return commonErr.INTERNAL
 	}
@@ -84,5 +85,21 @@ func (c *CustomerDB) AppendFavorite(ctx context.Context, customerId string, busi
 }
 
 func (c *CustomerDB) RemoveFavorite(ctx context.Context, customerId string, businessId string) error {
-	panic("implement me")
+	_, err := c.CusCol.UpdateOne(
+		ctx,
+		bson.M{"_id": customerId},
+		bson.D{
+			{"$pull",
+				bson.D{
+					{"favorite", businessId},
+				},
+			},
+		})
+
+	// TODO: better error handling
+	if err != nil {
+		return commonErr.INTERNAL
+	}
+
+	return nil
 }
