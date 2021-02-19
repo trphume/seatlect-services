@@ -23,9 +23,9 @@ func (s *Server) SignIn(ctx context.Context, req *userpb.SignInRequest) (*userpb
 		return nil, status.Error(codes.InvalidArgument, "Argument is not valid")
 	}
 
-	customer := &typedb.Customer{Username: req.Username}
+	customer := &typedb.Customer{Username: req.Username, Password: req.Password}
 
-	token, err := s.repo.AuthenticateCustomer(ctx, customer, req.Password)
+	token, err := s.repo.AuthenticateCustomer(ctx, customer)
 	if err != nil {
 		if err == commonErr.INTERNAL {
 			return nil, status.Error(codes.Internal, "Database error")
@@ -55,9 +55,9 @@ func (s *Server) SignUp(ctx context.Context, req *userpb.SignUpRequest) (*userpb
 		return nil, status.Error(codes.InvalidArgument, "Argument is not valid")
 	}
 
-	customer := &typedb.Customer{Username: req.Username, Email: req.Email, Dob: dob}
+	customer := &typedb.Customer{Username: req.Username, Email: req.Email, Dob: dob, Password: req.Password}
 
-	token, err := s.repo.CreateCustomer(ctx, customer, req.Password)
+	token, err := s.repo.CreateCustomer(ctx, customer)
 	if err != nil {
 		if err == commonErr.INTERNAL {
 			return nil, status.Error(codes.Internal, "Database error")
@@ -112,11 +112,11 @@ func (s *Server) RemoveFavorite(ctx context.Context, req *userpb.RemoveFavoriteR
 type Repo interface {
 	// customer is an out parameter - values will be overwritten
 	// will return a user token
-	AuthenticateCustomer(ctx context.Context, customer *typedb.Customer, password string) (string, error)
+	AuthenticateCustomer(ctx context.Context, customer *typedb.Customer) (string, error)
 
 	// customer is an out parameter - values will be overwritten
 	// will return a user token
-	CreateCustomer(ctx context.Context, customer *typedb.Customer, password string) (string, error)
+	CreateCustomer(ctx context.Context, customer *typedb.Customer) (string, error)
 
 	AppendFavorite(ctx context.Context, customerId string, businessId string) error
 	RemoveFavorite(ctx context.Context, customerId string, businessId string) error
