@@ -14,7 +14,8 @@ import (
 )
 
 const (
-	jakeID = "5facaf3bd646b77f40481343"
+	jakeID     = "5facaf3bd646b77f40481343"
+	brightioID = "5facafef6b28446f285d7ae4"
 )
 
 type CustomerSuite struct {
@@ -87,7 +88,23 @@ func (c *CustomerSuite) TestCreateCustomer() {
 	}
 }
 
-func (c *CustomerSuite) TestAppendFavorite() {}
+func (c *CustomerSuite) TestAppendFavorite() {
+	tests := []struct {
+		in  []string
+		err error
+	}{
+		{in: []string{jakeID, brightioID}, err: nil},
+		{in: []string{jakeID, "DoesNotExist"}, err: commonErr.NOTFOUND},
+		{in: []string{jakeID, brightioID}, err: nil},
+	}
+
+	for _, tt := range tests {
+		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+		err := c.CustomerDB.AppendFavorite(ctx, tt.in[0], tt.in[1])
+
+		c.Assert().Equal(tt.err, err)
+	}
+}
 
 func (c *CustomerSuite) TestRemoveFavorite() {}
 

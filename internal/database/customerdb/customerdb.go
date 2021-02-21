@@ -57,7 +57,10 @@ func (c *CustomerDB) CreateCustomer(ctx context.Context, customer *typedb.Custom
 }
 
 func (c *CustomerDB) AppendFavorite(ctx context.Context, customerId string, businessId string) error {
-	if res := c.BusCol.FindOne(ctx, bson.M{"_id": businessId}); res.Err() != nil {
+	pCustomerId, _ := primitive.ObjectIDFromHex(customerId)
+	pBusinessId, _ := primitive.ObjectIDFromHex(businessId)
+
+	if res := c.BusCol.FindOne(ctx, bson.M{"_id": pBusinessId}); res.Err() != nil {
 		if res.Err() == mongo.ErrNoDocuments {
 			return commonErr.NOTFOUND
 		}
@@ -67,11 +70,11 @@ func (c *CustomerDB) AppendFavorite(ctx context.Context, customerId string, busi
 
 	_, err := c.CusCol.UpdateOne(
 		ctx,
-		bson.M{"_id": customerId},
+		bson.M{"_id": pCustomerId},
 		bson.D{
-			{"$push",
+			{"$addToSet",
 				bson.D{
-					{"favorite", businessId},
+					{"favorite", pBusinessId},
 				},
 			},
 		})
