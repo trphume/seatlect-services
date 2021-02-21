@@ -55,7 +55,7 @@ func (s *Server) SignUp(ctx context.Context, req *userpb.SignUpRequest) (*userpb
 		return nil, status.Error(codes.InvalidArgument, "Argument is not valid")
 	}
 
-	customer := &typedb.Customer{Username: req.Username, Email: req.Email, Dob: dob, Password: req.Password}
+	customer := &typedb.Customer{Username: req.Username, Email: req.Email, Dob: dob, Password: req.Password, Favorite: make([]string, 0)}
 
 	token, err := s.repo.CreateCustomer(ctx, customer)
 	if err != nil {

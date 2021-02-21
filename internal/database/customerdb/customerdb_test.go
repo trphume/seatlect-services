@@ -70,7 +70,22 @@ func (c *CustomerSuite) TestAuthenticateCustomer() {
 	}
 }
 
-func (c *CustomerSuite) TestCreateCustomer() {}
+func (c *CustomerSuite) TestCreateCustomer() {
+	tests := []struct {
+		in  *typedb.Customer
+		err error
+	}{
+		{in: &typedb.Customer{Username: "Jake", Password: "ExamplePassword", Dob: time.Unix(1613905601, 0), Favorite: make([]string, 0)}, err: commonErr.INTERNAL},
+		{in: &typedb.Customer{Username: "Tata", Password: "DoesNotMatter", Dob: time.Unix(1613905601, 0), Favorite: make([]string, 0)}, err: nil},
+	}
+
+	for _, tt := range tests {
+		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+		_, err := c.CustomerDB.CreateCustomer(ctx, tt.in)
+
+		c.Assert().Equal(tt.err, err)
+	}
+}
 
 func (c *CustomerSuite) TestAppendFavorite() {}
 
