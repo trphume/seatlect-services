@@ -19,7 +19,7 @@ type CustomerSuite struct {
 func (c *CustomerSuite) SetupSuite() {
 	// Create MongoDB client and verify connection
 	mongoURI := os.Getenv("MONGO_URI")
-	if c.Assert().Empty(mongoURI) {
+	if mongoURI == "" {
 		c.T().Fatal("Mongo connection URI is empty")
 	}
 
