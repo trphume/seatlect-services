@@ -106,7 +106,22 @@ func (c *CustomerSuite) TestAppendFavorite() {
 	}
 }
 
-func (c *CustomerSuite) TestRemoveFavorite() {}
+func (c *CustomerSuite) TestRemoveFavorite() {
+	tests := []struct {
+		in  []string
+		err error
+	}{
+		{in: []string{jakeID, brightioID}, err: nil},
+		{in: []string{jakeID, "DoesNotExist"}, err: nil},
+	}
+
+	for _, tt := range tests {
+		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+		err := c.CustomerDB.RemoveFavorite(ctx, tt.in[0], tt.in[1])
+
+		c.Assert().Equal(tt.err, err)
+	}
+}
 
 func TestCustomerSuite(t *testing.T) {
 	suite.Run(t, new(CustomerSuite))

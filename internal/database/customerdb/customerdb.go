@@ -88,13 +88,16 @@ func (c *CustomerDB) AppendFavorite(ctx context.Context, customerId string, busi
 }
 
 func (c *CustomerDB) RemoveFavorite(ctx context.Context, customerId string, businessId string) error {
+	pCustomerId, _ := primitive.ObjectIDFromHex(customerId)
+	pBusinessId, _ := primitive.ObjectIDFromHex(businessId)
+
 	_, err := c.CusCol.UpdateOne(
 		ctx,
-		bson.M{"_id": customerId},
+		bson.M{"_id": pCustomerId},
 		bson.D{
 			{"$pull",
 				bson.D{
-					{"favorite", businessId},
+					{"favorite", pBusinessId},
 				},
 			},
 		})
