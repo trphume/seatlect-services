@@ -1,4 +1,4 @@
-// All password in the mock api is 'ExamplePassword123'
+// All password in the mock api is 'ExamplePassword'
 // Uses Bcrypt with 12 round for encryption
 
 

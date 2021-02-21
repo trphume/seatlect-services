@@ -3,12 +3,18 @@ package customerdb
 import (
 	"context"
 	"github.com/stretchr/testify/suite"
+	"github.com/tphume/seatlect-services/internal/commonErr"
+	"github.com/tphume/seatlect-services/internal/database/typedb"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"os"
 	"testing"
 	"time"
+)
+
+const (
+	jakeID = "5facaf3bd646b77f40481343"
 )
 
 type CustomerSuite struct {
@@ -35,7 +41,7 @@ func (c *CustomerSuite) SetupSuite() {
 		c.T().Fatal("Could not connect to mongodb")
 	}
 
-	db := client.Database("db")
+	db := client.Database("test")
 
 	// Attach CustomerDB type to Suite
 	c.CustomerDB = &CustomerDB{
@@ -44,7 +50,25 @@ func (c *CustomerSuite) SetupSuite() {
 	}
 }
 
-func (c *CustomerSuite) TestAuthenticateCustomer() {}
+func (c *CustomerSuite) TestAuthenticateCustomer() {
+	tests := []struct {
+		in  *typedb.Customer
+		out string
+		err error
+	}{
+		{in: &typedb.Customer{Username: "Jake", Password: "ExamplePassword"}, out: jakeID, err: nil},
+		{in: &typedb.Customer{Username: "DoesNotExist", Password: "DoesNotMatter"}, out: "", err: commonErr.NOTFOUND},
+		{in: &typedb.Customer{Username: "Jake", Password: "WrongPassword"}, out: "", err: commonErr.NOTFOUND},
+	}
+
+	for _, tt := range tests {
+		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+		out, err := c.CustomerDB.AuthenticateCustomer(ctx, tt.in)
+
+		c.Assert().Equal(tt.out, out)
+		c.Assert().Equal(tt.err, err)
+	}
+}
 
 func (c *CustomerSuite) TestCreateCustomer() {}
 

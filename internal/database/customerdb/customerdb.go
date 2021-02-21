@@ -17,7 +17,7 @@ type CustomerDB struct {
 }
 
 func (c *CustomerDB) AuthenticateCustomer(ctx context.Context, customer *typedb.Customer) (string, error) {
-	res := c.CusCol.FindOne(ctx, bson.M{"_id": customer.Id})
+	res := c.CusCol.FindOne(ctx, bson.M{"username": customer.Username})
 	if res.Err() != nil {
 		if res.Err() == mongo.ErrNoDocuments {
 			return "", commonErr.NOTFOUND
@@ -35,7 +35,7 @@ func (c *CustomerDB) AuthenticateCustomer(ctx context.Context, customer *typedb.
 		return "", commonErr.NOTFOUND
 	}
 
-	return customer.Id.String(), nil
+	return customer.Id.Hex(), nil
 }
 
 func (c *CustomerDB) CreateCustomer(ctx context.Context, customer *typedb.Customer) (string, error) {
@@ -53,7 +53,7 @@ func (c *CustomerDB) CreateCustomer(ctx context.Context, customer *typedb.Custom
 		return "", commonErr.INTERNAL
 	}
 
-	return customer.Id.String(), nil
+	return customer.Id.Hex(), nil
 }
 
 func (c *CustomerDB) AppendFavorite(ctx context.Context, customerId string, businessId string) error {
