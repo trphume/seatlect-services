@@ -71,7 +71,7 @@ func (s *Server) SignUp(ctx context.Context, req *userpb.SignUpRequest) (*userpb
 		User: &commonpb.User{
 			Username: customer.Username,
 			Dob:      customer.Dob.String(),
-			Favorite: customer.Favorite},
+			Favorite: make([]string, 0)},
 	}, nil
 }
 
