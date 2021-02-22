@@ -52,24 +52,7 @@ func (s *Server) ListBusiness(ctx context.Context, req *businesspb.ListBusinessR
 	}
 
 	// Convert typedb.Business to proto definition type
-	res := make([]*commonpb.Business, len(businesses))
-	for i, b := range businesses {
-		res[i] = &commonpb.Business{
-			XId:         b.Id.Hex(),
-			Name:        b.BusinessName,
-			Type:        b.Type,
-			Tags:        b.Tags,
-			Description: b.Description,
-			Location: &commonpb.Latlng{
-				Latitude:  b.Location.Coordinates[1],
-				Longitude: b.Location.Coordinates[0],
-			},
-			Address:      b.Address,
-			DisplayImage: b.DisplayImage,
-			Images:       b.Images,
-			Menu:         MenuItemsToProto(b.Menu),
-		}
-	}
+	res := typedbBusinessToCommonpb(businesses)
 
 	return &businesspb.ListBusinessResponse{Businesses: res}, nil
 }
@@ -81,6 +64,18 @@ func (s *Server) ListBusinessById(ctx context.Context, req *businesspb.ListBusin
 	}
 
 	// Convert typedb.Business to proto definition type
+	res := typedbBusinessToCommonpb(businesses)
+
+	return &businesspb.ListBusinessByIdResponse{Businesses: res}, nil
+}
+
+type Repo interface {
+	ListBusiness(ctx context.Context, searchParams typedb.ListBusinessParams) ([]typedb.Business, error)
+	ListBusinessByIds(ctx context.Context, ids []string) ([]typedb.Business, error)
+}
+
+// Helper function
+func typedbBusinessToCommonpb(businesses []typedb.Business) []*commonpb.Business {
 	res := make([]*commonpb.Business, len(businesses))
 	for i, b := range businesses {
 		res[i] = &commonpb.Business{
@@ -100,15 +95,9 @@ func (s *Server) ListBusinessById(ctx context.Context, req *businesspb.ListBusin
 		}
 	}
 
-	return &businesspb.ListBusinessByIdResponse{Businesses: res}, nil
+	return res
 }
 
-type Repo interface {
-	ListBusiness(ctx context.Context, searchParams typedb.ListBusinessParams) ([]typedb.Business, error)
-	ListBusinessByIds(ctx context.Context, ids []string) ([]typedb.Business, error)
-}
-
-// Helper function
 func MenuItemsToProto(mi []typedb.MenuItems) []*commonpb.MenuItem {
 	res := make([]*commonpb.MenuItem, len(mi))
 	for i, d := range mi {
