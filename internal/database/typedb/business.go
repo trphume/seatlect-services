@@ -25,7 +25,7 @@ type Business struct {
 
 type ListBusinessParams struct {
 	Limit      int32
-	Sort       BusinessSort
+	Sort       int32
 	Name       string
 	Type       string
 	Tags       []string
@@ -35,17 +35,3 @@ type ListBusinessParams struct {
 	StartDate  time.Time
 	EndDate    time.Time
 }
-
-// Helper definition
-type BusinessSort int32
-
-const (
-	Sort_NAME_ASC      BusinessSort = 0
-	Sort_NAME_DESC     BusinessSort = 1
-	Sort_LOCATION_ASC  BusinessSort = 2
-	Sort_LOCATION_DESC BusinessSort = 3
-	Sort_PRICE_ASC     BusinessSort = 4
-	Sort_PRICE_DESC    BusinessSort = 5
-	Sort_DATE_ASC      BusinessSort = 6
-	Sort_DATE_DESC     BusinessSort = 7
-)

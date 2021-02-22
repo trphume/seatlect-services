@@ -7,6 +7,7 @@ import (
 	"github.com/tphume/seatlect-services/internal/genproto/commonpb"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"time"
 )
 
 type Server struct {
@@ -15,8 +16,62 @@ type Server struct {
 	businesspb.UnimplementedBusinessServiceServer
 }
 
-func (s *Server) ListBusiness(ctx context.Context, request *businesspb.ListBusinessRequest) (*businesspb.ListBusinessResponse, error) {
-	panic("implement me")
+func (s *Server) ListBusiness(ctx context.Context, req *businesspb.ListBusinessRequest) (*businesspb.ListBusinessResponse, error) {
+	// Construct search params
+	iso8601 := "2006-01-02T15:04:05-0700"
+	startDate, err := time.Parse(iso8601, req.StartDate)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "Argument is not valid")
+	}
+
+	endDate, err := time.Parse(iso8601, req.EndDate)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "Argument is not valid")
+	}
+
+	searchParams := typedb.ListBusinessParams{
+		Limit: req.Limit,
+		Sort:  int32(req.Sort),
+		Name:  req.Name,
+		Type:  req.Type,
+		Tags:  req.Tags,
+		Location: typedb.Location{
+			Type:        "Point",
+			Coordinates: []float64{req.Location.Longitude, req.Location.Latitude},
+		},
+		StartPrice: req.StartPrice,
+		EndPrice:   req.EndPrice,
+		StartDate:  startDate,
+		EndDate:    endDate,
+	}
+
+	// Call repo method
+	businesses, err := s.repo.ListBusiness(ctx, searchParams)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "Database error")
+	}
+
+	// Convert typedb.Business to proto definition type
+	res := make([]*commonpb.Business, len(businesses))
+	for i, b := range businesses {
+		res[i] = &commonpb.Business{
+			XId:         b.Id.Hex(),
+			Name:        b.BusinessName,
+			Type:        b.Type,
+			Tags:        b.Tags,
+			Description: b.Description,
+			Location: &commonpb.Latlng{
+				Latitude:  b.Location.Coordinates[1],
+				Longitude: b.Location.Coordinates[0],
+			},
+			Address:      b.Address,
+			DisplayImage: b.DisplayImage,
+			Images:       b.Images,
+			Menu:         MenuItemsToProto(b.Menu),
+		}
+	}
+
+	return &businesspb.ListBusinessResponse{Businesses: res}, nil
 }
 
 func (s *Server) ListBusinessById(ctx context.Context, req *businesspb.ListBusinessByIdRequest) (*businesspb.ListBusinessByIdResponse, error) {
@@ -35,8 +90,8 @@ func (s *Server) ListBusinessById(ctx context.Context, req *businesspb.ListBusin
 			Tags:        b.Tags,
 			Description: b.Description,
 			Location: &commonpb.Latlng{
-				Latitude:  b.Location.Coordinates[0],
-				Longitude: b.Location.Coordinates[1],
+				Latitude:  b.Location.Coordinates[1],
+				Longitude: b.Location.Coordinates[0],
 			},
 			Address:      b.Address,
 			DisplayImage: b.DisplayImage,
