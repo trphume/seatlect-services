@@ -11,7 +11,7 @@ type Seat struct {
 	Name     string  `bson:"Name"`
 	Floor    int     `bson:"floor"`
 	Type     string  `bson:"type"`
-	Space    string  `bson:"space"`
+	Space    int     `bson:"space"`
 	X        float64 `bson:"x"`
 	Y        float64 `bson:"y"`
 	Width    float64 `bson:"width"`

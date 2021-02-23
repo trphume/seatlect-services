@@ -16,4 +16,5 @@ type Order struct {
 	Status        string             `bson:"status"`
 	Image         string             `bson:"image"`
 	ExtraSpace    int                `bson:"extraSpace"`
+	Name          string             `bson:"name"`
 }
