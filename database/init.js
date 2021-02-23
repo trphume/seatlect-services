@@ -88,7 +88,7 @@ db.createCollection('reservation', {
 db.createCollection('order', {
   validator: {
     $jsonSchema: {
-      bsonType: 'object', required: ['reservationId', 'customerId', 'businessId', 'start', 'end', 'seats', 'status', 'image', 'extraSpace'], properties: {
+      bsonType: 'object', required: ['reservationId', 'customerId', 'businessId', 'start', 'end', 'seats', 'status', 'image', 'extraSpace', 'name'], properties: {
         reservationId: { bsonType: 'objectId' }, customerId: { bsonType: 'objectId' }, businessId: { bsonType: 'objectId' }, start: { bsonType: 'date' }, end: { bsonType: 'date' }, seats: {
           bsonType: 'array', items: {
             required: ['name', 'floor', 'type', 'space', 'x', 'y', 'width', 'height', 'rotation'], properties: {
@@ -98,12 +98,11 @@ db.createCollection('order', {
               }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE'] }, space: { bsonType: 'int', min: 1 }, x: { bsonType: 'double' }, y: { bsonType: 'double' }, width: { bsonType: 'double' }, height: { bsonType: 'double' }, rotation: { bsonType: 'double' }
             }
           }
-        }, status: { bsonType: 'string', enum: ['PAID', 'USED', 'EXPIRED', 'CANCELLED'] }, image: { bsonType: 'string' }, extraSpace: { bsonType: 'int' }
+        }, status: { bsonType: 'string', enum: ['PAID', 'USED', 'EXPIRED', 'CANCELLED'] }, image: { bsonType: 'string' }, extraSpace: { bsonType: 'int' }, name: { bsonType: 'string' }
       }
     }
   }
 });
-
 db.createCollection('admin', { validator: { $jsonSchema: { bsonType: 'object', required: ['username', 'password'], properties: { username: { bsonType: 'string' }, password: { bsonType: 'string' } } } } });
 
-db.createCollection('request', { validator: { $jsonSchema: { bsonType: 'object', required: ['businessName', 'type', 'tags', 'description', 'location', 'address', 'createdAt'], properties: { businessName: { bsonType: 'string' }, type: { bsonType: 'string' }, tags: { bsonType: 'array', items: { bsonType: 'string' } }, description: { bsonType: 'string' }, location: { bsonType: 'object' }, address: { bsonType: 'string' }, createdAt: { bsonType: 'date' } } } } });  
+db.createCollection('request', { validator: { $jsonSchema: { bsonType: 'object', required: ['businessName', 'type', 'tags', 'description', 'location', 'address', 'createdAt'], properties: { businessName: { bsonType: 'string' }, type: { bsonType: 'string' }, tags: { bsonType: 'array', items: { bsonType: 'string' } }, description: { bsonType: 'string' }, location: { bsonType: 'object' }, address: { bsonType: 'string' }, createdAt: { bsonType: 'date' } } } } });
