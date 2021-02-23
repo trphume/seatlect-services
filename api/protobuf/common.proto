@@ -51,5 +51,4 @@ message MenuItem {
 message OrderSeat {
   string name = 1;
   int32 space = 4;
-  string price = 5;
 }
