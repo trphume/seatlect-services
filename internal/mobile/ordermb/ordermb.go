@@ -32,7 +32,7 @@ func (s *Server) ListOrder(ctx context.Context, req *orderpb.ListOrderRequest) (
 }
 
 type Repo interface {
-	ListOrderByCustomer(ctx context.Context, CustomerId string, limit int32, page int32) ([]typedb.Order, error)
+	ListOrderByCustomer(ctx context.Context, customerId string, limit int32, page int32) ([]typedb.Order, error)
 }
 
 // Helper function
