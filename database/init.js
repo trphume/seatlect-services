@@ -57,17 +57,14 @@ db.createCollection('business', {
 db.createCollection('reservation', {
   validator: {
     $jsonSchema: {
-      bsonType: 'object', required: ['businessId', 'name', 'start', 'end', 'placement', 'menu'], properties: {
-        businessId: { bsonType: 'objectId' }, name: {
-          bsonType: 'string', minLength: 3,
-          maxLength: 20
-        }, start: { bsonType: 'date' }, end: { bsonType: 'date' }, placement: {
+      bsonType: 'object', required: ['businessId', 'name', 'start', 'end', 'placement', 'menu', 'image'], properties: {
+        businessId: { bsonType: 'objectId' }, name: { bsonType: 'string' }, start: { bsonType: 'date' }, end: { bsonType: 'date' }, placement: {
           bsonType: 'array', items: {
             required: ['name', 'floor', 'type', 'space', 'user', 'status', 'x', 'y', 'width', 'height', 'rotation'], properties: {
               name: {
                 bsonType: 'string', minLength: 1,
                 maxLength: 2
-              }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE'] }, space: { bsonType: 'int', min: 1 }, user: { bsonType: 'objectId' }, status: { bsonType: 'string', enum: ['EMPTY', 'TAKEN', 'IN PROGRESS'] }, x: { bsonType: 'double' }, y: { bsonType: 'double' }, width: { bsonType: 'double' }, height: { bsonType: 'double' }, rotation: { bsonType: 'double' }
+              }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string' }, space: { bsonType: 'int', min: 1 }, user: { bsonType: 'objectId' }, status: { bsonType: 'string', enum: ['EMPTY', 'TAKEN', 'IN PROGRESS'] }, x: { bsonType: 'double' }, y: { bsonType: 'double' }, width: { bsonType: 'double' }, height: { bsonType: 'double' }, rotation: { bsonType: 'double' }
             }
           }
         }, menu: {
@@ -79,7 +76,7 @@ db.createCollection('reservation', {
               }, description: { bsonType: 'string', maxLength: 125 }, image: { bsonType: 'string' }, price: { bsonType: 'decimal', min: 0 }, max: { bsonType: 'int' }
             }
           }
-        }
+        }, image: { bsonType: 'string' }
       }
     }
   }
@@ -103,6 +100,7 @@ db.createCollection('order', {
     }
   }
 });
+
 db.createCollection('admin', { validator: { $jsonSchema: { bsonType: 'object', required: ['username', 'password'], properties: { username: { bsonType: 'string' }, password: { bsonType: 'string' } } } } });
 
 db.createCollection('request', { validator: { $jsonSchema: { bsonType: 'object', required: ['businessName', 'type', 'tags', 'description', 'location', 'address', 'createdAt'], properties: { businessName: { bsonType: 'string' }, type: { bsonType: 'string' }, tags: { bsonType: 'array', items: { bsonType: 'string' } }, description: { bsonType: 'string' }, location: { bsonType: 'object' }, address: { bsonType: 'string' }, createdAt: { bsonType: 'date' } } } } });

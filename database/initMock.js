@@ -12,6 +12,10 @@ beerBurgerId = ObjectId('5facaff31c6d49b2c7256bf3');
 ironBuffetId = ObjectId('5facaff9e4d46967c9c2a558');
 specialTaleId = ObjectId('5fcde2ec209efa45620a08b6');
 
+reservationA = ObjectId('6035f3a48d505df0b9d043a3');
+
+orderA = ObjectId('6035fb35bf78e591bea86350');
+
 // customer collection
 db.customer.insertMany([
   {
@@ -125,5 +129,75 @@ db.business.insertMany([
     placement: [],
     menu: [],
     status: 1
+  }
+]);
+
+// reservation
+db.reservation.insertMany([
+  {
+    _id: reservationA,
+    businessId: brightioId,
+    name: 'Brightio',
+    start: new Date('2021-02-24T19:00:00Z'),
+    end: new Date('2021-02-25T00:00:00Z'),
+    placement: [
+      {
+        name: 'A1',
+        floor: 1,
+        type: 'table1',
+        space: 4,
+        user: jakeId,
+        status: 'TAKEN',
+        x: 471.1235,
+        y: 124.2363,
+        width: 80,
+        height: 80,
+        rotation: 0,
+      },
+      {
+        name: 'A2',
+        floor: 1,
+        type: 'table2',
+        space: 4,
+        user: '',
+        status: 'EMPTY',
+        x: 470.2353,
+        y: 368.8553,
+        width: 100,
+        height: 80,
+        rotation: 0,
+      },
+    ],
+    menu: [],
+    image: '',
+  }
+]);
+
+// order
+db.order.insertMany([
+  {
+    _id: orderA,
+    reservationId: reservationA,
+    customerId: jakeId,
+    businessId: brightioId,
+    start: new Date('2021-02-24T19:00:00Z'),
+    end: new Date('2021-02-25T00:00:00Z'),
+    seats: [
+      {
+        name: 'A1',
+        floor: 1,
+        type: 'table1',
+        space: 4,
+        x: 471.1235,
+        y: 124.2363,
+        width: 80,
+        height: 80,
+        rotation: 0,
+      }
+    ],
+    status: 'USED',
+    image: '',
+    extraSpace: 0,
+    name: 'Brightio'
   }
 ]);
