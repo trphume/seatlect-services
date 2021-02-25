@@ -11,6 +11,11 @@ import (
 	"time"
 )
 
+const (
+	jakeID     = "5facaf3bd646b77f40481343"
+	brightioID = "5facafef6b28446f285d7ae4"
+)
+
 type OrderSuite struct {
 	suite.Suite
 	OrderDB *OrderDB
@@ -40,6 +45,25 @@ func (b *OrderSuite) SetupSuite() {
 	// Attach CustomerDB type to Suite
 	b.OrderDB = &OrderDB{
 		OrdCol: db.Collection("order"),
+	}
+}
+
+func (b *OrderSuite) TestListOrderByCustomer() {
+	tests := []struct {
+		in  string
+		out int
+		err error
+	}{
+		{in: jakeID, out: 1, err: nil},
+		{in: brightioID, out: 0, err: nil},
+	}
+
+	for _, tt := range tests {
+		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+		out, err := b.OrderDB.ListOrderByCustomer(ctx, tt.in, 10, 1)
+
+		b.Assert().Equal(tt.err, err)
+		b.Assert().Equal(tt.out, len(out))
 	}
 }
 
