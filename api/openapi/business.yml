@@ -145,6 +145,23 @@ paths:
       responses:
         "204":
           description: "Status updated"
+  /business/{businessId}/menu:
+    get:
+      description: Get the list of menu items
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+            description: ID of the Business
+      responses:
+        "200":
+          description: "List of menu items retrieved successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetMenuResponse"
 
 components:
   schemas:
@@ -178,6 +195,17 @@ components:
           type: array
           items:
             type: string
+    MenuItems:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        image:
+          type: string
+        price:
+          type: string
     ImageUpload:
       type: string
       format: Binary
@@ -229,3 +257,10 @@ components:
       properties:
         status:
           type: integer
+    GetMenuResponse:
+      type: object
+      properties:
+        menu:
+          type: array
+          items:
+            $ref: "#/components/schemas/MenuItems"
