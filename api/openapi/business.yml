@@ -180,6 +180,24 @@ paths:
       responses:
         "204":
           description: Menu item appended
+  /business/{businessId}/menuitems/{name}:
+    delete:
+      description: Delete a menuitem given its name
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+            description: ID of the Business
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: "Image deleted from Business"
 
 components:
   schemas:
