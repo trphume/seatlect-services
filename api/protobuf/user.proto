@@ -38,14 +38,16 @@ message SignUpResponse {
 
 // For Add to favorite endpoint
 message AddFavoriteRequest {
-  string businessId = 1;
+  string id = 1;
+  string businessId = 2;
 }
 
 message AddFavoriteResponse {}
 
 // For Remove favorite endpoint
 message RemoveFavoriteRequest {
-  string businessId = 1;
+  string id = 1;
+  string businessId = 2;
 }
 
 message RemoveFavoriteResponse {}

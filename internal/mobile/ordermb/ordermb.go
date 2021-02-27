@@ -16,12 +16,11 @@ type Server struct {
 }
 
 func (s *Server) ListOrder(ctx context.Context, req *orderpb.ListOrderRequest) (*orderpb.ListOrderResponse, error) {
-	id := ctx.Value("id").(string)
-	if len(id) <= 0 {
+	if len(req.Id) <= 0 {
 		return nil, status.Error(codes.Unauthenticated, "ID is not valid")
 	}
 
-	orders, err := s.repo.ListOrderByCustomer(ctx, id, req.Limit, req.Page)
+	orders, err := s.repo.ListOrderByCustomer(ctx, req.Id, req.Limit, req.Page)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "Database error")
 	}

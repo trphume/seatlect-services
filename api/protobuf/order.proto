@@ -11,8 +11,9 @@ service OrderService {
 
 // For ListOrder endpoint
 message ListOrderRequest {
-  int32 limit = 1;
-  int32 page = 2;
+  string id = 1;
+  int32 limit = 2;
+  int32 page = 3;
 }
 
 message ListOrderResponse {

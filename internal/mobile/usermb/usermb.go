@@ -76,12 +76,11 @@ func (s *Server) SignUp(ctx context.Context, req *userpb.SignUpRequest) (*userpb
 }
 
 func (s *Server) AddFavorite(ctx context.Context, req *userpb.AddFavoriteRequest) (*userpb.AddFavoriteResponse, error) {
-	id := ctx.Value("id").(string)
-	if len(id) <= 0 {
+	if len(req.Id) <= 0 {
 		return nil, status.Error(codes.Unauthenticated, "ID is not valid")
 	}
 
-	if err := s.repo.AppendFavorite(ctx, id, req.BusinessId); err != nil {
+	if err := s.repo.AppendFavorite(ctx, req.Id, req.BusinessId); err != nil {
 		if err == commonErr.NOTFOUND {
 			return nil, status.Error(codes.NotFound, "Could not find business with that id")
 		}
@@ -93,12 +92,11 @@ func (s *Server) AddFavorite(ctx context.Context, req *userpb.AddFavoriteRequest
 }
 
 func (s *Server) RemoveFavorite(ctx context.Context, req *userpb.RemoveFavoriteRequest) (*userpb.RemoveFavoriteResponse, error) {
-	id := ctx.Value("id").(string)
-	if len(id) <= 0 {
+	if len(req.Id) <= 0 {
 		return nil, status.Error(codes.Unauthenticated, "ID is not valid")
 	}
 
-	if err := s.repo.RemoveFavorite(ctx, id, req.BusinessId); err != nil {
+	if err := s.repo.RemoveFavorite(ctx, req.Id, req.BusinessId); err != nil {
 		if err == commonErr.NOTFOUND {
 			return nil, status.Error(codes.NotFound, "Could not find business with that id")
 		}
