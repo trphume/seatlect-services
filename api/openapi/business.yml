@@ -162,6 +162,24 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GetMenuResponse"
+  /business/{businessId}/menuitems:
+    post:
+      description: Append a new menu item to the menu
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+            description: ID of the Business
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MenuItem"
+      responses:
+        "204":
+          description: Menu item appended
 
 components:
   schemas:
@@ -195,7 +213,7 @@ components:
           type: array
           items:
             type: string
-    MenuItems:
+    MenuItem:
       type: object
       properties:
         name:
@@ -263,4 +281,4 @@ components:
         menu:
           type: array
           items:
-            $ref: "#/components/schemas/MenuItems"
+            $ref: "#/components/schemas/MenuItem"
