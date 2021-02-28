@@ -13,7 +13,7 @@ import (
 )
 
 type Server struct {
-	repo Repo
+	Repo Repo
 
 	userpb.UnimplementedUserServiceServer
 }
@@ -25,7 +25,7 @@ func (s *Server) SignIn(ctx context.Context, req *userpb.SignInRequest) (*userpb
 
 	customer := &typedb.Customer{Username: req.Username, Password: req.Password}
 
-	token, err := s.repo.AuthenticateCustomer(ctx, customer)
+	token, err := s.Repo.AuthenticateCustomer(ctx, customer)
 	if err != nil {
 		if err == commonErr.INTERNAL {
 			return nil, status.Error(codes.Internal, "Database error")
@@ -57,7 +57,7 @@ func (s *Server) SignUp(ctx context.Context, req *userpb.SignUpRequest) (*userpb
 
 	customer := &typedb.Customer{Username: req.Username, Email: req.Email, Dob: dob, Password: req.Password, Favorite: make([]string, 0)}
 
-	token, err := s.repo.CreateCustomer(ctx, customer)
+	token, err := s.Repo.CreateCustomer(ctx, customer)
 	if err != nil {
 		if err == commonErr.INTERNAL {
 			return nil, status.Error(codes.Internal, "Database error")
@@ -80,7 +80,7 @@ func (s *Server) AddFavorite(ctx context.Context, req *userpb.AddFavoriteRequest
 		return nil, status.Error(codes.Unauthenticated, "ID is not valid")
 	}
 
-	if err := s.repo.AppendFavorite(ctx, req.Id, req.BusinessId); err != nil {
+	if err := s.Repo.AppendFavorite(ctx, req.Id, req.BusinessId); err != nil {
 		if err == commonErr.NOTFOUND {
 			return nil, status.Error(codes.NotFound, "Could not find business with that id")
 		}
@@ -96,7 +96,7 @@ func (s *Server) RemoveFavorite(ctx context.Context, req *userpb.RemoveFavoriteR
 		return nil, status.Error(codes.Unauthenticated, "ID is not valid")
 	}
 
-	if err := s.repo.RemoveFavorite(ctx, req.Id, req.BusinessId); err != nil {
+	if err := s.Repo.RemoveFavorite(ctx, req.Id, req.BusinessId); err != nil {
 		if err == commonErr.NOTFOUND {
 			return nil, status.Error(codes.NotFound, "Could not find business with that id")
 		}

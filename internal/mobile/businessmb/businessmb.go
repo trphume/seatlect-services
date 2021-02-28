@@ -11,7 +11,7 @@ import (
 )
 
 type Server struct {
-	repo Repo
+	Repo Repo
 
 	businesspb.UnimplementedBusinessServiceServer
 }
@@ -46,7 +46,7 @@ func (s *Server) ListBusiness(ctx context.Context, req *businesspb.ListBusinessR
 	}
 
 	// Call repo method
-	businesses, err := s.repo.ListBusiness(ctx, searchParams)
+	businesses, err := s.Repo.ListBusiness(ctx, searchParams)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "Database error")
 	}
@@ -58,7 +58,7 @@ func (s *Server) ListBusiness(ctx context.Context, req *businesspb.ListBusinessR
 }
 
 func (s *Server) ListBusinessById(ctx context.Context, req *businesspb.ListBusinessByIdRequest) (*businesspb.ListBusinessByIdResponse, error) {
-	businesses, err := s.repo.ListBusinessByIds(ctx, req.Ids)
+	businesses, err := s.Repo.ListBusinessByIds(ctx, req.Ids)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "Database error")
 	}

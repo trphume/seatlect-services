@@ -2,6 +2,7 @@ version: "3.8"
 services:
   mongo:
     image: mongo:4.4.0
+    container_name: seatlect-service-mongo
     environment:
       MONGO_INITDB_ROOT_USERNAME: user
       MONGO_INITDB_ROOT_PASSWORD: password

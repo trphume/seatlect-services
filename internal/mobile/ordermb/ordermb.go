@@ -10,7 +10,7 @@ import (
 )
 
 type Server struct {
-	repo Repo
+	Repo Repo
 
 	orderpb.UnimplementedOrderServiceServer
 }
@@ -20,7 +20,7 @@ func (s *Server) ListOrder(ctx context.Context, req *orderpb.ListOrderRequest) (
 		return nil, status.Error(codes.Unauthenticated, "ID is not valid")
 	}
 
-	orders, err := s.repo.ListOrderByCustomer(ctx, req.Id, req.Limit, req.Page)
+	orders, err := s.Repo.ListOrderByCustomer(ctx, req.Id, req.Limit, req.Page)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "Database error")
 	}
