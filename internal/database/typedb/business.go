@@ -9,6 +9,7 @@ type Business struct {
 	Id           primitive.ObjectID `bson:"_id"`
 	Username     string             `bson:"username"`
 	Email        string             `bson:"email"`
+	Password     string             `bson:"password"`
 	BusinessName string             `bson:"businessName"`
 	Type         string             `bson:"type"`
 	Tags         []string           `bson:"tags"`
