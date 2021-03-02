@@ -37,6 +37,11 @@ type Business struct {
 	Type *string   `json:"type,omitempty"`
 }
 
+// GetMenuResponse defines model for GetMenuResponse.
+type GetMenuResponse struct {
+	Menu *[]MenuItem `json:"menu,omitempty"`
+}
+
 // ImageUpload defines model for ImageUpload.
 type ImageUpload string
 
@@ -46,8 +51,16 @@ type ListBusinessResponse struct {
 	MaxPage    *int        `json:"maxPage,omitempty"`
 }
 
-// UpdateBusinessResponse defines model for UpdateBusinessResponse.
-type UpdateBusinessResponse struct {
+// MenuItem defines model for MenuItem.
+type MenuItem struct {
+	Description *string `json:"description,omitempty"`
+	Image       *string `json:"image,omitempty"`
+	Name        *string `json:"name,omitempty"`
+	Price       *string `json:"price,omitempty"`
+}
+
+// UpdateBusinessRequest defines model for UpdateBusinessRequest.
+type UpdateBusinessRequest struct {
 	Id           *string `json:"_id,omitempty"`
 	Address      *string `json:"address,omitempty"`
 	BusinessName *string `json:"businessName,omitempty"`
@@ -77,13 +90,19 @@ type GetBusinessParams struct {
 }
 
 // PatchBusinessBusinessIdJSONBody defines parameters for PatchBusinessBusinessId.
-type PatchBusinessBusinessIdJSONBody UpdateBusinessResponse
+type PatchBusinessBusinessIdJSONBody UpdateBusinessRequest
+
+// PostBusinessBusinessIdMenuitemsJSONBody defines parameters for PostBusinessBusinessIdMenuitems.
+type PostBusinessBusinessIdMenuitemsJSONBody MenuItem
 
 // PatchBusinessBusinessIdStatusJSONBody defines parameters for PatchBusinessBusinessIdStatus.
 type PatchBusinessBusinessIdStatusJSONBody UpdateStatusRequest
 
 // PatchBusinessBusinessIdRequestBody defines body for PatchBusinessBusinessId for application/json ContentType.
 type PatchBusinessBusinessIdJSONRequestBody PatchBusinessBusinessIdJSONBody
+
+// PostBusinessBusinessIdMenuitemsRequestBody defines body for PostBusinessBusinessIdMenuitems for application/json ContentType.
+type PostBusinessBusinessIdMenuitemsJSONRequestBody PostBusinessBusinessIdMenuitemsJSONBody
 
 // PatchBusinessBusinessIdStatusRequestBody defines body for PatchBusinessBusinessIdStatus for application/json ContentType.
 type PatchBusinessBusinessIdStatusJSONRequestBody PatchBusinessBusinessIdStatusJSONBody
@@ -108,6 +127,15 @@ type ServerInterface interface {
 
 	// (DELETE /business/{businessId}/images/{pos})
 	DeleteBusinessBusinessIdImagesPos(ctx echo.Context, businessId string, pos int) error
+
+	// (GET /business/{businessId}/menu)
+	GetBusinessBusinessIdMenu(ctx echo.Context, businessId string) error
+
+	// (POST /business/{businessId}/menuitems)
+	PostBusinessBusinessIdMenuitems(ctx echo.Context, businessId string) error
+
+	// (DELETE /business/{businessId}/menuitems/{name})
+	DeleteBusinessBusinessIdMenuitemsName(ctx echo.Context, businessId string, name string) error
 
 	// (PATCH /business/{businessId}/status)
 	PatchBusinessBusinessIdStatus(ctx echo.Context, businessId string) error
@@ -231,6 +259,62 @@ func (w *ServerInterfaceWrapper) DeleteBusinessBusinessIdImagesPos(ctx echo.Cont
 	return err
 }
 
+// GetBusinessBusinessIdMenu converts echo context to params.
+func (w *ServerInterfaceWrapper) GetBusinessBusinessIdMenu(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "businessId" -------------
+	var businessId string
+
+	err = runtime.BindStyledParameter("simple", false, "businessId", ctx.Param("businessId"), &businessId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter businessId: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.GetBusinessBusinessIdMenu(ctx, businessId)
+	return err
+}
+
+// PostBusinessBusinessIdMenuitems converts echo context to params.
+func (w *ServerInterfaceWrapper) PostBusinessBusinessIdMenuitems(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "businessId" -------------
+	var businessId string
+
+	err = runtime.BindStyledParameter("simple", false, "businessId", ctx.Param("businessId"), &businessId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter businessId: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.PostBusinessBusinessIdMenuitems(ctx, businessId)
+	return err
+}
+
+// DeleteBusinessBusinessIdMenuitemsName converts echo context to params.
+func (w *ServerInterfaceWrapper) DeleteBusinessBusinessIdMenuitemsName(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "businessId" -------------
+	var businessId string
+
+	err = runtime.BindStyledParameter("simple", false, "businessId", ctx.Param("businessId"), &businessId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter businessId: %s", err))
+	}
+
+	// ------------- Path parameter "name" -------------
+	var name string
+
+	err = runtime.BindStyledParameter("simple", false, "name", ctx.Param("name"), &name)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter name: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.DeleteBusinessBusinessIdMenuitemsName(ctx, businessId, name)
+	return err
+}
+
 // PatchBusinessBusinessIdStatus converts echo context to params.
 func (w *ServerInterfaceWrapper) PatchBusinessBusinessIdStatus(ctx echo.Context) error {
 	var err error
@@ -281,6 +365,9 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.PUT(baseURL+"/business/:businessId/displayImage", wrapper.PutBusinessBusinessIdDisplayImage)
 	router.POST(baseURL+"/business/:businessId/images", wrapper.PostBusinessBusinessIdImages)
 	router.DELETE(baseURL+"/business/:businessId/images/:pos", wrapper.DeleteBusinessBusinessIdImagesPos)
+	router.GET(baseURL+"/business/:businessId/menu", wrapper.GetBusinessBusinessIdMenu)
+	router.POST(baseURL+"/business/:businessId/menuitems", wrapper.PostBusinessBusinessIdMenuitems)
+	router.DELETE(baseURL+"/business/:businessId/menuitems/:name", wrapper.DeleteBusinessBusinessIdMenuitemsName)
 	router.PATCH(baseURL+"/business/:businessId/status", wrapper.PatchBusinessBusinessIdStatus)
 
 }
@@ -288,22 +375,24 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/+RXXY/jJhT9K4j20Rpntn2p3xqNVEVaVaNZ7VO1qoi5dljZwMB12ijyf68AO7ZjnPG0",
-	"u9pq9ikOcD8459wLnGmuaq0kSLQ0O1ObH6Bm/vNXrUHyXc1KeAKrlbTghrVRGgwK8IuEm3YfeNJAM2rR",
-	"CFnStk36EbX/DDnSNqHbxgoJ1s69/Cl4xEdCGeemM5jN7Ttvv7Maogs42NwIjULJ+LywumKn3cIOkrC3",
-	"sEuEOp5FN8CMYSf3v1I56yNO91gxFNjwcSjZ1HswwUyWS7MxKJGVr0ws/F/Fk0fko64U86wUytQMaUa3",
-	"QjJzosk82HthsWd3WSs9Y1eY/migoBn9IR2UmHYyTC+SieyoZn8/TqkTEqFcguyj5gzh5Sy/iRbfgmwC",
-	"wA+jqloG+YXaW3b/ARk29gmeG7A492v99DpJuCEhC+VXC6zc3EVvCT2CsZ4Ren+3udu4FJQGybSgGf3p",
-	"bnP3jiZUMzz4cOl+1NxK8KlNSKe/AZJKWCSqIEMlkP2JhKQJk5xoVgLpGPTxjJfFjgcHo/Q0M6wGBGNp",
-	"9seZChfiuQFfn9LLsAcjoQaeG2GA0wxNA0nX5OMoxV25vF7n6JNbHej3mLzbbNxPriSC9PAwrSsRZJ9+",
-	"tkH7g8NbXSHabjyfU8ifAI2AI/AL8NsBeNvkOVhbNFV1csZtMpCYnvuvHW9vMto7JE5Jrk8KJR2nu4db",
-	"/G0v3udMTmPsHlzaeAAy4t4z5KQ3ELQfe3yRpkudfU2Wht49ZyYKm7nQdc2NL7T8MKcgNIXXsPDoHK3h",
-	"4d+DvILBKA++p20VP30xChbOPI/oNP82LoQVrDU+Bl9fT+l189cNvszs2GiJ2iZSYOPz6P9Msr9splqW",
-	"69kd39PajtOvVMs3zvZIdXfriN9TL5Dbmhju2lrZiBzCY4QwIuGvzi+qUd0H85kilI1IYtcv/q7EcP/F",
-	"xBB7GEZUEEqV+cXr6E/PWtk2AFoBwhzaBz9OmOw0IOSggVIcQRKBlmhlhTe41kMwX1LEo/rWokii8bSy",
-	"//Xu9XMkIQ9gAJqTwqiajE/sZa6GO/btQ3m81/6OWwio+Noz+UN/f32zJ/P0NRMt2whzwWrSV9uEWjDH",
-	"HqHGVDSjB0Sdpal7W1YHZTE7a2WwTZkW6fGeXtfre7eOBDfu/cOMYPuqb8qma8oFayqkGf1ls9m40J/a",
-	"fwIAAP//kxzhp0MSAAA=",
+	"H4sIAAAAAAAC/+RYTW/jNhD9KwTboxA5216qW40AhYHNItjFnopFQUtjmQuJZMiRW8PQfy9I6ssWpShN",
+	"ghrZUxyJHA7fe/PI0YmmslRSgEBDkxM16R5K5n7+rhSIbFOyHD6DUVIYsI+Vlgo0cnCDuH1tf+BRAU2o",
+	"Qc1FTus6ap/I7XdIkdYRXVeGCzBmHOUvngViRJRlmW4mjN5tm2ifWAnBARmYVHOFXIrwe25UwY6biR1E",
+	"fm9+lwhlOIvmAdOaHe3/hUxZu+L5HguGHKtsuJSoyi1oP03kU29DUCLLn5mY/38RT38A3oOopkkvQVRn",
+	"q/+sYUcT+lPciylulBTbUBuEcpxUaG3HxldVSOYUsZO6ZEgTuuaC6SONxhv9yA22yppOuVXLBZ9ziXdy",
+	"DaBZsn8ezmXDBUI+RVeHwSivp0TKJ9UppnSvNE+XUv1VZQyhh++xAoNXUp/voZQ8vncDp5mW6BN+NB3+",
+	"CzKspskz7vUyqdpHXOykG82xsO+6OojoAbRxjNDbm9XNyqYgFQimOE3oLzermw80oorh3i0XbweGnwOO",
+	"9G6dhhTcIJE70lco2R6JT5owkRHFciANg2497WSxyXyAQXqKaVYCgjY0+fNEuV3isQLnG75cWjAiquGx",
+	"4hoymqCuIGoOvjBK4VA2r+cF+mZHe/odJh9WK/snlQJBOHiYUgX3so+/G6/9PuCcWwVt0PF5DvlnQM3h",
+	"AFkH/LoH3lRpCsbsqqKw/mxndyTGp/bXJqtnGW0DEqsk699cCsvp5m6Ov3UXfczk+RqbO5s27oEMuHcM",
+	"Wen1BG2HEZ+kqauzt2SpP1PGzARh0x1dl9y4Qkv3Ywq8KTyHhQcbaAkP/x3kBQwGeXCetpbZ8dUoCB95",
+	"DtDz9OuwDhaQVrklsuXlFF96v6rwaWKHk6aYrQL1NTyOrpljd/eJlciXkzu8PtYNp29UyjNHe6C4m3HE",
+	"7akVyLwm+vZDSROQg+/PCCMC/m7iohyUvZ8+UoQ0AUls2sE/lBhuX00MoV45oAJfqswNXkZ/fFLS1B7Q",
+	"AhDG0N6554SJRgNc9BrI+QEE4WiIkoa7CZd68NOnFPEg/29RRMH1lDQvvXr9GkjIAeiBzshOy5IMD+xp",
+	"rtqGePJKZDfZ3rfsYOK7jUXXIds8XkNlvpGPXn5tCJTNxxFyM/eieZa6Lm+Bp3bLWV+1CJWeiSWGet+t",
+	"9S4vUf1HnZCvBkrrvsNymft1XMUni9EiByTtpIHvOYCXel5H2ic/6/p8r9nOS5qZ1/S9/tPCfC8y3Gvb",
+	"2u84FNnSVuRL27a/24bk/CPO0rLys87uk3VEDehDi1ClC5rQPaJK4riQKSv20mByUlJjHTPF48MtHRmu",
+	"HUd8GBrRA9OcbYv2Mqob49yxqkCa0N9Wq5Vd+lv9bwAAAP//brEpsk4YAAA=",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code

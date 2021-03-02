@@ -121,17 +121,17 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/7RVQWvcPBD9K2K+72jWTtoe6lsDPRRKKYGcQihae7xWKkvKzHiXsOx/L5K83TjrLS20",
-	"N9uS3pt5b568h8YPwTt0wlDvgZseB50eP/uNcbf4NCJLfA/kA5IYTKtBM+88tfFZngNCDSxk3AYOBYyM",
-	"5PSAC4uHAgifRkPYQn1/2lmcEB+K4yG/fsRGIuJUDAfvGM+r+WbaZa4zoFvcGBaki43ptiVkXuxrPbJx",
-	"yPxlubcCWuSGTBDj3eI6DtrYxRXrG308Ni/IajEyti8J3TiskfIxt7m0utT+L23LH/7Yz1ck8ZNxnY+b",
-	"Z3rAR9cGb5yozpOKmKx8p6RHtcO1OoqrBu30Bgd0ooLV0nkaoAAxYiPNHSNBAVskzqhXq2pVxSp9QKeD",
-	"gRrerKrVdRop6ZOGZWQrbRyiJLDPzs/LSzOW6lI7I73amC3m99i70q5VP+VLbJQc+9RCDV89S6wsYUCe",
-	"cWS58e1zJGq8E3SJU4dgTfa6fORseE5dfPqfsIMa/itPsSynTJazQB7mSRIaMX3ICUlNX1fV3+ae8pfI",
-	"5+J9GKVHJxO62mlWPDYNMnejje68ra7OJX91qtPGYvtS/YawjRu05QjyLrc0B7lz353fOYVEnpRvmpGi",
-	"JodUZXaeptRfNv94L6RxPM1AfMuVxJGmIWf0kvtHkH80AK/vrt+agQXVb45J6/UW1Rqzzlom0Q4FMFIM",
-	"GNT3exjJQg29SKjLMl5Ttvcs9T54kkOpgym3V1CcZanRVmWYmFZNRq/t9OvwNBnQ6dEK1PC+qqpI/XD4",
-	"EQAA//+cdtrdkAYAAA==",
+	"H4sIAAAAAAAC/7RVwW7bOhD8FWLfOwqWkpd3qG4N0EOBoigC5BQEBS2tLKYUyeyubASG/70gKddRLBct",
+	"0N4kkZzZndmh9tD4IXiHThjqPXDT46DT4ye/Me4On0dkie+BfEASg2k1aOadpzY+y0tAqIGFjNvAoYCR",
+	"kZwecGHxUADh82gIW6gfTjuLE+JjcTzk10/YSESciuHgHeN5NV9Nu8x1BnSHG8OCdLEx3baEzIt9rUc2",
+	"Dpk/L/dWQIvckAlivFtcx0Ebu7hifaOPx+YFWS1GxvY1oRuHNVI+5jaXVpfa/6lt+cNv+/mGJH4yrvNx",
+	"80wP+ODa4I0T1XlSEZOV75T0qHa4Vkdx1aCd3uCATlSwWjpPAxQgRmykuWckKGCLxBn1alWtqlilD+h0",
+	"MFDDf6tqdZ1GSvqkYRnZShuHKAnss/Pz8tKMpbrUzkivNmaL+T32rrRr1Q/5Ehslxz62UMMXzxIrSxiQ",
+	"ZxxZbn37Eoka7wRd4tQhWJO9Lp84G55TF5/+Jeyghn/KUyzLKZPlLJCHeZKERkwfckJS09dV9ae5p/wl",
+	"8rl470fp0cmErnaaFY9Ng8zdaKM7N9XNueRvTnXaWGxfq98QtnGDthxB/s8tzUHu3Tfnd04hkSflm2ak",
+	"qMkhVZmdpyn1l80/3gtpHE8zEN9yJXGkacgZveT+EeQvDcDbu+uXZuDqvNfbY9J6vUW1xqyzlkm0QwGM",
+	"FAMG9cMeRrJQQy8S6rKM15TtPUu9D57kUOpgyu0VFGdZarRVGSamVZPRazv9OjxNBnR6tAI1vKuqKlI/",
+	"Hr4HAAD//9vrvnaQBgAA",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code

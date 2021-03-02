@@ -61,7 +61,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UpdateBusinessResponse"
+              $ref: "#/components/schemas/UpdateBusinessRequest"
       responses:
         "200":
           description: Business information updated successfully
@@ -254,7 +254,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Business"
-    UpdateBusinessResponse:
+    UpdateBusinessRequest:
       type: object
       properties:
         _id:

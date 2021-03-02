@@ -38,7 +38,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/LoginResponse"
-        "401":
+        "404":
           description: Authentication failed with given credentials
         "500":
           description: Unknown error occurred
