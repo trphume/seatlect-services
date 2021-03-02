@@ -44,7 +44,41 @@ func (s *Server) PostUserLogin(ctx echo.Context) error {
 }
 
 func (s *Server) PostUserRegister(ctx echo.Context) error {
-	panic("implement me")
+	var req user_api.RegisterRequest
+	if err := ctx.Bind(&req); err != nil {
+		return ctx.JSONPretty(http.StatusBadRequest, "Error binding request body", "  ")
+	}
+
+	business := &typedb.Business{
+		Username:     *req.Username,
+		Email:        *req.Email,
+		Password:     *req.Password,
+		BusinessName: *req.BusinessName,
+		Type:         *req.Type,
+		Tags:         make([]string, 0),
+		Description:  *req.Description,
+		Location: typedb.Location{
+			Type:        "Point",
+			Coordinates: []float64{float64(*req.Location.Longitude), float64(*req.Location.Latitude)},
+		},
+		Address:      *req.Address,
+		DisplayImage: "",
+		Images:       make([]string, 0),
+		Placement:    make([]typedb.Seat, 0),
+		Menu:         make([]typedb.MenuItems, 0),
+		Status:       0,
+		Verified:     false,
+	}
+
+	if err := s.Repo.CreateBusiness(ctx.Request().Context(), business); err != nil {
+		if err == commonErr.INTERNAL {
+			return ctx.JSONPretty(http.StatusInternalServerError, "Database error", "  ")
+		}
+
+		return ctx.JSONPretty(http.StatusConflict, "Business with that credentials already exist", "  ")
+	}
+
+	return ctx.String(http.StatusCreated, "Business created")
 }
 
 type Repo interface {
@@ -53,8 +87,7 @@ type Repo interface {
 	AuthenticateBusiness(ctx context.Context, business *typedb.Business) (string, error)
 
 	// business is an out parameter - values will be overwritten
-	// will return a user token
-	CreateBusiness(ctx context.Context, business *typedb.Business) (string, error)
+	CreateBusiness(ctx context.Context, business *typedb.Business) error
 }
 
 // Helper function
