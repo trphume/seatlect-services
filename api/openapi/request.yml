@@ -75,6 +75,13 @@ paths:
           description: Create change request successfully
 components:
   schemas:
+    Location:
+      type: object
+      properties:
+        latitude:
+          type: number
+        longitude:
+          type: number
     Business:
       type: object
       properties:
@@ -91,12 +98,7 @@ components:
         description:
           type: string
         location:
-          type: object
-          properties:
-            latitude:
-              type: number
-            longitude:
-              type: number
+          $ref: "#/components/schemas/Location"
         address:
           type: string
         displayImage:
@@ -121,12 +123,7 @@ components:
         description:
           type: string
         location:
-          type: object
-          properties:
-            latitude:
-              type: number
-            longitude:
-              type: number
+          $ref: "#/components/schemas/Location"
         address:
           type: string
     ListRequestResponse:
