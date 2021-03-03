@@ -8,6 +8,7 @@ import (
 	"github.com/tphume/seatlect-services/internal/gen_openapi/request_api"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
+	"time"
 )
 
 type Server struct {
@@ -49,7 +50,39 @@ func (s *Server) GetRequestBusinessId(ctx echo.Context, businessId string) error
 }
 
 func (s *Server) PostRequestBusinessId(ctx echo.Context, businessId string) error {
-	panic("implement me")
+	var req request_api.ChangeRequest
+	if err := ctx.Bind(&req); err != nil {
+		return ctx.String(http.StatusBadRequest, "Error binding request body")
+	}
+
+	pId, err := primitive.ObjectIDFromHex(businessId)
+	if err != nil {
+		return ctx.String(http.StatusBadRequest, "Bad ID")
+	}
+
+	request := &typedb.Request{
+		Id:           pId,
+		BusinessName: *req.BusinessName,
+		Type:         *req.Type,
+		Tags:         *req.Tags,
+		Description:  *req.Description,
+		Location: typedb.Location{
+			Type:        "Point",
+			Coordinates: []float64{float64(*req.Location.Longitude), float64(*req.Location.Latitude)},
+		},
+		Address:   *req.Type,
+		CreatedAt: time.Now(),
+	}
+
+	if err = s.Repo.CreateRequest(ctx.Request().Context(), request); err != nil {
+		if err == commonErr.NOTFOUND {
+			return ctx.String(http.StatusNotFound, "Error fnding business with given id")
+		}
+
+		return ctx.String(http.StatusInternalServerError, "Database error")
+	}
+
+	return ctx.String(http.StatusCreated, "Business change request created successfully")
 }
 
 func (s *Server) PostRequestBusinessIdApprove(ctx echo.Context, businessId string) error {

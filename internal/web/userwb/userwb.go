@@ -17,7 +17,7 @@ type Server struct {
 func (s *Server) PostUserLogin(ctx echo.Context) error {
 	var req user_api.LoginRequest
 	if err := ctx.Bind(&req); err != nil {
-		return ctx.JSONPretty(http.StatusBadRequest, "Error binding request body", "  ")
+		return ctx.String(http.StatusBadRequest, "Error binding request body")
 	}
 
 	business := &typedb.Business{Username: req.Username, Password: req.Password}
