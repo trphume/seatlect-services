@@ -25,10 +25,10 @@ func (s *Server) PostUserLogin(ctx echo.Context) error {
 	token, err := s.Repo.AuthenticateBusiness(ctx.Request().Context(), business)
 	if err != nil {
 		if err == commonErr.INTERNAL {
-			return ctx.JSONPretty(http.StatusInternalServerError, "Database error", "  ")
+			return ctx.String(http.StatusInternalServerError, "Database error")
 		}
 
-		return ctx.JSONPretty(http.StatusNotFound, "Username and password does not match", "  ")
+		return ctx.String(http.StatusNotFound, "Username and password does not match")
 	}
 
 	// Construct response
@@ -46,7 +46,7 @@ func (s *Server) PostUserLogin(ctx echo.Context) error {
 func (s *Server) PostUserRegister(ctx echo.Context) error {
 	var req user_api.RegisterRequest
 	if err := ctx.Bind(&req); err != nil {
-		return ctx.JSONPretty(http.StatusBadRequest, "Error binding request body", "  ")
+		return ctx.String(http.StatusBadRequest, "Error binding request body")
 	}
 
 	business := &typedb.Business{
@@ -72,10 +72,10 @@ func (s *Server) PostUserRegister(ctx echo.Context) error {
 
 	if err := s.Repo.CreateBusiness(ctx.Request().Context(), business); err != nil {
 		if err == commonErr.INTERNAL {
-			return ctx.JSONPretty(http.StatusInternalServerError, "Database error", "  ")
+			return ctx.String(http.StatusInternalServerError, "Database error")
 		}
 
-		return ctx.JSONPretty(http.StatusConflict, "Business with that credentials already exist", "  ")
+		return ctx.String(http.StatusConflict, "Business with that credentials already exist")
 	}
 
 	return ctx.String(http.StatusCreated, "Business created")
