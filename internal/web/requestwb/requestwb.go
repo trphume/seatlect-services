@@ -86,7 +86,15 @@ func (s *Server) PostRequestBusinessId(ctx echo.Context, businessId string) erro
 }
 
 func (s *Server) PostRequestBusinessIdApprove(ctx echo.Context, businessId string) error {
-	panic("implement me")
+	if err := s.Repo.ApproveRequest(ctx.Request().Context(), businessId); err != nil {
+		if err == commonErr.NOTFOUND {
+			return ctx.String(http.StatusNotFound, "Error change request of business with given id")
+		}
+
+		return ctx.String(http.StatusInternalServerError, "Database error")
+	}
+
+	return ctx.String(http.StatusNoContent, "Business change request approved successfully")
 }
 
 type Repo interface {

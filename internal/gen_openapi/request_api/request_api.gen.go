@@ -175,17 +175,17 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/8yWQWvjOhDHv4qY944mdvveZX3b7UIplKX0upRFsceOii2po3F2Q8h3XyTZcRw77bJQ",
-	"6MmONRr95/+bQdlDYVprNGp2kO/BFRtsZXi92Uhd4yO+dOjYf7BkLBIrDMs/VOkfvLMIOTgmpWs4JCDL",
-	"ktC5xbV155RG577JFhcDSnQFKcvK6MX1xhRyWPyXsIIc/knHCtJefno/xB0SYFkHNYqxXZbVf5BEcjf+",
-	"ngWOkWb9jAX70HvluLfoEZ012uHcqlb+epD1aUqlGWskn4FGg48KXyttimWmflHkiWtTZY1kxV15Kk13",
-	"7Toqa4yuL63Oj/GflK5MCFbc+LVBZQJbJBcUwNUqW2U+vbGopVWQw3+rbHUNCVjJmyArPTGlxvCYdEaw",
-	"XQzdJKQuhWInimCN6DcLr4baWHk4jsL7XQk53CKP4qwk2SIjOci/70H5E146pB0koEOrgvX8IixFWELO",
-	"1GHSj8sS2MOTj44dEWq6zjL/KIxm1KEkaW2jIpn02UU8Y8JX23uh6wKAqUuPyKRwi6Lxdplq6tiZW64r",
-	"CnSu6prGt5HPNmBI98PGu/JwkcktspDCWSxUpYqz9K8A+HLMPUcxPeHuqy+CNyiGPZBEWr5zRljr04xv",
-	"IjuO93sSO5vaOaubi70rqMdYzhglYI1bQHFDKBmFFBp/nnOuDAl57IQZlwfjPiaYKMmUu/dkMtV0mDXE",
-	"1UWv/3KaUmktmW28NBZZfo4BJ8zeGq1FhH2aDzdi/88rHk7+wyHw3jqk7VBQRw3ksGG2eZr6PwzNxjjO",
-	"99YQe79Vur2C8/HzV2QjYhp/XUlSct1EkX5jVFnJrmHI4VOWZf7op8PvAAAA//9PqVYxQAkAAA==",
+	"H4sIAAAAAAAC/8yWUWvbMBDHv4q47dHEbreX+W3toBTKKH0dZSj22VGxJfV0zhaCv/uQbMdx7KQwKPTJ",
+	"jnU6/e//u0PZQ2ZqazRqdpDuwWUbrGV4vd1IXeITvjbo2H+wZCwSKwzLv1XuH7yzCCk4JqVLaCOQeU7o",
+	"3OLaunFKo3M/ZY2LATm6jJRlZfTiemUyOSx+JiwghU/xWEHcy48fhrg2ApZlUKMY62VZ/QdJJHfj71ng",
+	"GGnWL5ixD31QjnuLntBZox3Orarl30dZHqdUmrFE8hloNPig8FJpUywz9Ysij1ybKqskK27yY2m6qded",
+	"ssro8tzq/Bj/SenChGDFlV8bVEawRXJBAVytklXi0xuLWloFKXxZJatriMBK3gRZ8ZEpJYbHpDOC7WLo",
+	"JiF1LhQ7kQVrRL9ZeDVUd5WH4yi83+eQwh3yKM5KkjUykoP01x6UP+G1QdpBBDq0KljPr4OlCHNImRqM",
+	"+nFZAts+++iuI0JN10niH5nRjDqUJK2tVEcmfnEdnjHhxfZe6LoAYOrSEzIp3KKovF2mmDp24pZrsgyd",
+	"K5qq8m3ksw0Y4v2w8T5vzzK5QxZSOIuZKlR2kv4CgJtD7jmK6Qn3P3wRvEEx7IGoo+U7Z4S1Ps74JrLD",
+	"eL8nsZOpnbO6Pdu7gnqM+YxRBNa4BRS3hJJRSKHxzynnwpCQh06YcXk07mOC6SSZfPeeTKaa2llDXJ31",
+	"+j+nKZbWktl2l8Yiy+9dwBGzt0ZrEWGf5sON2Nd5xTfLdYreqjz42UbgkLZDFQ1VkMKG2aZx7P8lVBvj",
+	"ON1bQ+xNVvH2Ck5nzt+LlejS+DtKkpLrqlPmN3bSCtlUDCl8S5LEH/3c/gsAAP//CgPvZjUJAAA=",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code

@@ -37,7 +37,7 @@ paths:
           description: ID of the Business
       responses:
         "204":
-          description: Business information retrieved successfully
+          description: Business change request approved
   /request/{businessId}:
     get:
       description: Get a specific change request
