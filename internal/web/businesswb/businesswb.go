@@ -3,6 +3,7 @@ package businesswb
 import (
 	"context"
 	"github.com/labstack/echo/v4"
+	"github.com/tphume/seatlect-services/internal/commonErr"
 	"github.com/tphume/seatlect-services/internal/database/typedb"
 	"github.com/tphume/seatlect-services/internal/gen_openapi/business_api"
 	"net/http"
@@ -28,7 +29,19 @@ func (s *Server) GetBusiness(ctx echo.Context, params business_api.GetBusinessPa
 }
 
 func (s *Server) GetBusinessBusinessId(ctx echo.Context, businessId string) error {
-	panic("implement me")
+	business, err := s.Repo.GetBusinessById(ctx.Request().Context(), businessId)
+	if err != nil {
+		if err == commonErr.NOTFOUND {
+			return ctx.String(http.StatusNotFound, "Business not found with given id")
+		} else if err == commonErr.INVALID {
+			return ctx.String(http.StatusBadRequest, "ID is in an invalid format")
+		}
+
+		return ctx.String(http.StatusInternalServerError, "Database error")
+	}
+
+	res := typedbToOapi(business)
+	return ctx.JSONPretty(http.StatusOK, res, "  ")
 }
 
 func (s *Server) PatchBusinessBusinessId(ctx echo.Context, businessId string) error {
