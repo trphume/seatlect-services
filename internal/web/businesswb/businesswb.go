@@ -35,6 +35,18 @@ func (s *Server) DeleteBusinessBusinessIdImagesPos(ctx echo.Context, businessId 
 	panic("implement me")
 }
 
+func (s *Server) GetBusinessBusinessIdMenu(ctx echo.Context, businessId string) error {
+	panic("implement me")
+}
+
+func (s *Server) PostBusinessBusinessIdMenuitems(ctx echo.Context, businessId string) error {
+	panic("implement me")
+}
+
+func (s *Server) DeleteBusinessBusinessIdMenuitemsName(ctx echo.Context, businessId string, name string) error {
+	panic("implement me")
+}
+
 func (s *Server) PatchBusinessBusinessIdStatus(ctx echo.Context, businessId string) error {
 	panic("implement me")
 }
@@ -46,5 +58,8 @@ type Repo interface {
 	UpdateBusinessDIById(ctx context.Context, id string, image string) error
 	AppendBusinessImage(ctx context.Context, id string, image string) error
 	RemoveBusinessImage(ctx context.Context, id string, pos int) error
+	ListMenuItem(ctx context.Context, id string) ([]typedb.MenuItems, error)
+	AppendMenuItem(ctx context.Context, id string, item typedb.MenuItems) error
+	RemoveMenuItem(ctx context.Context, id string, name string) error
 	UpdateBusinessStatus(ctx context.Context, id string, status int) error
 }
