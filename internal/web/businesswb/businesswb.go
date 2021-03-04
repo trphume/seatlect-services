@@ -119,7 +119,36 @@ func (s *Server) GetBusinessBusinessIdMenu(ctx echo.Context, businessId string) 
 }
 
 func (s *Server) PostBusinessBusinessIdMenuitems(ctx echo.Context, businessId string) error {
-	panic("implement me")
+	var req business_api.MenuItem
+	if err := ctx.Bind(&req); err != nil {
+		return ctx.String(http.StatusBadRequest, "Error binding request body")
+	}
+
+	price, err := primitive.ParseDecimal128(*req.Price)
+	if err != nil {
+		return ctx.String(http.StatusBadRequest, "Error with price format")
+	}
+
+	request := typedb.MenuItems{
+		Name:        *req.Name,
+		Description: *req.Description,
+		Image:       *req.Image,
+		Price:       price,
+	}
+
+	image, err := s.Repo.AppendMenuItem(ctx.Request().Context(), businessId, request)
+	if err != nil {
+		if err == commonErr.NOTFOUND {
+			return ctx.String(http.StatusNotFound, "Business not found with given id")
+		} else if err == commonErr.INVALID {
+			return ctx.String(http.StatusBadRequest, "ID is in an invalid format")
+		}
+
+		return ctx.String(http.StatusInternalServerError, "Database error")
+	}
+
+	res := &business_api.AppendMenuItemResponse{Image: &image}
+	return ctx.JSONPretty(http.StatusCreated, res, "  ")
 }
 
 func (s *Server) DeleteBusinessBusinessIdMenuitemsName(ctx echo.Context, businessId string, name string) error {
@@ -138,7 +167,7 @@ type Repo interface {
 	AppendBusinessImage(ctx context.Context, id string, image string) error
 	RemoveBusinessImage(ctx context.Context, id string, pos int) error
 	ListMenuItem(ctx context.Context, id string) ([]typedb.MenuItems, error)
-	AppendMenuItem(ctx context.Context, id string, item typedb.MenuItems) error
+	AppendMenuItem(ctx context.Context, id string, item typedb.MenuItems) (string, error)
 	RemoveMenuItem(ctx context.Context, id string, name string) error
 	UpdateBusinessStatus(ctx context.Context, id string, status int) error
 }
