@@ -29,12 +29,9 @@ type Business struct {
 	Description  *string   `json:"description,omitempty"`
 	DisplayImage *string   `json:"displayImage,omitempty"`
 	Images       *[]string `json:"images,omitempty"`
-	Location     *struct {
-		Latitude  *float32 `json:"latitude,omitempty"`
-		Longitude *float32 `json:"longitude,omitempty"`
-	} `json:"location,omitempty"`
-	Tags *[]string `json:"tags,omitempty"`
-	Type *string   `json:"type,omitempty"`
+	Location     *Location `json:"location,omitempty"`
+	Tags         *[]string `json:"tags,omitempty"`
+	Type         *string   `json:"type,omitempty"`
 }
 
 // GetMenuResponse defines model for GetMenuResponse.
@@ -51,6 +48,12 @@ type ListBusinessResponse struct {
 	MaxPage    *int        `json:"maxPage,omitempty"`
 }
 
+// Location defines model for Location.
+type Location struct {
+	Latitude  *float32 `json:"latitude,omitempty"`
+	Longitude *float32 `json:"longitude,omitempty"`
+}
+
 // MenuItem defines model for MenuItem.
 type MenuItem struct {
 	Description *string `json:"description,omitempty"`
@@ -61,16 +64,13 @@ type MenuItem struct {
 
 // UpdateBusinessRequest defines model for UpdateBusinessRequest.
 type UpdateBusinessRequest struct {
-	Id           *string `json:"_id,omitempty"`
-	Address      *string `json:"address,omitempty"`
-	BusinessName *string `json:"businessName,omitempty"`
-	Description  *string `json:"description,omitempty"`
-	Location     *struct {
-		Latitude  *float32 `json:"latitude,omitempty"`
-		Longitude *float32 `json:"longitude,omitempty"`
-	} `json:"location,omitempty"`
-	Tags *[]string `json:"tags,omitempty"`
-	Type *string   `json:"type,omitempty"`
+	Id           *string   `json:"_id,omitempty"`
+	Address      *string   `json:"address,omitempty"`
+	BusinessName *string   `json:"businessName,omitempty"`
+	Description  *string   `json:"description,omitempty"`
+	Location     *Location `json:"location,omitempty"`
+	Tags         *[]string `json:"tags,omitempty"`
+	Type         *string   `json:"type,omitempty"`
 }
 
 // UpdateDisplayImageResponse defines model for UpdateDisplayImageResponse.
@@ -375,24 +375,24 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code
