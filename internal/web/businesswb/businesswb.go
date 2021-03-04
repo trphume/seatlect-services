@@ -89,7 +89,17 @@ func (s *Server) PostBusinessBusinessIdImages(ctx echo.Context, businessId strin
 }
 
 func (s *Server) DeleteBusinessBusinessIdImagesPos(ctx echo.Context, businessId string, pos int) error {
-	panic("implement me")
+	if err := s.Repo.RemoveBusinessImage(ctx.Request().Context(), businessId, pos); err != nil {
+		if err == commonErr.NOTFOUND {
+			return ctx.String(http.StatusNotFound, "Business not found with given id")
+		} else if err == commonErr.INVALID {
+			return ctx.String(http.StatusBadRequest, "Invalid argument")
+		}
+
+		return ctx.String(http.StatusInternalServerError, "Database error")
+	}
+
+	return ctx.String(http.StatusNoContent, "Image deleted")
 }
 
 func (s *Server) GetBusinessBusinessIdMenu(ctx echo.Context, businessId string) error {
@@ -112,7 +122,7 @@ type Repo interface {
 	SimpleListBusiness(ctx context.Context, status int, page int, business []typedb.Business) (int, error)
 	GetBusinessById(ctx context.Context, id string) (typedb.Business, error)
 	UpdateBusinessById(ctx context.Context, business typedb.Business) error
-	UpdateBusinessDIById(ctx context.Context, id string, image string) error
+	UpdateBusinessDIById(ctx context.Context, id string, image string) (string, error)
 	AppendBusinessImage(ctx context.Context, id string, image string) error
 	RemoveBusinessImage(ctx context.Context, id string, pos int) error
 	ListMenuItem(ctx context.Context, id string) ([]typedb.MenuItems, error)
