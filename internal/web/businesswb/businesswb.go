@@ -6,6 +6,7 @@ import (
 	"github.com/tphume/seatlect-services/internal/commonErr"
 	"github.com/tphume/seatlect-services/internal/database/typedb"
 	"github.com/tphume/seatlect-services/internal/gen_openapi/business_api"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
 )
 
@@ -45,7 +46,38 @@ func (s *Server) GetBusinessBusinessId(ctx echo.Context, businessId string) erro
 }
 
 func (s *Server) PatchBusinessBusinessId(ctx echo.Context, businessId string) error {
-	panic("implement me")
+	var req business_api.UpdateBusinessRequest
+	if err := ctx.Bind(&req); err != nil {
+		return ctx.String(http.StatusBadRequest, "Error binding request body")
+	}
+
+	pId, err := primitive.ObjectIDFromHex(businessId)
+	if err != nil {
+		return ctx.String(http.StatusBadRequest, "Bad ID")
+	}
+
+	request := typedb.Business{
+		Id:           pId,
+		BusinessName: *req.BusinessName,
+		Type:         *req.Type,
+		Tags:         *req.Tags,
+		Description:  *req.Description,
+		Location: typedb.Location{
+			Type:        "Point",
+			Coordinates: []float64{float64(*req.Location.Longitude), float64(*req.Location.Latitude)},
+		},
+		Address: *req.Address,
+	}
+
+	if err := s.Repo.UpdateBusinessById(ctx.Request().Context(), request); err != nil {
+		if err == commonErr.NOTFOUND {
+			return ctx.String(http.StatusNotFound, "Error fnding business with given id")
+		}
+
+		return ctx.String(http.StatusInternalServerError, "Database error")
+	}
+
+	return ctx.String(http.StatusNoContent, "Business information updated successfully")
 }
 
 func (s *Server) PutBusinessBusinessIdDisplayImage(ctx echo.Context, businessId string) error {
@@ -79,7 +111,7 @@ func (s *Server) PatchBusinessBusinessIdStatus(ctx echo.Context, businessId stri
 type Repo interface {
 	SimpleListBusiness(ctx context.Context, status int, page int, business []typedb.Business) (int, error)
 	GetBusinessById(ctx context.Context, id string) (typedb.Business, error)
-	UpdateBusinessById(ctx context.Context, business *typedb.Business) error
+	UpdateBusinessById(ctx context.Context, business typedb.Business) error
 	UpdateBusinessDIById(ctx context.Context, id string, image string) error
 	AppendBusinessImage(ctx context.Context, id string, image string) error
 	RemoveBusinessImage(ctx context.Context, id string, pos int) error

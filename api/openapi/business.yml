@@ -63,7 +63,7 @@ paths:
             schema:
               $ref: "#/components/schemas/UpdateBusinessRequest"
       responses:
-        "200":
+        "204":
           description: Business information updated successfully
   /business/{businessId}/displayImage:
     put:
