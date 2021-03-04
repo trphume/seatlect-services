@@ -152,7 +152,17 @@ func (s *Server) PostBusinessBusinessIdMenuitems(ctx echo.Context, businessId st
 }
 
 func (s *Server) DeleteBusinessBusinessIdMenuitemsName(ctx echo.Context, businessId string, name string) error {
-	panic("implement me")
+	if err := s.Repo.RemoveMenuItem(ctx.Request().Context(), businessId, name); err != nil {
+		if err == commonErr.NOTFOUND {
+			return ctx.String(http.StatusNotFound, "Business or menu item not found")
+		} else if err == commonErr.INVALID {
+			return ctx.String(http.StatusBadRequest, "Argument format is missing or incorrect")
+		}
+
+		return ctx.String(http.StatusInternalServerError, "Database error")
+	}
+
+	return ctx.String(http.StatusNoContent, "Menu item deleted successfully")
 }
 
 func (s *Server) PatchBusinessBusinessIdStatus(ctx echo.Context, businessId string) error {
