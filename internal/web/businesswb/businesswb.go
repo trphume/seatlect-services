@@ -103,7 +103,19 @@ func (s *Server) DeleteBusinessBusinessIdImagesPos(ctx echo.Context, businessId 
 }
 
 func (s *Server) GetBusinessBusinessIdMenu(ctx echo.Context, businessId string) error {
-	panic("implement me")
+	menu, err := s.Repo.ListMenuItem(ctx.Request().Context(), businessId)
+	if err != nil {
+		if err == commonErr.NOTFOUND {
+			return ctx.String(http.StatusNotFound, "Business not found with given id")
+		} else if err == commonErr.INVALID {
+			return ctx.String(http.StatusBadRequest, "ID is in an invalid format")
+		}
+
+		return ctx.String(http.StatusInternalServerError, "Database error")
+	}
+
+	res := business_api.GetMenuResponse{Menu: typedbMenuToOapi(menu)}
+	return ctx.JSONPretty(http.StatusOK, res, "  ")
 }
 
 func (s *Server) PostBusinessBusinessIdMenuitems(ctx echo.Context, businessId string) error {
@@ -155,6 +167,24 @@ func typedbToOapi(b typedb.Business) business_api.Business {
 		},
 		Tags: &b.Tags,
 		Type: createString(b.Type),
+	}
+}
+
+func typedbMenuToOapi(menu []typedb.MenuItems) *[]business_api.MenuItem {
+	res := make([]business_api.MenuItem, len(menu))
+	for i, m := range menu {
+		res[i] = typedbMenuItemsToOapi(m)
+	}
+
+	return &res
+}
+
+func typedbMenuItemsToOapi(m typedb.MenuItems) business_api.MenuItem {
+	return business_api.MenuItem{
+		Description: createString(m.Description),
+		Image:       createString(m.Image),
+		Name:        createString(m.Name),
+		Price:       createString(m.Price.String()),
 	}
 }
 
