@@ -166,7 +166,22 @@ func (s *Server) DeleteBusinessBusinessIdMenuitemsName(ctx echo.Context, busines
 }
 
 func (s *Server) PatchBusinessBusinessIdStatus(ctx echo.Context, businessId string) error {
-	panic("implement me")
+	var req business_api.UpdateStatusRequest
+	if err := ctx.Bind(&req); err != nil {
+		return ctx.String(http.StatusBadRequest, "Error binding request body")
+	}
+
+	if err := s.Repo.UpdateBusinessStatus(ctx.Request().Context(), businessId, *req.Status); err != nil {
+		if err == commonErr.NOTFOUND {
+			return ctx.String(http.StatusNotFound, "Business not found with given id")
+		} else if err == commonErr.INVALID {
+			return ctx.String(http.StatusBadRequest, "ID is in an invalid format")
+		}
+
+		return ctx.String(http.StatusInternalServerError, "Database error")
+	}
+
+	return ctx.String(http.StatusNoContent, "Business status updated successfully")
 }
 
 type Repo interface {
