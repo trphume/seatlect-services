@@ -5,12 +5,14 @@ import (
 	"github.com/tphume/seatlect-services/internal/commonErr"
 	"github.com/tphume/seatlect-services/internal/database/typedb"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type RequestDB struct {
 	ReqCol *mongo.Collection
+	BusCol *mongo.Collection
 }
 
 func (r *RequestDB) ListRequest(ctx context.Context, page int) ([]typedb.Request, error) {
@@ -40,8 +42,50 @@ func (r *RequestDB) ListRequest(ctx context.Context, page int) ([]typedb.Request
 	return res, nil
 }
 
-func (r *RequestDB) ApproveRequest(ctX context.Context, id string) error {
-	panic("implement me")
+func (r *RequestDB) ApproveRequest(ctx context.Context, id string) error {
+	rId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return commonErr.INVALID
+	}
+
+	// Find the request and delete
+	tmp := r.ReqCol.FindOneAndDelete(ctx, bson.M{"_id": rId})
+	if tmp.Err() != nil {
+		if tmp.Err() == mongo.ErrNoDocuments {
+			return commonErr.NOTFOUND
+		}
+
+		return commonErr.INTERNAL
+	}
+
+	var req typedb.Request
+	if err = tmp.Decode(&req); err != nil {
+		return commonErr.INTERNAL
+	}
+
+	// Update information in business collection
+	_, err = r.BusCol.UpdateOne(
+		ctx,
+		bson.M{"_id": req.Id},
+		bson.D{
+			{"$set",
+				bson.D{
+					{"businessName", req.BusinessName},
+					{"type", req.Type},
+					{"tags", req.Tags},
+					{"description", req.Description},
+					{"location", req.Location},
+					{"address", req.Address},
+				},
+			},
+		},
+	)
+
+	if err != nil {
+		return commonErr.INTERNAL
+	}
+
+	return nil
 }
 
 func (r *RequestDB) GetRequestById(ctx context.Context, request *typedb.Request) error {
