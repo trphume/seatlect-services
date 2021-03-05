@@ -66,3 +66,51 @@ func (b *BusinessDB) ListBusinessByIds(ctx context.Context, ids []string) ([]typ
 
 	return res, nil
 }
+
+func (b *BusinessDB) AuthenticateBusiness(ctx context.Context, business *typedb.Business) (string, error) {
+	panic("implement me")
+}
+
+func (b *BusinessDB) CreateBusiness(ctx context.Context, business *typedb.Business) error {
+	panic("implement me")
+}
+
+func (b *BusinessDB) SimpleListBusiness(ctx context.Context, status int, page int, business []typedb.Business) (int, error) {
+	panic("implement me")
+}
+
+func (b *BusinessDB) GetBusinessById(ctx context.Context, id string) (typedb.Business, error) {
+	panic("implement me")
+}
+
+func (b *BusinessDB) UpdateBusinessById(ctx context.Context, business typedb.Business) error {
+	panic("implement me")
+}
+
+func (b *BusinessDB) UpdateBusinessDIById(ctx context.Context, id string, image string) (string, error) {
+	panic("implement me")
+}
+
+func (b *BusinessDB) AppendBusinessImage(ctx context.Context, id string, image string) error {
+	panic("implement me")
+}
+
+func (b *BusinessDB) RemoveBusinessImage(ctx context.Context, id string, pos int) error {
+	panic("implement me")
+}
+
+func (b *BusinessDB) ListMenuItem(ctx context.Context, id string) ([]typedb.MenuItems, error) {
+	panic("implement me")
+}
+
+func (b *BusinessDB) AppendMenuItem(ctx context.Context, id string, item typedb.MenuItems) (string, error) {
+	panic("implement me")
+}
+
+func (b *BusinessDB) RemoveMenuItem(ctx context.Context, id string, name string) error {
+	panic("implement me")
+}
+
+func (b *BusinessDB) UpdateBusinessStatus(ctx context.Context, id string, status int) error {
+	panic("implement me")
+}
