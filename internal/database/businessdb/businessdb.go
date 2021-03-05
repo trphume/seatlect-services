@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type BusinessDB struct {
@@ -68,7 +69,25 @@ func (b *BusinessDB) ListBusinessByIds(ctx context.Context, ids []string) ([]typ
 }
 
 func (b *BusinessDB) AuthenticateBusiness(ctx context.Context, business *typedb.Business) (string, error) {
-	panic("implement me")
+	res := b.BusCol.FindOne(ctx, bson.M{"username": business.Username})
+	if res.Err() != nil {
+		if res.Err() == mongo.ErrNoDocuments {
+			return "", commonErr.NOTFOUND
+		}
+
+		return "", commonErr.INTERNAL
+	}
+
+	pw := business.Password
+	if err := res.Decode(business); err != nil {
+		return "", commonErr.INTERNAL
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(business.Password), []byte(pw)); err != nil {
+		return "", commonErr.NOTFOUND
+	}
+
+	return business.Id.Hex(), nil
 }
 
 func (b *BusinessDB) CreateBusiness(ctx context.Context, business *typedb.Business) error {
