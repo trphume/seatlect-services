@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/crypto/bcrypt"
+	"time"
 )
 
 type BusinessDB struct {
@@ -91,7 +92,21 @@ func (b *BusinessDB) AuthenticateBusiness(ctx context.Context, business *typedb.
 }
 
 func (b *BusinessDB) CreateBusiness(ctx context.Context, business *typedb.Business) error {
-	panic("implement me")
+	pw, err := bcrypt.GenerateFromPassword([]byte(business.Password), 12)
+	if err != nil {
+		return commonErr.INTERNAL
+	}
+
+	business.Password = string(pw)
+	business.Id = primitive.NewObjectIDFromTimestamp(time.Now())
+
+	_, err = b.BusCol.InsertOne(ctx, business)
+	if err != nil {
+		// TODO: better error handling
+		return commonErr.INTERNAL
+	}
+
+	return nil
 }
 
 func (b *BusinessDB) SimpleListBusiness(ctx context.Context, status int, page int, business []typedb.Business) (int, error) {
