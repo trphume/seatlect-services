@@ -16,14 +16,12 @@ type Server struct {
 }
 
 func (s *Server) GetRequest(ctx echo.Context, params request_api.GetRequestParams) error {
-	requests := make([]typedb.Request, 0)
-	max, err := s.Repo.ListRequest(ctx.Request().Context(), params.Page, requests)
+	requests, err := s.Repo.ListRequest(ctx.Request().Context(), params.Page)
 	if err != nil {
 		return ctx.String(http.StatusInternalServerError, "Database error")
 	}
 
 	res := request_api.ListRequestResponse{
-		MaxPage: &max,
 		Request: typedbListToOapi(requests),
 	}
 
@@ -98,7 +96,7 @@ func (s *Server) PostRequestBusinessIdApprove(ctx echo.Context, businessId strin
 }
 
 type Repo interface {
-	ListRequest(ctx context.Context, page int, requests []typedb.Request) (int, error)
+	ListRequest(ctx context.Context, page int) ([]typedb.Request, error)
 	ApproveRequest(ctX context.Context, id string) error
 	GetRequestById(ctx context.Context, request *typedb.Request) error
 	CreateRequest(ctx context.Context, request *typedb.Request) error

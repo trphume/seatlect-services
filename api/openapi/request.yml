@@ -129,8 +129,6 @@ components:
     ListRequestResponse:
       type: object
       properties:
-        maxPage:
-          type: integer
         request:
           type: array
           items:
