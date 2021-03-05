@@ -106,5 +106,22 @@ func (r *RequestDB) GetRequestById(ctx context.Context, request *typedb.Request)
 }
 
 func (r *RequestDB) CreateRequest(ctx context.Context, request *typedb.Request) error {
-	panic("implement me")
+	// remove any old request first
+	_, err := r.ReqCol.DeleteOne(ctx, bson.M{"_id": request.Id})
+	if err != nil {
+		return commonErr.INTERNAL
+	}
+
+	// insert new request
+	_, err = r.ReqCol.InsertOne(ctx, request)
+	if err != nil {
+		return commonErr.INTERNAL
+	}
+
+	return nil
+}
+
+// helper function
+func createBool(b bool) *bool {
+	return &b
 }
