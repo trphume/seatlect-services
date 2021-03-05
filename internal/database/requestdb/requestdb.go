@@ -89,7 +89,20 @@ func (r *RequestDB) ApproveRequest(ctx context.Context, id string) error {
 }
 
 func (r *RequestDB) GetRequestById(ctx context.Context, request *typedb.Request) error {
-	panic("implement me")
+	res := r.ReqCol.FindOne(ctx, bson.M{"_id": request.Id}, nil)
+	if res.Err() != nil {
+		if res.Err() == mongo.ErrNoDocuments {
+			return commonErr.NOTFOUND
+		}
+
+		return commonErr.INTERNAL
+	}
+
+	if err := res.Decode(request); err != nil {
+		return commonErr.INTERNAL
+	}
+
+	return nil
 }
 
 func (r *RequestDB) CreateRequest(ctx context.Context, request *typedb.Request) error {
