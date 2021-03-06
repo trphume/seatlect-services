@@ -226,7 +226,37 @@ func (b *BusinessDB) ListMenuItem(ctx context.Context, id string) ([]typedb.Menu
 }
 
 func (b *BusinessDB) AppendMenuItem(ctx context.Context, id string, item typedb.MenuItems) (string, error) {
-	panic("implement me")
+	pId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return "", commonErr.INVALID
+	}
+
+	// TODO: Create storage for image
+
+	// Add to mongo
+	res, err := b.BusCol.UpdateOne(
+		ctx,
+		bson.D{
+			{"_id", pId},
+			{"menu", bson.D{
+				{"$ne", item.Name},
+			}},
+		},
+		bson.D{
+			{"$push", item},
+		},
+	)
+
+	if err != nil {
+		return "", commonErr.INTERNAL
+	}
+
+	// Actually can be the case that name is duplicate
+	if res.MatchedCount == 0 {
+		return "", commonErr.NOTFOUND
+	}
+
+	return item.Image, nil
 }
 
 func (b *BusinessDB) RemoveMenuItem(ctx context.Context, id string, name string) error {
