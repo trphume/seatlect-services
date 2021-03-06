@@ -198,7 +198,31 @@ func (b *BusinessDB) RemoveBusinessImage(ctx context.Context, id string, pos int
 }
 
 func (b *BusinessDB) ListMenuItem(ctx context.Context, id string) ([]typedb.MenuItems, error) {
-	panic("implement me")
+	pId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, commonErr.INVALID
+	}
+
+	items := b.BusCol.FindOne(
+		ctx,
+		bson.M{"_id": pId},
+		options.FindOne().SetProjection(bson.M{"menu": 1}),
+	)
+
+	if items.Err() != nil {
+		if items.Err() == mongo.ErrNoDocuments {
+			return nil, commonErr.NOTFOUND
+		}
+
+		return nil, commonErr.INTERNAL
+	}
+
+	var res typedb.Business
+	if err = items.Decode(&res); err != nil {
+		return nil, commonErr.INTERNAL
+	}
+
+	return res.Menu, nil
 }
 
 func (b *BusinessDB) AppendMenuItem(ctx context.Context, id string, item typedb.MenuItems) (string, error) {
