@@ -159,7 +159,30 @@ func (b *BusinessDB) GetBusinessById(ctx context.Context, id string) (*typedb.Bu
 }
 
 func (b *BusinessDB) UpdateBusinessById(ctx context.Context, business typedb.Business) error {
-	panic("implement me")
+	res, err := b.BusCol.UpdateOne(
+		ctx,
+		bson.M{"_id": business.Id},
+		bson.D{
+			{"$set",
+				bson.D{
+					{"businessName", business.BusinessName},
+					{"type", business.Type},
+					{"tags", business.Tags},
+					{"description", business.Description},
+					{"location", business.Location},
+					{"address", business.Address},
+				}},
+		},
+	)
+	if err != nil {
+		return commonErr.INTERNAL
+	}
+
+	if res.ModifiedCount == 0 {
+		return commonErr.NOTFOUND
+	}
+
+	return nil
 }
 
 func (b *BusinessDB) UpdateBusinessDIById(ctx context.Context, id string, image string) (string, error) {
