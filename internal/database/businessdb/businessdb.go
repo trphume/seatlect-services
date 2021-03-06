@@ -110,7 +110,29 @@ func (b *BusinessDB) CreateBusiness(ctx context.Context, business *typedb.Busine
 }
 
 func (b *BusinessDB) SimpleListBusiness(ctx context.Context, status int, page int) ([]typedb.Business, error) {
-	panic("implement me")
+	if page == 0 {
+		page = 1
+	}
+
+	// Construct params
+	limit := int64(10)
+	p := int64((page - 1) * 10)
+
+	req, err := b.BusCol.Find(ctx, bson.M{"status": status}, &options.FindOptions{
+		Limit: &limit,
+		Skip:  &p,
+	})
+
+	if err != nil {
+		return nil, commonErr.INTERNAL
+	}
+
+	var res []typedb.Business
+	if err == req.All(ctx, res) {
+		return nil, commonErr.INTERNAL
+	}
+
+	return res, nil
 }
 
 func (b *BusinessDB) GetBusinessById(ctx context.Context, id string) (typedb.Business, error) {
