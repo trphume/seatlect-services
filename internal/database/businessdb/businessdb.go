@@ -289,5 +289,30 @@ func (b *BusinessDB) RemoveMenuItem(ctx context.Context, id string, name string)
 }
 
 func (b *BusinessDB) UpdateBusinessStatus(ctx context.Context, id string, status int) error {
-	panic("implement me")
+	pId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return commonErr.INVALID
+	}
+
+	res, err := b.BusCol.UpdateOne(
+		ctx,
+		bson.M{"_id": pId},
+		bson.D{
+			{"$set",
+				bson.D{
+					{"status", status},
+				},
+			},
+		},
+	)
+
+	if err != nil {
+		return commonErr.INTERNAL
+	}
+
+	if res.MatchedCount == 0 {
+		return commonErr.NOTFOUND
+	}
+
+	return nil
 }
