@@ -39,7 +39,7 @@ func (s *Server) GetBusinessBusinessId(ctx echo.Context, businessId string) erro
 		return ctx.String(http.StatusInternalServerError, "Database error")
 	}
 
-	res := typedbToOapi(business)
+	res := typedbToOapi(*business)
 	return ctx.JSONPretty(http.StatusOK, res, "  ")
 }
 
@@ -184,7 +184,7 @@ func (s *Server) PatchBusinessBusinessIdStatus(ctx echo.Context, businessId stri
 
 type Repo interface {
 	SimpleListBusiness(ctx context.Context, status int, page int) ([]typedb.Business, error)
-	GetBusinessById(ctx context.Context, id string) (typedb.Business, error)
+	GetBusinessById(ctx context.Context, id string) (*typedb.Business, error)
 	UpdateBusinessById(ctx context.Context, business typedb.Business) error
 	UpdateBusinessDIById(ctx context.Context, id string, image string) (string, error)
 	AppendBusinessImage(ctx context.Context, id string, image string) error

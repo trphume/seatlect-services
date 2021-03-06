@@ -135,8 +135,27 @@ func (b *BusinessDB) SimpleListBusiness(ctx context.Context, status int, page in
 	return res, nil
 }
 
-func (b *BusinessDB) GetBusinessById(ctx context.Context, id string) (typedb.Business, error) {
-	panic("implement me")
+func (b *BusinessDB) GetBusinessById(ctx context.Context, id string) (*typedb.Business, error) {
+	pId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, commonErr.INVALID
+	}
+
+	business := b.BusCol.FindOne(ctx, bson.M{"_id": pId})
+	if business.Err() != nil {
+		if business.Err() == mongo.ErrNoDocuments {
+			return nil, commonErr.NOTFOUND
+		}
+
+		return nil, commonErr.INTERNAL
+	}
+
+	var res typedb.Business
+	if err = business.Decode(&res); err != nil {
+		return nil, commonErr.INTERNAL
+	}
+
+	return &res, nil
 }
 
 func (b *BusinessDB) UpdateBusinessById(ctx context.Context, business typedb.Business) error {
