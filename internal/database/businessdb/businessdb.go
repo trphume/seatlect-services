@@ -260,7 +260,32 @@ func (b *BusinessDB) AppendMenuItem(ctx context.Context, id string, item typedb.
 }
 
 func (b *BusinessDB) RemoveMenuItem(ctx context.Context, id string, name string) error {
-	panic("implement me")
+	pId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return commonErr.INVALID
+	}
+
+	_, err = b.BusCol.UpdateOne(
+		ctx,
+		bson.M{"_id": pId},
+		bson.D{
+			{"$pull",
+				bson.D{
+					{"menu",
+						bson.D{
+							{"name", name},
+						},
+					},
+				},
+			},
+		},
+	)
+
+	if err != nil {
+		return commonErr.INTERNAL
+	}
+
+	return nil
 }
 
 func (b *BusinessDB) UpdateBusinessStatus(ctx context.Context, id string, status int) error {
