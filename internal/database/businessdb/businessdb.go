@@ -109,7 +109,7 @@ func (b *BusinessDB) CreateBusiness(ctx context.Context, business *typedb.Busine
 	return nil
 }
 
-func (b *BusinessDB) SimpleListBusiness(ctx context.Context, status int, page int, business []typedb.Business) (int, error) {
+func (b *BusinessDB) SimpleListBusiness(ctx context.Context, status int, page int) ([]typedb.Business, error) {
 	panic("implement me")
 }
 

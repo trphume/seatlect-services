@@ -15,15 +15,13 @@ type Server struct {
 }
 
 func (s *Server) GetBusiness(ctx echo.Context, params business_api.GetBusinessParams) error {
-	business := make([]typedb.Business, 0)
-	max, err := s.Repo.SimpleListBusiness(ctx.Request().Context(), params.Status, params.Page, business)
+	business, err := s.Repo.SimpleListBusiness(ctx.Request().Context(), params.Status, params.Page)
 	if err != nil {
 		return ctx.String(http.StatusInternalServerError, "Database error")
 	}
 
 	res := business_api.ListBusinessResponse{
 		Businesses: typedbListToOapi(business),
-		MaxPage:    &max,
 	}
 
 	return ctx.JSONPretty(http.StatusOK, res, "  ")
@@ -185,7 +183,7 @@ func (s *Server) PatchBusinessBusinessIdStatus(ctx echo.Context, businessId stri
 }
 
 type Repo interface {
-	SimpleListBusiness(ctx context.Context, status int, page int, business []typedb.Business) (int, error)
+	SimpleListBusiness(ctx context.Context, status int, page int) ([]typedb.Business, error)
 	GetBusinessById(ctx context.Context, id string) (typedb.Business, error)
 	UpdateBusinessById(ctx context.Context, business typedb.Business) error
 	UpdateBusinessDIById(ctx context.Context, id string, image string) (string, error)
