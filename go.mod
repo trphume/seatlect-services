@@ -9,6 +9,7 @@ require (
 	github.com/getkin/kin-openapi v0.32.0
 	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/google/go-cmp v0.5.4 // indirect
+	github.com/google/uuid v1.2.0 // indirect
 	github.com/labstack/echo/v4 v4.1.17
 	github.com/stretchr/objx v0.3.0 // indirect
 	github.com/stretchr/testify v1.7.0
