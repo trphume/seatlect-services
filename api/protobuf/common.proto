@@ -52,3 +52,28 @@ message OrderSeat {
   string name = 1;
   int32 space = 4;
 }
+
+message ReservationSeat {
+  string name = 1;
+  int32 floor = 2;
+  string type = 3;
+  int32 space = 4;
+  string user = 5;
+  string status = 6;
+  double x = 7;
+  double y = 8;
+  double width = 9;
+  double height = 10;
+  double rotation = 11;
+}
+
+message Reservation {
+  string id = 1;
+  string businessId = 2;
+  string name = 3;
+  string start = 4;
+  string end = 5;
+  ReservationSeat placement = 6;
+  repeated MenuItem menu = 7;
+  string image = 8;
+}
