@@ -5,7 +5,7 @@ option go_package = "github.com/tphume/seatlect-services/internal/genproto/reser
 
 import "common.proto";
 
-service OrderService {
+service ReservationService {
   rpc ListReservation (ListReservationRequest) returns (ListReservationResponse);
 }
 

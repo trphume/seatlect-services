@@ -1,9 +1,9 @@
-.PHONY: gen_proto clean_proto gen_proto_common gen_proto_user gen_proto_token gen_proto_business gen_proto_order
-.PHONY: gen_client clean_openapi gen_client_common gen_client_business gen_client_order
+.PHONY: gen_proto clean_proto gen_proto_common gen_proto_user gen_proto_token gen_proto_business gen_proto_order gen_proto_reservation
+.PHONY: gen_client clean_openapi gen_client_common gen_client_business gen_client_order gen_client_reservation
 .PHONY: gen_openapi gen_openapi_user  gen_openapi_business gen_openapi_admin gen_openapi_request clean_openapi
 
 # This section contains commands for working with proto files
-gen_proto: gen_proto_common gen_proto_user gen_proto_token gen_proto_business gen_proto_order
+gen_proto: gen_proto_common gen_proto_user gen_proto_token gen_proto_business gen_proto_order gen_proto_reservation
 
 gen_proto_common:
 	@protoc --go_out=. -I=api/protobuf --go_opt=module=github.com/tphume/seatlect-services common.proto
@@ -20,11 +20,14 @@ gen_proto_business:
 gen_proto_order:
 	@protoc --go_out=. --go-grpc_out=. -I=api/protobuf --go_opt=module=github.com/tphume/seatlect-services --go-grpc_opt=module=github.com/tphume/seatlect-services order.proto
 
+gen_proto_reservation:
+	@protoc --go_out=. --go-grpc_out=. -I=api/protobuf --go_opt=module=github.com/tphume/seatlect-services --go-grpc_opt=module=github.com/tphume/seatlect-services reservation.proto
+
 clean_proto:
 	@rm -rf internal/genproto/
 
 # This requires the seatlect_mobile repo to be adjacent to this project repository
-gen_client: gen_client_common gen_client_user gen_client_token gen_client_business gen_client_order
+gen_client: gen_client_common gen_client_user gen_client_token gen_client_business gen_client_order gen_client_reservation
 
 gen_client_common:
 	@protoc --dart_out=grpc:../seatlect_mobile/packages/genproto/lib/src -I=api/protobuf common.proto
@@ -40,6 +43,9 @@ gen_client_business:
 
 gen_client_order:
 	@protoc --dart_out=grpc:../seatlect_mobile/packages/genproto/lib/src -I=api/protobuf order.proto
+
+gen_client_reservation:
+	@protoc --dart_out=grpc:../seatlect_mobile/packages/genproto/lib/src -I=api/protobuf reservation.proto
 
 # This section contains commands for working with openapi files
 gen_openapi: gen_openapi_user gen_openapi_business gen_openapi_admin gen_openapi_request
