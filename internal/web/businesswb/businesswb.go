@@ -139,7 +139,7 @@ func (s *Server) PostBusinessBusinessIdMenuitems(ctx echo.Context, businessId st
 		if err == commonErr.NOTFOUND {
 			return ctx.String(http.StatusNotFound, "Business not found with given id")
 		} else if err == commonErr.INVALID {
-			return ctx.String(http.StatusBadRequest, "ID is in an invalid format")
+			return ctx.String(http.StatusBadRequest, "Invalid format")
 		}
 
 		return ctx.String(http.StatusInternalServerError, "Database error")

@@ -1,7 +1,10 @@
 package businessdb
 
 import (
+	"cloud.google.com/go/storage"
 	"context"
+	"encoding/base64"
+	"github.com/google/uuid"
 	"github.com/tphume/seatlect-services/internal/commonErr"
 	"github.com/tphume/seatlect-services/internal/database/typedb"
 	"go.mongodb.org/mongo-driver/bson"
@@ -9,11 +12,14 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/crypto/bcrypt"
+	"io"
+	"strings"
 	"time"
 )
 
 type BusinessDB struct {
-	BusCol *mongo.Collection
+	BusCol      *mongo.Collection
+	ImageBucket *storage.BucketHandle
 }
 
 // TODO: proper search functionality
@@ -231,7 +237,15 @@ func (b *BusinessDB) AppendMenuItem(ctx context.Context, id string, item typedb.
 		return "", commonErr.INVALID
 	}
 
-	// TODO: Create storage for image
+	// Upload image to bucket
+	wr := b.ImageBucket.Object(uuid.NewString()).NewWriter(ctx)
+
+	imgReader := strings.NewReader(item.Image)
+	imgDecoder := base64.NewDecoder(base64.StdEncoding, imgReader)
+
+	if _, err = io.Copy(wr, imgDecoder); err != nil {
+		return "", commonErr.INVALID
+	}
 
 	// Add to mongo
 	res, err := b.BusCol.UpdateOne(
@@ -256,7 +270,7 @@ func (b *BusinessDB) AppendMenuItem(ctx context.Context, id string, item typedb.
 		return "", commonErr.NOTFOUND
 	}
 
-	return item.Image, nil
+	return wr.MediaLink, nil
 }
 
 func (b *BusinessDB) RemoveMenuItem(ctx context.Context, id string, name string) error {
