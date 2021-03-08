@@ -12,9 +12,8 @@ service ReservationService {
 // For ListReservation endpoint
 // start and end are optional
 message ListReservationRequest {
-  repeated Reservation reservation = 1;
-  string start = 2;
-  string end = 3;
+  string start = 1;
+  string end = 2;
 }
 
 message ListReservationResponse {

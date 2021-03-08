@@ -642,14 +642,14 @@ type Reservation struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id         string           `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	BusinessId string           `protobuf:"bytes,2,opt,name=businessId,proto3" json:"businessId,omitempty"`
-	Name       string           `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
-	Start      string           `protobuf:"bytes,4,opt,name=start,proto3" json:"start,omitempty"`
-	End        string           `protobuf:"bytes,5,opt,name=end,proto3" json:"end,omitempty"`
-	Placement  *ReservationSeat `protobuf:"bytes,6,opt,name=placement,proto3" json:"placement,omitempty"`
-	Menu       []*MenuItem      `protobuf:"bytes,7,rep,name=menu,proto3" json:"menu,omitempty"`
-	Image      string           `protobuf:"bytes,8,opt,name=image,proto3" json:"image,omitempty"`
+	Id         string             `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	BusinessId string             `protobuf:"bytes,2,opt,name=businessId,proto3" json:"businessId,omitempty"`
+	Name       string             `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Start      string             `protobuf:"bytes,4,opt,name=start,proto3" json:"start,omitempty"`
+	End        string             `protobuf:"bytes,5,opt,name=end,proto3" json:"end,omitempty"`
+	Placement  []*ReservationSeat `protobuf:"bytes,6,rep,name=placement,proto3" json:"placement,omitempty"`
+	Menu       []*MenuItem        `protobuf:"bytes,7,rep,name=menu,proto3" json:"menu,omitempty"`
+	Image      string             `protobuf:"bytes,8,opt,name=image,proto3" json:"image,omitempty"`
 }
 
 func (x *Reservation) Reset() {
@@ -719,7 +719,7 @@ func (x *Reservation) GetEnd() string {
 	return ""
 }
 
-func (x *Reservation) GetPlacement() *ReservationSeat {
+func (x *Reservation) GetPlacement() []*ReservationSeat {
 	if x != nil {
 		return x.Placement
 	}
@@ -825,7 +825,7 @@ var file_common_proto_rawDesc = []byte{
 	0x61, 0x6d, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x73, 0x74, 0x61, 0x72, 0x74, 0x18, 0x04, 0x20, 0x01,
 	0x28, 0x09, 0x52, 0x05, 0x73, 0x74, 0x61, 0x72, 0x74, 0x12, 0x10, 0x0a, 0x03, 0x65, 0x6e, 0x64,
 	0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x65, 0x6e, 0x64, 0x12, 0x37, 0x0a, 0x09, 0x70,
-	0x6c, 0x61, 0x63, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x18, 0x06, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x19,
+	0x6c, 0x61, 0x63, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x18, 0x06, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x19,
 	0x2e, 0x73, 0x65, 0x61, 0x74, 0x6c, 0x65, 0x63, 0x74, 0x2e, 0x52, 0x65, 0x73, 0x65, 0x72, 0x76,
 	0x61, 0x74, 0x69, 0x6f, 0x6e, 0x53, 0x65, 0x61, 0x74, 0x52, 0x09, 0x70, 0x6c, 0x61, 0x63, 0x65,
 	0x6d, 0x65, 0x6e, 0x74, 0x12, 0x26, 0x0a, 0x04, 0x6d, 0x65, 0x6e, 0x75, 0x18, 0x07, 0x20, 0x03,
