@@ -41,11 +41,11 @@ db.createCollection('business', {
           }
         }, menu: {
           bsonType: 'array', items: {
-            required: ['name', 'description', 'image', 'price', 'max'], properties: {
+            required: ['name', 'description', 'image', 'price'], properties: {
               name: {
                 bsonType: 'string', minLength: 3,
                 maxLength: 20
-              }, description: { bsonType: 'string', maxLength: 125 }, image: { bsonType: 'string' }, price: { bsonType: 'decimal', min: 0 }, max: { bsonType: 'int' }
+              }, description: { bsonType: 'string', maxLength: 125 }, image: { bsonType: 'string' }, price: { bsonType: 'decimal', min: 0 }
             }
           }
         }, status: { bsonType: 'int' }, verified: { bsonType: 'bool' }
@@ -57,7 +57,7 @@ db.createCollection('business', {
 db.createCollection('reservation', {
   validator: {
     $jsonSchema: {
-      bsonType: 'object', required: ['businessId', 'name', 'start', 'end', 'placement', 'menu', 'image'], properties: {
+      bsonType: 'object', required: ['businessId', 'name', 'start', 'end', 'placement', 'image'], properties: {
         businessId: { bsonType: 'objectId' }, name: { bsonType: 'string' }, start: { bsonType: 'date' }, end: { bsonType: 'date' }, placement: {
           bsonType: 'array', items: {
             required: ['name', 'floor', 'type', 'space', 'user', 'status', 'x', 'y', 'width', 'height', 'rotation'], properties: {
@@ -65,15 +65,6 @@ db.createCollection('reservation', {
                 bsonType: 'string', minLength: 1,
                 maxLength: 2
               }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string' }, space: { bsonType: 'int', min: 1 }, user: { bsonType: 'objectId' }, status: { bsonType: 'string', enum: ['EMPTY', 'TAKEN', 'IN PROGRESS'] }, x: { bsonType: 'double' }, y: { bsonType: 'double' }, width: { bsonType: 'double' }, height: { bsonType: 'double' }, rotation: { bsonType: 'double' }
-            }
-          }
-        }, menu: {
-          bsonType: 'array', items: {
-            required: ['name', 'description', 'image', 'price', 'max'], properties: {
-              name: {
-                bsonType: 'string', minLength: 3,
-                maxLength: 20
-              }, description: { bsonType: 'string', maxLength: 125 }, image: { bsonType: 'string' }, price: { bsonType: 'decimal', min: 0 }, max: { bsonType: 'int' }
             }
           }
         }, image: { bsonType: 'string' }

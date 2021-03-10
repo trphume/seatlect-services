@@ -168,7 +168,6 @@ db.reservation.insertMany([
         rotation: 0,
       },
     ],
-    menu: [],
     image: '',
   }
 ]);
