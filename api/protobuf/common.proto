@@ -74,6 +74,5 @@ message Reservation {
   string start = 4;
   string end = 5;
   repeated ReservationSeat placement = 6;
-  repeated MenuItem menu = 7;
-  string image = 8;
+  string image = 7;
 }
