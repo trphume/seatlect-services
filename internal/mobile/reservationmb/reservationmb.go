@@ -12,7 +12,7 @@ type Server struct {
 	reservationpb.UnimplementedReservationServiceServer
 }
 
-func (s Server) ListReservation(ctx context.Context, request *reservationpb.ListReservationRequest) (*reservationpb.ListReservationResponse, error) {
+func (s *Server) ListReservation(ctx context.Context, request *reservationpb.ListReservationRequest) (*reservationpb.ListReservationResponse, error) {
 	panic("implement me")
 }
 
