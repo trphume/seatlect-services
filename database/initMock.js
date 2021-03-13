@@ -13,6 +13,7 @@ ironBuffetId = ObjectId('5facaff9e4d46967c9c2a558');
 specialTaleId = ObjectId('5fcde2ec209efa45620a08b6');
 
 reservationA = ObjectId('6035f3a48d505df0b9d043a3');
+reservationB = ObjectId('604c80551714a597557abc2e');
 
 orderA = ObjectId('6035fb35bf78e591bea86350');
 
@@ -159,7 +160,43 @@ db.reservation.insertMany([
         floor: 1,
         type: 'table2',
         space: 4,
-        user: '',
+        user: null,
+        status: 'EMPTY',
+        x: 470.2353,
+        y: 368.8553,
+        width: 100,
+        height: 80,
+        rotation: 0,
+      },
+    ],
+    image: '',
+  },
+  {
+    _id: reservationB,
+    businessId: specialTaleId,
+    name: 'SpecialTale',
+    start: new Date('2021-02-24T19:00:00Z'),
+    end: new Date('2021-02-25T00:00:00Z'),
+    placement: [
+      {
+        name: 'A1',
+        floor: 1,
+        type: 'table1',
+        space: 4,
+        user: null,
+        status: 'EMPTY',
+        x: 471.1235,
+        y: 124.2363,
+        width: 80,
+        height: 80,
+        rotation: 0,
+      },
+      {
+        name: 'A2',
+        floor: 1,
+        type: 'table2',
+        space: 4,
+        user: null,
         status: 'EMPTY',
         x: 470.2353,
         y: 368.8553,
