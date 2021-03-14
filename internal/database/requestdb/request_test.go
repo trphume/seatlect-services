@@ -96,6 +96,41 @@ func (r *RequestSuite) TestGetRequestById() {
 	}
 }
 
+func (r *RequestSuite) TestGCreateRequest() {
+	pBrightioId, _ := primitive.ObjectIDFromHex(brightioID)
+
+	tests := []struct {
+		in  *typedb.Request
+		err error
+	}{
+		{in: &typedb.Request{
+			Id:           pBrightioId,
+			BusinessName: "Brightio",
+			Type:         "Super Cool Bar",
+			Tags:         []string{},
+			Description:  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+			Location: typedb.Location{
+				Type:        "Point",
+				Coordinates: []float64{100.769652, 13.727892},
+			},
+			Address:   "Keki Ngam 4, Chalong Krung 1, Latkrabang, Bangkok, 10520",
+			CreatedAt: time.Now(),
+		}, err: nil},
+	}
+
+	for _, tt := range tests {
+		ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+		err := r.RequestDB.CreateRequest(ctx, tt.in)
+
+		r.Assert().Equal(tt.err, err)
+
+		tmp := &typedb.Request{Id: pBrightioId}
+		err = r.RequestDB.GetRequestById(ctx, tmp)
+
+		r.Assert().Equal(tt.in.Type, tmp.Type)
+	}
+}
+
 func TestRequestSuite(t *testing.T) {
 	suite.Run(t, new(RequestSuite))
 }
