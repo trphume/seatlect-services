@@ -35,7 +35,7 @@ func (r *RequestDB) ListRequest(ctx context.Context, page int) ([]typedb.Request
 	}
 
 	var res []typedb.Request
-	if err == req.All(ctx, res) {
+	if err = req.All(ctx, &res); err != nil {
 		return nil, commonErr.INTERNAL
 	}
 

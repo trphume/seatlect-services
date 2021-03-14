@@ -11,16 +11,18 @@ import (
 	"time"
 )
 
+const brightioID = "5facafef6b28446f285d7ae4"
+
 type RequestSuite struct {
 	suite.Suite
 	RequestDB *RequestDB
 }
 
-func (a *RequestSuite) SetupSuite() {
+func (r *RequestSuite) SetupSuite() {
 	// Create MongoDB client and verify connection
 	mongoURI := os.Getenv("MONGO_URI")
 	if mongoURI == "" {
-		a.T().Fatal("Mongo connection URI is empty")
+		r.T().Fatal("Mongo connection URI is empty")
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -28,18 +30,43 @@ func (a *RequestSuite) SetupSuite() {
 
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoURI))
 	if err != nil {
-		a.T().Fatal("Could create a mongo client")
+		r.T().Fatal("Could create a mongo client")
 	}
 
 	if err = client.Ping(ctx, readpref.Primary()); err != nil {
-		a.T().Fatal("Could not connect to mongodb")
+		r.T().Fatal("Could not connect to mongodb")
 	}
 
 	db := client.Database("test")
 
 	// Attach CustomerDB type to Suite
-	a.RequestDB = &RequestDB{
+	r.RequestDB = &RequestDB{
 		ReqCol: db.Collection("request"),
+	}
+}
+
+func (r *RequestSuite) TestListRequest() {
+	tests := []struct {
+		in     int
+		lenout int
+		idout  string
+		err    error
+	}{
+		{in: 0, lenout: 1, idout: brightioID, err: nil},
+		{in: 1, lenout: 1, idout: brightioID, err: nil},
+		{in: 2, lenout: 0, idout: "", err: nil},
+	}
+
+	for _, tt := range tests {
+		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+		out, err := r.RequestDB.ListRequest(ctx, tt.in)
+
+		r.Assert().Equal(tt.err, err)
+		r.Assert().Equal(tt.lenout, len(out))
+
+		if len(out) != 0 {
+			r.Assert().Equal(tt.idout, out[0].Id.Hex())
+		}
 	}
 }
 
