@@ -48,6 +48,7 @@ func (r *RequestSuite) SetupSuite() {
 	// Attach CustomerDB type to Suite
 	r.RequestDB = &RequestDB{
 		ReqCol: db.Collection("request"),
+		BusCol: db.Collection("business"),
 	}
 }
 
@@ -76,6 +77,45 @@ func (r *RequestSuite) TestListRequest() {
 	}
 }
 
+func (r *RequestSuite) TestApproveRequest() {
+	pBrightioId, _ := primitive.ObjectIDFromHex(brightioID)
+
+	tests := []struct {
+		in  string
+		err error
+	}{
+		{in: brightioID, err: nil},
+		{in: brightioID, err: commonErr.NOTFOUND},
+	}
+
+	for _, tt := range tests {
+		ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+		err := r.RequestDB.ApproveRequest(ctx, tt.in)
+
+		r.Assert().Equal(tt.err, err)
+	}
+
+	// recreate apprpove request
+	req := &typedb.Request{
+		Id:           pBrightioId,
+		BusinessName: "Brightio",
+		Type:         "Cool Bar",
+		Tags:         []string{"BAR", "JAPANESE", "LIVE MUSIC"},
+		Description:  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+		Location: typedb.Location{
+			Type:        "Point",
+			Coordinates: []float64{100.769652, 13.727892},
+		},
+		Address:   "Keki Ngam 4, Chalong Krung 1, Latkrabang, Bangkok, 10520",
+		CreatedAt: time.Now(),
+	}
+
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	if err := r.RequestDB.CreateRequest(ctx, req); err != nil {
+		r.FailNow("error on recreate request")
+	}
+}
+
 func (r *RequestSuite) TestGetRequestById() {
 	pBrightioId, _ := primitive.ObjectIDFromHex(brightioID)
 	pBeerBurgerId, _ := primitive.ObjectIDFromHex(beerBurgerId)
@@ -96,7 +136,7 @@ func (r *RequestSuite) TestGetRequestById() {
 	}
 }
 
-func (r *RequestSuite) TestGCreateRequest() {
+func (r *RequestSuite) TestCreateRequest() {
 	pBrightioId, _ := primitive.ObjectIDFromHex(brightioID)
 
 	tests := []struct {
