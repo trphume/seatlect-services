@@ -3,6 +3,8 @@
 
 
 // Ids
+admin1 = ObjectId('604dfa455226a8714411f33d');
+
 jakeId = ObjectId('5facaf3bd646b77f40481343');
 samuelId = ObjectId('5facaf7a35c1e1db56597485');
 gunId = ObjectId('5facaf818b4f49b3cf1f1792');
@@ -16,6 +18,15 @@ reservationA = ObjectId('6035f3a48d505df0b9d043a3');
 reservationB = ObjectId('604c80551714a597557abc2e');
 
 orderA = ObjectId('6035fb35bf78e591bea86350');
+
+// admin collection
+db.admin.insertMany([
+  {
+    _id: admin1,
+    username: 'admin1',
+    password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
+  }
+]);
 
 // customer collection
 db.customer.insertMany([
