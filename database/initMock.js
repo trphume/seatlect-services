@@ -248,3 +248,20 @@ db.order.insertMany([
     name: 'Brightio'
   }
 ]);
+
+// request
+db.request.insertMany([
+  {
+    _id: brightioId,
+    businessName: 'Brightio',
+    type: 'Cool Bar',
+    tags: ['BAR', 'JAPANESE', 'LIVE MUSIC'],
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    location: {
+      type: 'Point',
+      coordinates: [100.769652, 13.727892]
+    },
+    address: 'Keki Ngam 4, Chalong Krung 1, Latkrabang, Bangkok, 10520',
+    createdAt: new Date('2021-02-25T19:00:00Z')
+  }
+]);
