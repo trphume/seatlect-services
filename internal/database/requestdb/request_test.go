@@ -3,6 +3,9 @@ package requestdb
 import (
 	"context"
 	"github.com/stretchr/testify/suite"
+	"github.com/tphume/seatlect-services/internal/commonErr"
+	"github.com/tphume/seatlect-services/internal/database/typedb"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -11,7 +14,10 @@ import (
 	"time"
 )
 
-const brightioID = "5facafef6b28446f285d7ae4"
+const (
+	brightioID   = "5facafef6b28446f285d7ae4"
+	beerBurgerId = "5facaff31c6d49b2c7256bf3"
+)
 
 type RequestSuite struct {
 	suite.Suite
@@ -67,6 +73,26 @@ func (r *RequestSuite) TestListRequest() {
 		if len(out) != 0 {
 			r.Assert().Equal(tt.idout, out[0].Id.Hex())
 		}
+	}
+}
+
+func (r *RequestSuite) TestGetRequestById() {
+	pBrightioId, _ := primitive.ObjectIDFromHex(brightioID)
+	pBeerBurgerId, _ := primitive.ObjectIDFromHex(beerBurgerId)
+
+	tests := []struct {
+		in  *typedb.Request
+		err error
+	}{
+		{in: &typedb.Request{Id: pBrightioId}, err: nil},
+		{in: &typedb.Request{Id: pBeerBurgerId}, err: commonErr.NOTFOUND},
+	}
+
+	for _, tt := range tests {
+		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+		err := r.RequestDB.GetRequestById(ctx, tt.in)
+
+		r.Assert().Equal(tt.err, err)
 	}
 }
 
