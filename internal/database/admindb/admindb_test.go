@@ -3,6 +3,7 @@ package admindb
 import (
 	"context"
 	"github.com/stretchr/testify/suite"
+	"github.com/tphume/seatlect-services/internal/commonErr"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -10,6 +11,8 @@ import (
 	"testing"
 	"time"
 )
+
+const admin1ID = "604dfa455226a8714411f33d"
 
 type AdminSuite struct {
 	suite.Suite
@@ -40,6 +43,27 @@ func (a *AdminSuite) SetupSuite() {
 	// Attach CustomerDB type to Suite
 	a.AdminDB = &AdminDB{
 		AdminCol: db.Collection("admin"),
+	}
+}
+
+func (a *AdminSuite) TestAuthenticateAdmin() {
+	tests := []struct {
+		username string
+		password string
+		out      string
+		err      error
+	}{
+		{username: "admin1", password: "ExamplePassword", out: admin1ID, err: nil},
+		{username: "admin2", password: "ExamplePassword", out: "", err: commonErr.NOTFOUND},
+		{username: "admin1", password: "wrongpassword", out: "", err: commonErr.NOTFOUND},
+	}
+
+	for _, tt := range tests {
+		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+		id, err := a.AdminDB.AuthenticateAdmin(ctx, tt.username, tt.password)
+
+		a.Assert().Equal(tt.err, err)
+		a.Assert().Equal(tt.out, id)
 	}
 }
 
