@@ -16,6 +16,7 @@ import (
 const (
 	brightioID   = "5facafef6b28446f285d7ae4"
 	beerBurgerId = "5facaff31c6d49b2c7256bf3"
+	admin1ID     = "604dfa455226a8714411f33d"
 )
 
 type BusinessSuite struct {
@@ -155,7 +156,7 @@ func (b *BusinessSuite) TestCreateBusiness() {
 	b.Assert().Equal(nil, err)
 }
 
-func (b *BusinessSuite) SimpleListBusiness() {
+func (b *BusinessSuite) TestSimpleListBusiness() {
 	tests := []struct {
 		status int
 		page   int
@@ -163,7 +164,7 @@ func (b *BusinessSuite) SimpleListBusiness() {
 		err    error
 	}{
 		{status: 1, page: 1, lenout: 4, err: nil},
-		{status: 1, page: -1, lenout: 0, err: commonErr.INTERNAL},
+		{status: 1, page: -1, lenout: 0, err: nil},
 	}
 
 	for _, tt := range tests {
@@ -172,6 +173,28 @@ func (b *BusinessSuite) SimpleListBusiness() {
 
 		b.Assert().Equal(tt.err, err)
 		b.Assert().Equal(tt.lenout, len(out))
+	}
+}
+
+func (b *BusinessSuite) TestGetBusinessById() {
+	tests := []struct {
+		in      string
+		nameout string
+		err     error
+	}{
+		{in: brightioID, nameout: "Brightio", err: nil},
+		{in: "randomID", nameout: "", err: commonErr.INVALID},
+		{in: admin1ID, nameout: "", err: commonErr.NOTFOUND},
+	}
+
+	for _, tt := range tests {
+		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+		out, err := b.BusinessDB.GetBusinessById(ctx, tt.in)
+
+		b.Assert().Equal(tt.err, err)
+		if err == nil {
+			b.Assert().Equal(tt.nameout, out.BusinessName)
+		}
 	}
 }
 

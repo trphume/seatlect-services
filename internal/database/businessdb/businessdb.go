@@ -134,7 +134,7 @@ func (b *BusinessDB) SimpleListBusiness(ctx context.Context, status int, page in
 	}
 
 	var res []typedb.Business
-	if err == req.All(ctx, &res) {
+	if err = req.All(ctx, &res); err != nil {
 		return nil, commonErr.INTERNAL
 	}
 
