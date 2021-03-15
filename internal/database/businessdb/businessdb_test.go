@@ -3,6 +3,8 @@ package businessdb
 import (
 	"context"
 	"github.com/stretchr/testify/suite"
+	"github.com/tphume/seatlect-services/internal/commonErr"
+	"github.com/tphume/seatlect-services/internal/database/typedb"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -67,6 +69,26 @@ func (b *BusinessSuite) TestListBusinessByIds() {
 
 		b.Assert().Equal(tt.err, err)
 		b.Assert().Equal(tt.out, len(out))
+	}
+}
+
+func (b *BusinessSuite) TestAuthenticateBusiness() {
+	tests := []struct {
+		in    *typedb.Business
+		outid string
+		err   error
+	}{
+		{in: &typedb.Business{Username: "BeerBurger", Password: "ExamplePassword"}, outid: beerBurgerId, err: nil},
+		{in: &typedb.Business{Username: "BeerBurger", Password: "WrongPassword"}, err: commonErr.NOTFOUND},
+		{in: &typedb.Business{Username: "RandomID", Password: "ExamplePassword"}, err: commonErr.NOTFOUND},
+	}
+
+	for _, tt := range tests {
+		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+		id, err := b.BusinessDB.AuthenticateBusiness(ctx, tt.in)
+
+		b.Assert().Equal(tt.err, err)
+		b.Assert().Equal(tt.outid, id)
 	}
 }
 
