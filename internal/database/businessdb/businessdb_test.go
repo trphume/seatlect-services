@@ -92,6 +92,69 @@ func (b *BusinessSuite) TestAuthenticateBusiness() {
 	}
 }
 
+func (b *BusinessSuite) TestCreateBusiness() {
+	tests := []struct {
+		in  *typedb.Business
+		err error
+	}{
+		{in: &typedb.Business{
+			Username:     "Somewhere",
+			Email:        "somewhere@gmail.com",
+			Password:     "ExamplePassword",
+			BusinessName: "SomewhereBar",
+			Type:         "Bar",
+			Tags:         nil,
+			Description:  "",
+			Location: typedb.Location{
+				Type:        "Point",
+				Coordinates: []float64{100.769652, 13.727892},
+			},
+			Address:      "Somewhere",
+			DisplayImage: "",
+			Images:       nil,
+			Placement:    nil,
+			Menu:         nil,
+			Status:       0,
+			Verified:     false,
+		}, err: nil},
+		{in: &typedb.Business{
+			Username:     "Somewhere",
+			Email:        "somewhere@gmail.com",
+			Password:     "ExamplePassword",
+			BusinessName: "SomewhereBar",
+			Type:         "Bar",
+			Tags:         nil,
+			Description:  "",
+			Location: typedb.Location{
+				Type:        "Point",
+				Coordinates: []float64{100.769652, 13.727892},
+			},
+			Address:      "Somewhere",
+			DisplayImage: "",
+			Images:       nil,
+			Placement:    nil,
+			Menu:         nil,
+			Status:       0,
+			Verified:     false,
+		}, err: commonErr.INTERNAL},
+	}
+
+	for _, tt := range tests {
+		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+		err := b.BusinessDB.CreateBusiness(ctx, tt.in)
+
+		b.Assert().Equal(tt.err, err)
+	}
+
+	// check new business
+	tmp := &typedb.Business{Username: "Somewhere", Password: "ExamplePassword"}
+
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	_, err := b.BusinessDB.AuthenticateBusiness(ctx, tmp)
+
+	b.Assert().Equal(nil, err)
+}
+
 func TestBusinessSuite(t *testing.T) {
 	suite.Run(t, new(BusinessSuite))
 }
