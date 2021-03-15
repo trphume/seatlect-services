@@ -155,6 +155,26 @@ func (b *BusinessSuite) TestCreateBusiness() {
 	b.Assert().Equal(nil, err)
 }
 
+func (b *BusinessSuite) SimpleListBusiness() {
+	tests := []struct {
+		status int
+		page   int
+		lenout int
+		err    error
+	}{
+		{status: 1, page: 1, lenout: 4, err: nil},
+		{status: 1, page: -1, lenout: 0, err: commonErr.INTERNAL},
+	}
+
+	for _, tt := range tests {
+		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+		out, err := b.BusinessDB.SimpleListBusiness(ctx, tt.status, tt.page)
+
+		b.Assert().Equal(tt.err, err)
+		b.Assert().Equal(tt.lenout, len(out))
+	}
+}
+
 func TestBusinessSuite(t *testing.T) {
 	suite.Run(t, new(BusinessSuite))
 }
