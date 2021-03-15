@@ -17,6 +17,7 @@ import (
 const (
 	brightioID   = "5facafef6b28446f285d7ae4"
 	beerBurgerId = "5facaff31c6d49b2c7256bf3"
+	ironBuffetId = "5facaff9e4d46967c9c2a558"
 	admin1ID     = "604dfa455226a8714411f33d"
 )
 
@@ -248,6 +249,26 @@ func (b *BusinessSuite) TestListMenuItem() {
 
 		b.Assert().Equal(tt.err, err)
 		b.Assert().Equal(tt.lenout, len(out))
+	}
+}
+
+func (b *BusinessSuite) TestRemoveMenuItem() {
+	tests := []struct {
+		id   string
+		name string
+		err  error
+	}{
+		{id: ironBuffetId, name: "Fries", err: nil},
+		{id: ironBuffetId, name: "Fries", err: commonErr.NOTFOUND},
+		{id: admin1ID, name: "Salty Fries", err: commonErr.NOTFOUND},
+		{id: "fewfew", name: "", err: commonErr.INVALID},
+	}
+
+	for _, tt := range tests {
+		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+		err := b.BusinessDB.RemoveMenuItem(ctx, tt.id, tt.name)
+
+		b.Assert().Equal(tt.err, err)
 	}
 }
 

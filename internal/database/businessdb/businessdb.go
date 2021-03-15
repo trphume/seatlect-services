@@ -279,7 +279,7 @@ func (b *BusinessDB) RemoveMenuItem(ctx context.Context, id string, name string)
 		return commonErr.INVALID
 	}
 
-	_, err = b.BusCol.UpdateOne(
+	res, err := b.BusCol.UpdateOne(
 		ctx,
 		bson.M{"_id": pId},
 		bson.D{
@@ -297,6 +297,10 @@ func (b *BusinessDB) RemoveMenuItem(ctx context.Context, id string, name string)
 
 	if err != nil {
 		return commonErr.INTERNAL
+	}
+
+	if res.ModifiedCount == 0 {
+		return commonErr.NOTFOUND
 	}
 
 	return nil
@@ -324,7 +328,7 @@ func (b *BusinessDB) UpdateBusinessStatus(ctx context.Context, id string, status
 		return commonErr.INTERNAL
 	}
 
-	if res.MatchedCount == 0 {
+	if res.ModifiedCount == 0 {
 		return commonErr.NOTFOUND
 	}
 
