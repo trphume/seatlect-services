@@ -5,6 +5,7 @@ import (
 	"github.com/stretchr/testify/suite"
 	"github.com/tphume/seatlect-services/internal/commonErr"
 	"github.com/tphume/seatlect-services/internal/database/typedb"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -164,7 +165,7 @@ func (b *BusinessSuite) TestSimpleListBusiness() {
 		err    error
 	}{
 		{status: 1, page: 1, lenout: 4, err: nil},
-		{status: 1, page: -1, lenout: 0, err: nil},
+		{status: 1, page: -1, lenout: 0, err: commonErr.INTERNAL},
 	}
 
 	for _, tt := range tests {
@@ -195,6 +196,37 @@ func (b *BusinessSuite) TestGetBusinessById() {
 		if err == nil {
 			b.Assert().Equal(tt.nameout, out.BusinessName)
 		}
+	}
+}
+
+func (b *BusinessSuite) TestUpdateBusinessById() {
+	pBrightioId, _ := primitive.ObjectIDFromHex(brightioID)
+	pAdminId, _ := primitive.ObjectIDFromHex(admin1ID)
+
+	tests := []struct {
+		in  typedb.Business
+		err error
+	}{
+		{in: typedb.Business{
+			Id:           pBrightioId,
+			BusinessName: "Brightio",
+			Type:         "Bar",
+			Tags:         []string{"Hello"},
+			Description:  "Something idk",
+			Location: typedb.Location{
+				Type:        "Point",
+				Coordinates: []float64{100.769652, 13.727892},
+			},
+			Address: "Somewhere",
+		}, err: nil},
+		{in: typedb.Business{Id: pAdminId}, err: commonErr.NOTFOUND},
+	}
+
+	for _, tt := range tests {
+		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+		err := b.BusinessDB.UpdateBusinessById(ctx, tt.in)
+
+		b.Assert().Equal(tt.err, err)
 	}
 }
 
