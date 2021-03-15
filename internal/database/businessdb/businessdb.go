@@ -306,6 +306,24 @@ func (b *BusinessDB) RemoveMenuItem(ctx context.Context, id string, name string)
 	return nil
 }
 
+func (b *BusinessDB) DeleteBusiness(ctx context.Context, id string) error {
+	pId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return commonErr.INVALID
+	}
+
+	res := b.BusCol.FindOneAndDelete(ctx, bson.M{"_id": pId})
+	if res.Err() != nil {
+		if res.Err() == mongo.ErrNoDocuments {
+			return commonErr.NOTFOUND
+		}
+
+		return commonErr.INTERNAL
+	}
+
+	return nil
+}
+
 func (b *BusinessDB) UpdateBusinessStatus(ctx context.Context, id string, status int) error {
 	pId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
