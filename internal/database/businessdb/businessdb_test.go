@@ -230,6 +230,27 @@ func (b *BusinessSuite) TestUpdateBusinessById() {
 	}
 }
 
+func (b *BusinessSuite) TestListMenuItem() {
+	tests := []struct {
+		in     string
+		lenout int
+		err    error
+	}{
+		{in: beerBurgerId, lenout: 2, err: nil},
+		{in: brightioID, lenout: 0, err: nil},
+		{in: admin1ID, lenout: 0, err: commonErr.NOTFOUND},
+		{in: "randomid", lenout: 0, err: commonErr.INVALID},
+	}
+
+	for _, tt := range tests {
+		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+		out, err := b.BusinessDB.ListMenuItem(ctx, tt.in)
+
+		b.Assert().Equal(tt.err, err)
+		b.Assert().Equal(tt.lenout, len(out))
+	}
+}
+
 func TestBusinessSuite(t *testing.T) {
 	suite.Run(t, new(BusinessSuite))
 }

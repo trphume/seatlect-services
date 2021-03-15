@@ -2,12 +2,14 @@ package businesswb
 
 import (
 	"context"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/tphume/seatlect-services/internal/commonErr"
 	"github.com/tphume/seatlect-services/internal/database/typedb"
 	"github.com/tphume/seatlect-services/internal/gen_openapi/business_api"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
+	"strconv"
 )
 
 type Server struct {
@@ -122,7 +124,7 @@ func (s *Server) PostBusinessBusinessIdMenuitems(ctx echo.Context, businessId st
 		return ctx.String(http.StatusBadRequest, "Error binding request body")
 	}
 
-	price, err := primitive.ParseDecimal128(*req.Price)
+	price, err := strconv.ParseFloat(*req.Price, 64)
 	if err != nil {
 		return ctx.String(http.StatusBadRequest, "Error with price format")
 	}
@@ -236,7 +238,7 @@ func typedbMenuItemsToOapi(m typedb.MenuItems) business_api.MenuItem {
 		Description: createString(m.Description),
 		Image:       createString(m.Image),
 		Name:        createString(m.Name),
-		Price:       createString(m.Price.String()),
+		Price:       createString(fmt.Sprintf("%f", m.Price)),
 	}
 }
 

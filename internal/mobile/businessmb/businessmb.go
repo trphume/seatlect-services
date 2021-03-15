@@ -2,6 +2,7 @@ package businessmb
 
 import (
 	"context"
+	"fmt"
 	"github.com/tphume/seatlect-services/internal/database/typedb"
 	"github.com/tphume/seatlect-services/internal/genproto/businesspb"
 	"github.com/tphume/seatlect-services/internal/genproto/commonpb"
@@ -105,7 +106,7 @@ func MenuItemsToProto(mi []typedb.MenuItems) []*commonpb.MenuItem {
 			Name:        d.Name,
 			Description: d.Description,
 			Image:       d.Image,
-			Price:       d.Price.String(),
+			Price:       fmt.Sprintf("%f", d.Price),
 		}
 	}
 

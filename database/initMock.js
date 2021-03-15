@@ -99,7 +99,10 @@ db.business.insertMany([
     displayImage: '',
     images: [],
     placement: [],
-    menu: [],
+    menu: [
+      {name: "Fries", description: "Just fries", image: "", price: 10},
+      {name: "Salty Fries", description: "Just salty fries", image: "", price: 10}
+    ],
     status: 1,
   },
   {

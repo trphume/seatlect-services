@@ -1,7 +1,5 @@
 package typedb
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
-
 type Location struct {
 	Type        string    `bson:"type"`
 	Coordinates []float64 `bson:"coordinates"`
@@ -20,8 +18,8 @@ type Seat struct {
 }
 
 type MenuItems struct {
-	Name        string               `bson:"name"`
-	Description string               `bson:"description"`
-	Image       string               `bson:"image"`
-	Price       primitive.Decimal128 `bson:"price"`
+	Name        string  `bson:"name"`
+	Description string  `bson:"description"`
+	Image       string  `bson:"image"`
+	Price       float64 `bson:"price"`
 }
