@@ -95,7 +95,7 @@ func (b *BusinessSuite) TestAuthenticateBusiness() {
 	}
 }
 
-func (b *BusinessSuite) TestCreateBusiness() {
+func (b *BusinessSuite) TestCreateAndDelete() {
 	tests := []struct {
 		in  *typedb.Business
 		err error
@@ -153,7 +153,13 @@ func (b *BusinessSuite) TestCreateBusiness() {
 	tmp := &typedb.Business{Username: "Somewhere", Password: "ExamplePassword"}
 
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
-	_, err := b.BusinessDB.AuthenticateBusiness(ctx, tmp)
+	id, err := b.BusinessDB.AuthenticateBusiness(ctx, tmp)
+
+	b.Assert().Equal(nil, err)
+
+	// now delete
+	ctx, _ = context.WithTimeout(context.Background(), 5*time.Second)
+	err = b.BusinessDB.DeleteBusiness(ctx, id)
 
 	b.Assert().Equal(nil, err)
 }
