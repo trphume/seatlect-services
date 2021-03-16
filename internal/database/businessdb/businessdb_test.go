@@ -1,6 +1,7 @@
 package businessdb
 
 import (
+	"cloud.google.com/go/storage"
 	"context"
 	"github.com/stretchr/testify/suite"
 	"github.com/tphume/seatlect-services/internal/commonErr"
@@ -9,6 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
+	"google.golang.org/api/option"
 	"os"
 	"testing"
 	"time"
@@ -51,6 +53,15 @@ func (b *BusinessSuite) SetupSuite() {
 	b.BusinessDB = &BusinessDB{
 		BusCol: db.Collection("business"),
 	}
+
+	// Setup google cloud storage client
+	ctx, cancel = context.WithTimeout(context.Background(), 15 * time.Second)
+	stClient, err := storage.NewClient(ctx, option.WithCredentialsFile("../../../seatlect-image.creds.json"))
+	if err != nil {
+		b.T().Fatal("Error creating google cloud storage client: " + err.Error())
+	}
+
+	b.BusinessDB.ImageBucket = stClient.Bucket("seatlect-images-test")
 }
 
 func (b *BusinessSuite) TestListBusinessByIds() {

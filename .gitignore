@@ -17,3 +17,6 @@
 # IDE configurations
 .idea/
 .vscode/
+
+# Credential files
+*.creds.*

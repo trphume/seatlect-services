@@ -1,6 +1,6 @@
 FROM golang:1.14.6 AS dev
 
-ENV APP_PATH="/setlect-service"
+ENV APP_PATH="/seatlect-service"
 
 WORKDIR ${APP_PATH}
 
