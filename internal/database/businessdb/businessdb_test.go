@@ -278,6 +278,38 @@ func (b *BusinessSuite) TestRemoveMenuItem() {
 	}
 }
 
+func (b *BusinessSuite) TestUpdateBusinessStatus() {
+	tests := []struct {
+		in     string
+		status int
+		err    error
+	}{
+		{in: "randomfakeid", status: 100, err: commonErr.INVALID},
+		{in: admin1ID, status: 100, err: commonErr.NOTFOUND},
+		{in: brightioID, status: 100, err: nil},
+	}
+
+	for _, tt := range tests {
+		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+		err := b.BusinessDB.UpdateBusinessStatus(ctx, tt.in, tt.status)
+
+		b.Assert().Equal(tt.err, err)
+	}
+
+	// check updated status
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	brightio, err := b.BusinessDB.GetBusinessById(ctx, brightioID)
+
+	b.Assert().Equal(nil, err)
+	b.Assert().Equal(100, brightio.Status)
+
+	// cleanup
+	ctx, _ = context.WithTimeout(context.Background(), 5*time.Second)
+	err = b.BusinessDB.UpdateBusinessStatus(ctx, brightioID, 1)
+
+	b.Assert().Equal(nil, err)
+}
+
 func TestBusinessSuite(t *testing.T) {
 	suite.Run(t, new(BusinessSuite))
 }
