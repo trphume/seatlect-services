@@ -55,7 +55,7 @@ func (b *BusinessSuite) SetupSuite() {
 	}
 
 	// Setup google cloud storage client
-	ctx, cancel = context.WithTimeout(context.Background(), 15 * time.Second)
+	ctx, cancel = context.WithTimeout(context.Background(), 15*time.Second)
 	stClient, err := storage.NewClient(ctx, option.WithCredentialsFile("../../../seatlect-image.creds.json"))
 	if err != nil {
 		b.T().Fatal("Error creating google cloud storage client: " + err.Error())
@@ -266,6 +266,28 @@ func (b *BusinessSuite) TestListMenuItem() {
 
 		b.Assert().Equal(tt.err, err)
 		b.Assert().Equal(tt.lenout, len(out))
+	}
+}
+
+func (b *BusinessSuite) TestAppendMenuItem() {
+	tests := []struct {
+		in   string
+		item typedb.MenuItems
+		err  error
+	}{
+		{in: ironBuffetId, item: typedb.MenuItems{
+			Name:        "Pisco",
+			Description: "A delicate Pisco cat dish",
+			Image:       b64Img,
+			Price:       100,
+		}, err: nil},
+	}
+
+	for _, tt := range tests {
+		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+		_, err := b.BusinessDB.AppendMenuItem(ctx, tt.in, tt.item)
+
+		b.Assert().Equal(nil, err)
 	}
 }
 

@@ -240,10 +240,14 @@ func (b *BusinessDB) AppendMenuItem(ctx context.Context, id string, item typedb.
 	// Upload image to bucket
 	wr := b.ImageBucket.Object(uuid.NewString()).NewWriter(ctx)
 
-	imgReader := strings.NewReader(item.Image)
-	imgDecoder := base64.NewDecoder(base64.StdEncoding, imgReader)
+	index := strings.Index(item.Image, ",")
+	imgDecoder := base64.NewDecoder(base64.StdEncoding, strings.NewReader(item.Image[index+1:]))
 
 	if _, err = io.Copy(wr, imgDecoder); err != nil {
+		return "", commonErr.INVALID
+	}
+
+	if err = wr.Close(); err != nil {
 		return "", commonErr.INVALID
 	}
 
@@ -257,7 +261,9 @@ func (b *BusinessDB) AppendMenuItem(ctx context.Context, id string, item typedb.
 			}},
 		},
 		bson.D{
-			{"$push", item},
+			{"$push", bson.D{
+				{"menu", item},
+			}},
 		},
 	)
 
