@@ -4,6 +4,7 @@ import (
 	"cloud.google.com/go/storage"
 	"context"
 	"encoding/base64"
+	"fmt"
 	"github.com/google/uuid"
 	"github.com/tphume/seatlect-services/internal/commonErr"
 	"github.com/tphume/seatlect-services/internal/database/typedb"
@@ -251,6 +252,13 @@ func (b *BusinessDB) AppendMenuItem(ctx context.Context, id string, item typedb.
 		return "", commonErr.INVALID
 	}
 
+	attrs, err := b.ImageBucket.Attrs(ctx)
+	if err != nil {
+		return "", commonErr.INTERNAL
+	}
+
+	item.Image = fmt.Sprintf("https://storage.googleapis.com/%s/%s", attrs.Name, wr.Name)
+
 	// Add to mongo
 	res, err := b.BusCol.UpdateOne(
 		ctx,
@@ -276,7 +284,7 @@ func (b *BusinessDB) AppendMenuItem(ctx context.Context, id string, item typedb.
 		return "", commonErr.NOTFOUND
 	}
 
-	return wr.MediaLink, nil
+	return item.Image, nil
 }
 
 func (b *BusinessDB) RemoveMenuItem(ctx context.Context, id string, name string) error {

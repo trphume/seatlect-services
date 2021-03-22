@@ -6,7 +6,7 @@ type Location struct {
 }
 
 type Seat struct {
-	Name     string  `bson:"Name"`
+	Name     string  `bson:"name"`
 	Floor    int     `bson:"floor"`
 	Type     string  `bson:"type"`
 	Space    int     `bson:"space"`
