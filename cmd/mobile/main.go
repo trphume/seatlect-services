@@ -5,11 +5,14 @@ import (
 	"github.com/tphume/seatlect-services/internal/database/businessdb"
 	"github.com/tphume/seatlect-services/internal/database/customerdb"
 	"github.com/tphume/seatlect-services/internal/database/orderdb"
+	"github.com/tphume/seatlect-services/internal/database/reservationdb"
 	"github.com/tphume/seatlect-services/internal/genproto/businesspb"
 	"github.com/tphume/seatlect-services/internal/genproto/orderpb"
+	"github.com/tphume/seatlect-services/internal/genproto/reservationpb"
 	"github.com/tphume/seatlect-services/internal/genproto/userpb"
 	"github.com/tphume/seatlect-services/internal/mobile/businessmb"
 	"github.com/tphume/seatlect-services/internal/mobile/ordermb"
+	"github.com/tphume/seatlect-services/internal/mobile/reservationmb"
 	"github.com/tphume/seatlect-services/internal/mobile/usermb"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -43,6 +46,7 @@ func main() {
 	cusCol := client.Database("test").Collection("customer")
 	busCol := client.Database("test").Collection("business")
 	ordCol := client.Database("test").Collection("order")
+	resCol := client.Database("test").Collection("reservation")
 
 	// Construct each mobile api route
 	cusRepo := &customerdb.CustomerDB{
@@ -57,6 +61,9 @@ func main() {
 	ordRepo := &orderdb.OrderDB{OrdCol: ordCol}
 	ordServer := &ordermb.Server{Repo: ordRepo}
 
+	resRepo := &reservationdb.ReservationDB{ResCol: resCol}
+	resServer := &reservationmb.Server{Repo: resRepo}
+
 	// Setup the gRPC server
 	lis, err := net.Listen("tcp", "0.0.0.0:9700")
 	if err != nil {
@@ -67,6 +74,7 @@ func main() {
 	userpb.RegisterUserServiceServer(grpcServer, userServer)
 	businesspb.RegisterBusinessServiceServer(grpcServer, busServer)
 	orderpb.RegisterOrderServiceServer(grpcServer, ordServer)
+	reservationpb.RegisterReservationServiceServer(grpcServer, resServer)
 
 	log.Println("Starting server on 0.0.0.0:9700")
 	log.Fatal(grpcServer.Serve(lis))

@@ -32,7 +32,7 @@ func (r *ReservationDB) ListReservation(ctx context.Context, id string, start ti
 					{"$gte", start},
 				}},
 				{"end", bson.D{
-					{"lte", end},
+					{"$lte", end},
 				}},
 			},
 		)

@@ -5,6 +5,7 @@ import (
 	"github.com/tphume/seatlect-services/internal/database/typedb"
 	"github.com/tphume/seatlect-services/internal/genproto/commonpb"
 	"github.com/tphume/seatlect-services/internal/genproto/reservationpb"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"time"
@@ -47,9 +48,46 @@ type Repo interface {
 
 // Helper function
 func typedbToCommonpb(resv []typedb.Reservation) []*commonpb.Reservation {
-	panic("implement me")
+	res := make([]*commonpb.Reservation, len(resv))
+	for i, r := range resv {
+		res[i] = &commonpb.Reservation{
+			Id:         r.Id.Hex(),
+			BusinessId: r.BusinessId.Hex(),
+			Name:       r.Name,
+			Start:      r.Start.String(),
+			End:        r.End.String(),
+			Placement:  seatsToCommonpb(r.Placement),
+			Image:      r.Image,
+		}
+	}
+
+	return res
 }
 
 func seatsToCommonpb(seats []typedb.ReservationSeat) []*commonpb.ReservationSeat {
-	panic("implement me")
+	res := make([]*commonpb.ReservationSeat, len(seats))
+	for i, s := range seats {
+		var userId string
+		if primitive.ObjectID.IsZero(s.User) {
+			userId = ""
+		} else {
+			userId = s.User.Hex()
+		}
+
+		res[i] = &commonpb.ReservationSeat{
+			Name:     s.Name,
+			Floor:    int32(s.Floor),
+			Type:     s.Type,
+			Space:    int32(s.Space),
+			User:     userId,
+			Status:   s.Status,
+			X:        s.X,
+			Y:        s.Y,
+			Width:    s.Width,
+			Height:   s.Height,
+			Rotation: s.Rotation,
+		}
+	}
+
+	return res
 }
