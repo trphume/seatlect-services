@@ -238,7 +238,7 @@ func typedbMenuItemsToOapi(m typedb.MenuItems) business_api.MenuItem {
 		Description: createString(m.Description),
 		Image:       createString(m.Image),
 		Name:        createString(m.Name),
-		Price:       createString(fmt.Sprintf("%f", m.Price)),
+		Price:       createString(fmt.Sprintf("%.2f", m.Price)),
 	}
 }
 

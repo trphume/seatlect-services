@@ -107,7 +107,7 @@ func MenuItemsToProto(mi []typedb.MenuItems) []*commonpb.MenuItem {
 			Name:        d.Name,
 			Description: d.Description,
 			Image:       d.Image,
-			Price:       fmt.Sprintf("%f", d.Price),
+			Price:       fmt.Sprintf("%.2f", d.Price),
 		}
 	}
 
