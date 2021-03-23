@@ -9,6 +9,8 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+const iso8601 = "2006-01-02T15:04:05-0700"
+
 type Server struct {
 	Repo Repo
 
@@ -42,8 +44,8 @@ func typedbToCommonpb(orders []typedb.Order) []*commonpb.Order {
 			XId:           o.Id.Hex(),
 			ReservationId: o.ReservationId.Hex(),
 			Business:      o.BusinessId.Hex(),
-			Start:         o.Start.String(),
-			End:           o.End.String(),
+			Start:         o.Start.Format(iso8601),
+			End:           o.End.Format(iso8601),
 			Seats:         seatsToCommonpb(o.Seats),
 			Status:        o.Status,
 			Image:         o.Image,

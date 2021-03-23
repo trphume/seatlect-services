@@ -11,6 +11,8 @@ import (
 	"time"
 )
 
+const iso8601 = "2006-01-02T15:04:05-0700"
+
 type Server struct {
 	Repo Repo
 
@@ -19,7 +21,6 @@ type Server struct {
 
 func (s *Server) ListBusiness(ctx context.Context, req *businesspb.ListBusinessRequest) (*businesspb.ListBusinessResponse, error) {
 	// Construct search params
-	iso8601 := "2006-01-02T15:04:05-0700"
 	startDate, err := time.Parse(iso8601, req.StartDate)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "Argument is not valid")

@@ -12,6 +12,8 @@ import (
 	"time"
 )
 
+const iso8601 = "2006-01-02T15:04:05-0700"
+
 type Server struct {
 	Repo Repo
 
@@ -38,7 +40,7 @@ func (s *Server) SignIn(ctx context.Context, req *userpb.SignInRequest) (*userpb
 		Token: token,
 		User: &commonpb.User{
 			Username: customer.Username,
-			Dob:      customer.Dob.String(),
+			Dob:      customer.Dob.Format(iso8601),
 			Favorite: customer.Favorite},
 	}, nil
 }
@@ -49,7 +51,6 @@ func (s *Server) SignUp(ctx context.Context, req *userpb.SignUpRequest) (*userpb
 	}
 
 	// format request to correct type
-	iso8601 := "2006-01-02T15:04:05-0700"
 	dob, err := time.Parse(iso8601, req.Dob)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "Argument is not valid")
@@ -70,7 +71,7 @@ func (s *Server) SignUp(ctx context.Context, req *userpb.SignUpRequest) (*userpb
 		Token: token,
 		User: &commonpb.User{
 			Username: customer.Username,
-			Dob:      customer.Dob.String(),
+			Dob:      customer.Dob.Format(iso8601),
 			Favorite: make([]string, 0)},
 	}, nil
 }
