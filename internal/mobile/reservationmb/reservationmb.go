@@ -54,8 +54,8 @@ func typedbToCommonpb(resv []typedb.Reservation) []*commonpb.Reservation {
 			Id:         r.Id.Hex(),
 			BusinessId: r.BusinessId.Hex(),
 			Name:       r.Name,
-			Start:      r.Start.String(),
-			End:        r.End.String(),
+			Start:      r.Start.Format(iso8601),
+			End:        r.End.Format(iso8601),
 			Placement:  seatsToCommonpb(r.Placement),
 			Image:      r.Image,
 		}
