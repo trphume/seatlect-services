@@ -9,4 +9,5 @@ COPY go.sum .
 RUN go mod download
 
 COPY . .
-CMD go test -v ./...
+RUN go build -o web ./cmd/web/main.go
+CMD ./web

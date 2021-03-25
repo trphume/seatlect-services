@@ -9,4 +9,5 @@ COPY go.sum .
 RUN go mod download
 
 COPY . .
-CMD go test -v ./...
+RUN go build -o mobile ./cmd/mobile/main.go
+CMD ./mobile
