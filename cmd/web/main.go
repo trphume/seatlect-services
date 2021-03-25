@@ -4,6 +4,7 @@ import (
 	"cloud.google.com/go/storage"
 	"context"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/tphume/seatlect-services/internal/database/admindb"
 	"github.com/tphume/seatlect-services/internal/database/businessdb"
 	"github.com/tphume/seatlect-services/internal/database/requestdb"
@@ -71,6 +72,7 @@ func main() {
 
 	// Register routes
 	server := echo.New()
+	server.Use(middleware.CORS())
 	apiV1 := server.Group("/api/v1")
 
 	admin_api.RegisterHandlers(apiV1, adminServer)
