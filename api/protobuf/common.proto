@@ -1,26 +1,39 @@
 syntax = "proto3";
 package seatlect;
 
-option go_package = "internal/genproto/commonpb";
+option go_package = "github.com/tphume/seatlect-services/internal/genproto/commonpb";
 
 message User {
   string username = 1;
   string dob = 2;
   string avatar = 3;
-  repeated string preference = 4;
-  repeated string favorite = 5;
+  repeated string favorite = 4;
 }
 
 message Business {
   string _id = 1;
   string name = 2;
-  repeated string tags = 3;
-  string description = 4;
-  Latlng location = 5;
-  string address = 6;
-  string displayImage = 7;
-  repeated string images = 8;
-  repeated MenuItem menu = 9;
+  string type = 3;
+  repeated string tags = 4;
+  string description = 5;
+  Latlng location = 6;
+  string address = 7;
+  string displayImage = 8;
+  repeated string images = 9;
+  repeated MenuItem menu = 10;
+}
+
+message Order {
+  string _id =  1;
+  string reservationId = 2;
+  string business = 3;
+  string start = 4;
+  string end = 5;
+  repeated OrderSeat seats = 6;
+  string status = 7;
+  string image = 8;
+  int32 extraSpace = 9;
+  string name = 10;
 }
 
 message Latlng {
@@ -33,4 +46,33 @@ message MenuItem {
   string description = 2;
   string image = 3;
   string price = 4;
+}
+
+message OrderSeat {
+  string name = 1;
+  int32 space = 4;
+}
+
+message ReservationSeat {
+  string name = 1;
+  int32 floor = 2;
+  string type = 3;
+  int32 space = 4;
+  string user = 5;
+  string status = 6;
+  double x = 7;
+  double y = 8;
+  double width = 9;
+  double height = 10;
+  double rotation = 11;
+}
+
+message Reservation {
+  string id = 1;
+  string businessId = 2;
+  string name = 3;
+  string start = 4;
+  string end = 5;
+  repeated ReservationSeat placement = 6;
+  string image = 7;
 }

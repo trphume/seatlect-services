@@ -9,6 +9,27 @@ servers:
       port:
         default: "9000"
 paths:
+  /business:
+    get:
+      description: Get list of businesses by status and page number
+      parameters:
+        - in: query
+          name: status
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: page
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Retrieved list of Businesses successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListBusinessResponse"
   /business/{businessId}:
     get:
       description: Get Business information by ID
@@ -26,8 +47,171 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Business"
+    patch:
+      description: Update Business information by ID
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+            description: ID of the Business
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateBusinessRequest"
+      responses:
+        "204":
+          description: Business information updated successfully
+  /business/{businessId}/displayImage:
+    put:
+      description: Update Business displayImage by ID
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+            description: ID of the Business
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateDisplayImageRequest"
+      responses:
+        "200":
+          description: Display image updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateDisplayImageResponse"
+  /business/{businessId}/images:
+    post:
+      description: Append a new image to Business images
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+            description: ID of the Business
+      requestBody:
+        content:
+          image/png:
+            schema:
+              $ref: "#/components/schemas/ImageUpload"
+      responses:
+        "201":
+          description: Image appended
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppendImageResponse"
+  /business/{businessId}/images/{pos}:
+    delete:
+      description: Delete an image in Business given its position
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+            description: ID of the Business
+        - in: path
+          name: pos
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: "Image deleted from Business"
+  /business/{businessId}/status:
+    patch:
+      description: Update the Business status field
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+            description: ID of the Business
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateStatusRequest"
+      responses:
+        "204":
+          description: "Status updated"
+  /business/{businessId}/menu:
+    get:
+      description: Get the list of menu items
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+            description: ID of the Business
+      responses:
+        "200":
+          description: "List of menu items retrieved successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetMenuResponse"
+  /business/{businessId}/menuitems:
+    post:
+      description: Append a new menu item to the menu
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+            description: ID of the Business
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MenuItem"
+      responses:
+        "201":
+          description: Menu item appended
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppendMenuItemResponse"
+  /business/{businessId}/menuitems/{name}:
+    delete:
+      description: Delete a menuitem given its name
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+            description: ID of the Business
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: "Image deleted from Business"
+
 components:
   schemas:
+    Location:
+      type: object
+      properties:
+        latitude:
+          type: number
+        longitude:
+          type: number
     Business:
       type: object
       properties:
@@ -36,18 +220,15 @@ components:
         businessName:
           type: string
         type:
+          type: string
+        tags:
           type: array
           items:
             type: string
         description:
           type: string
         location:
-          type: object
-          properties:
-            latitude:
-              type: string
-            longitude:
-              type: string
+          $ref: "#/components/schemas/Location"
         address:
           type: string
         displayImage:
@@ -56,3 +237,75 @@ components:
           type: array
           items:
             type: string
+    MenuItem:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        image:
+          type: string
+        price:
+          type: string
+    ImageUpload:
+      type: string
+      format: Binary
+    ListBusinessResponse:
+      type: object
+      properties:
+        businesses:
+          type: array
+          items:
+            $ref: "#/components/schemas/Business"
+    UpdateBusinessRequest:
+      type: object
+      properties:
+        _id:
+          type: string
+        businessName:
+          type: string
+        type:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+        location:
+          $ref: "#/components/schemas/Location"
+        address:
+          type: string
+    UpdateDisplayImageRequest:
+      type: object
+      properties:
+        displayImage:
+          type: string
+    UpdateDisplayImageResponse:
+      type: object
+      properties:
+        displayImage:
+          type: string
+    AppendImageResponse:
+      type: object
+      properties:
+        image:
+          type: string
+    UpdateStatusRequest:
+      type: object
+      properties:
+        status:
+          type: integer
+    GetMenuResponse:
+      type: object
+      properties:
+        menu:
+          type: array
+          items:
+            $ref: "#/components/schemas/MenuItem"
+    AppendMenuItemResponse:
+      type: object
+      properties:
+        image:
+          type: string

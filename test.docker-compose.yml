@@ -1,0 +1,36 @@
+version: "3.8"
+
+networks:
+  seatlect-service-test:
+    driver: bridge
+
+services:
+  mongo:
+    image: mongo:4.4.0
+    container_name: seatlect-service-test-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - ./database/init.js:/docker-entrypoint-initdb.d/init.js
+      - ./database/initIndex.js:/docker-entrypoint-initdb.d/initIndex.js
+      - ./database/initMock.js:/docker-entrypoint-initdb.d/initMock.js
+    ports:
+      - "27017:27017"
+    logging:
+      driver: none
+    networks:
+      - seatlect-service-test
+
+  seatlect-service:
+    build:
+      context: .
+      dockerfile: test.Dockerfile
+    image: seatlect-service-test
+    container_name: seatlect-service-test
+    environment:
+      - MONGO_URI=mongodb://user:password@mongo:27017
+    depends_on:
+      - mongo
+    networks:
+      - seatlect-service-test

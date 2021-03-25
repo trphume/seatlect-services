@@ -18,6 +18,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BusinessServiceClient interface {
 	ListBusiness(ctx context.Context, in *ListBusinessRequest, opts ...grpc.CallOption) (*ListBusinessResponse, error)
+	ListBusinessById(ctx context.Context, in *ListBusinessByIdRequest, opts ...grpc.CallOption) (*ListBusinessByIdResponse, error)
 }
 
 type businessServiceClient struct {
@@ -37,11 +38,21 @@ func (c *businessServiceClient) ListBusiness(ctx context.Context, in *ListBusine
 	return out, nil
 }
 
+func (c *businessServiceClient) ListBusinessById(ctx context.Context, in *ListBusinessByIdRequest, opts ...grpc.CallOption) (*ListBusinessByIdResponse, error) {
+	out := new(ListBusinessByIdResponse)
+	err := c.cc.Invoke(ctx, "/seatlect.BusinessService/ListBusinessById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BusinessServiceServer is the server API for BusinessService service.
 // All implementations must embed UnimplementedBusinessServiceServer
 // for forward compatibility
 type BusinessServiceServer interface {
 	ListBusiness(context.Context, *ListBusinessRequest) (*ListBusinessResponse, error)
+	ListBusinessById(context.Context, *ListBusinessByIdRequest) (*ListBusinessByIdResponse, error)
 	mustEmbedUnimplementedBusinessServiceServer()
 }
 
@@ -51,6 +62,9 @@ type UnimplementedBusinessServiceServer struct {
 
 func (UnimplementedBusinessServiceServer) ListBusiness(context.Context, *ListBusinessRequest) (*ListBusinessResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListBusiness not implemented")
+}
+func (UnimplementedBusinessServiceServer) ListBusinessById(context.Context, *ListBusinessByIdRequest) (*ListBusinessByIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListBusinessById not implemented")
 }
 func (UnimplementedBusinessServiceServer) mustEmbedUnimplementedBusinessServiceServer() {}
 
@@ -83,6 +97,24 @@ func _BusinessService_ListBusiness_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BusinessService_ListBusinessById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListBusinessByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BusinessServiceServer).ListBusinessById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/seatlect.BusinessService/ListBusinessById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BusinessServiceServer).ListBusinessById(ctx, req.(*ListBusinessByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _BusinessService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "seatlect.BusinessService",
 	HandlerType: (*BusinessServiceServer)(nil),
@@ -90,6 +122,10 @@ var _BusinessService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListBusiness",
 			Handler:    _BusinessService_ListBusiness_Handler,
+		},
+		{
+			MethodName: "ListBusinessById",
+			Handler:    _BusinessService_ListBusinessById_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

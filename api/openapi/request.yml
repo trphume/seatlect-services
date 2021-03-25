@@ -1,0 +1,135 @@
+openapi: "3.0.2"
+info:
+  title: Request
+  version: "1.0.0"
+servers:
+  - url: http://localhost:{port}/api/v1
+    description: Local server
+    variables:
+      port:
+        default: "9000"
+paths:
+  /request:
+    get:
+      description: List business and its change request information
+      parameters:
+        - in: query
+          name: page
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Retrieve list of business and change request successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListRequestResponse"
+  /request/{businessId}/approve:
+    post:
+      description: Approve a business change request
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+          description: ID of the Business
+      responses:
+        "204":
+          description: Business change request approved
+  /request/{businessId}:
+    get:
+      description: Get a specific change request
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+          description: ID of the Business
+      responses:
+        "200":
+          description: Change request information retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChangeRequest"
+    post:
+      description: Create a new change request for a business
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+          description: ID of the Business
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangeRequest"
+      responses:
+        "201":
+          description: Create change request successfully
+components:
+  schemas:
+    Location:
+      type: object
+      properties:
+        latitude:
+          type: number
+        longitude:
+          type: number
+    Business:
+      type: object
+      properties:
+        _id:
+          type: string
+        businessName:
+          type: string
+        type:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+        location:
+          $ref: "#/components/schemas/Location"
+        address:
+          type: string
+        displayImage:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+    ChangeRequest:
+      type: object
+      properties:
+        _id:
+          type: string
+        businessName:
+          type: string
+        type:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+        location:
+          $ref: "#/components/schemas/Location"
+        address:
+          type: string
+    ListRequestResponse:
+      type: object
+      properties:
+        request:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChangeRequest"

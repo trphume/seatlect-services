@@ -1,0 +1,40 @@
+openapi: "3.0.2"
+info:
+  title: Admin
+  description: Endpoint for Seatlect admin management platform
+  version: "1.0"
+servers:
+  - url: http://localhost:{port}/api/v1
+    description: Local server
+    variables:
+      port:
+        default: "9000"
+paths:
+  /admin/login:
+    post:
+      description: Login admin with given username and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "204":
+          description: Authentication was successful
+        "401":
+          description: Authentication failed with given credentials
+        "500":
+          description: Unknown error occurred
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - "username"
+        - "password"

@@ -1,13 +1,15 @@
 syntax = "proto3";
 package seatlect;
 
-option go_package = "internal/genproto/userpb";
+option go_package = "github.com/tphume/seatlect-services/internal/genproto/userpb";
 
 import "common.proto";
 
 service UserService {
   rpc SignIn (SignInRequest) returns (SignInResponse);
   rpc SignUp (SignUpRequest) returns (SignUpResponse);
+  rpc AddFavorite(AddFavoriteRequest) returns (AddFavoriteResponse);
+  rpc RemoveFavorite(RemoveFavoriteRequest) returns (RemoveFavoriteResponse);
 }
 
 // For SigIn endpoint
@@ -24,11 +26,28 @@ message SignInResponse {
 // For SignUp endpoint
 message SignUpRequest {
   string username = 1;
-  string password = 2;
-  string dob = 3;
+  string email = 2;
+  string password = 3;
+  string dob = 4;
 }
 
 message SignUpResponse {
   string token = 1;
   User user = 3;
 }
+
+// For Add to favorite endpoint
+message AddFavoriteRequest {
+  string id = 1;
+  string businessId = 2;
+}
+
+message AddFavoriteResponse {}
+
+// For Remove favorite endpoint
+message RemoveFavoriteRequest {
+  string id = 1;
+  string businessId = 2;
+}
+
+message RemoveFavoriteResponse {}

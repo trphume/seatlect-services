@@ -1,0 +1,22 @@
+syntax = "proto3";
+package seatlect;
+
+option go_package = "github.com/tphume/seatlect-services/internal/genproto/reservationpb";
+
+import "common.proto";
+
+service ReservationService {
+  rpc ListReservation (ListReservationRequest) returns (ListReservationResponse);
+}
+
+// For ListReservation endpoint
+// start and end are optional
+message ListReservationRequest {
+  string id = 1;
+  string start = 2;
+  string end = 3;
+}
+
+message ListReservationResponse {
+  repeated Reservation reservation = 1;
+}

@@ -10,7 +10,19 @@ servers:
       port:
         default: "9000"
 paths:
-  /users/login:
+  /user/register:
+    post:
+      description: Register the user with the given information
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "201":
+          description: Business have been created
+  /user/login:
     post:
       description: Login user with given username and password
       requestBody:
@@ -26,12 +38,36 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/LoginResponse"
-        "401":
+        "404":
           description: Authentication failed with given credentials
         "500":
           description: Unknown error occurred
 components:
   schemas:
+    RegisterRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        businessName:
+          type: string
+        type:
+          type: string
+        description:
+          type: string
+        location:
+          type: object
+          properties:
+            latitude:
+              type: number
+            longitude:
+              type: number
+        address:
+          type: string
     LoginRequest:
       type: object
       properties:
@@ -45,5 +81,5 @@ components:
     LoginResponse:
       type: object
       properties:
-        token:
+        _id:
           type: string

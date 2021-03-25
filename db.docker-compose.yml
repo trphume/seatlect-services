@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo:4.4.0
+    container_name: seatlect-service-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - ./database/init.js:/docker-entrypoint-initdb.d/init.js
+      - ./database/initIndex.js:/docker-entrypoint-initdb.d/initIndex.js
+      - ./database/initMock.js:/docker-entrypoint-initdb.d/initMock.js
+    ports:
+      - "27017:27017"
