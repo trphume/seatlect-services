@@ -77,9 +77,9 @@ paths:
             description: ID of the Business
       requestBody:
         content:
-          image/png:
+          application/json:
             schema:
-              $ref: "#/components/schemas/ImageUpload"
+              $ref: "#/components/schemas/UpdateDisplayImageRequest"
       responses:
         "200":
           description: Display image updated
@@ -276,6 +276,11 @@ components:
         location:
           $ref: "#/components/schemas/Location"
         address:
+          type: string
+    UpdateDisplayImageRequest:
+      type: object
+      properties:
+        displayImage:
           type: string
     UpdateDisplayImageResponse:
       type: object

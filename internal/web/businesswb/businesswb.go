@@ -81,7 +81,24 @@ func (s *Server) PatchBusinessBusinessId(ctx echo.Context, businessId string) er
 }
 
 func (s *Server) PutBusinessBusinessIdDisplayImage(ctx echo.Context, businessId string) error {
-	panic("implement me")
+	var req business_api.UpdateDisplayImageRequest
+	if err := ctx.Bind(&req); err != nil {
+		return ctx.String(http.StatusBadRequest, "Error binding request body")
+	}
+
+	img, err := s.Repo.UpdateBusinessDIById(ctx.Request().Context(), businessId, *req.DisplayImage)
+	if err != nil {
+		if err == commonErr.INVALID {
+			return ctx.String(http.StatusBadRequest, "Bad argument")
+		} else if err == commonErr.NOTFOUND {
+			return ctx.String(http.StatusNotFound, "Can't find business id with given id")
+		}
+
+		return ctx.String(http.StatusInternalServerError, "Internal error")
+	}
+
+	res := business_api.UpdateDisplayImageResponse{DisplayImage: createString(img)}
+	return ctx.JSONPretty(http.StatusOK, res, "  ")
 }
 
 func (s *Server) PostBusinessBusinessIdImages(ctx echo.Context, businessId string) error {
