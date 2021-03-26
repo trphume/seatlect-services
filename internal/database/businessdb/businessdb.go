@@ -193,7 +193,53 @@ func (b *BusinessDB) UpdateBusinessById(ctx context.Context, business typedb.Bus
 }
 
 func (b *BusinessDB) UpdateBusinessDIById(ctx context.Context, id string, image string) (string, error) {
-	panic("implement me")
+	pId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return "", commonErr.INVALID
+	}
+
+	// Upload Image to bucket
+	wr := b.ImageBucket.Object(uuid.NewString()).NewWriter(ctx)
+
+	index := strings.Index(image, ",")
+	imgDecoder := base64.NewDecoder(base64.StdEncoding, strings.NewReader(image[index+1:]))
+
+	if _, err = io.Copy(wr, imgDecoder); err != nil {
+		return "", commonErr.INVALID
+	}
+
+	if err = wr.Close(); err != nil {
+		return "", commonErr.INVALID
+	}
+
+	attrs, err := b.ImageBucket.Attrs(ctx)
+	if err != nil {
+		return "", commonErr.INTERNAL
+	}
+
+	image = fmt.Sprintf("https://storage.googleapis.com/%s/%s", attrs.Name, wr.Name)
+
+	// Update in Mongo
+	res := b.BusCol.FindOneAndUpdate(
+		ctx,
+		bson.M{"_id": pId},
+		bson.D{
+			{
+				"$set",
+				bson.D{{"displayImage", image}},
+			},
+		},
+	)
+
+	if res.Err() != nil {
+		if res.Err() == mongo.ErrNoDocuments {
+			return "", commonErr.NOTFOUND
+		}
+
+		return "", commonErr.INTERNAL
+	}
+
+	return image, nil
 }
 
 func (b *BusinessDB) AppendBusinessImage(ctx context.Context, id string, image string) error {
