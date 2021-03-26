@@ -248,6 +248,25 @@ func (b *BusinessSuite) TestUpdateBusinessById() {
 	}
 }
 
+func (b *BusinessSuite) TestUpdateBusinessDIById() {
+	tests := []struct {
+		in  string
+		img string
+		err error
+	}{
+		{in: brightioID, img: b64Img, err: nil},
+		{in: admin1ID, img: b64Img, err: commonErr.NOTFOUND},
+		{in: admin1ID, img: "wrong", err: commonErr.INVALID},
+	}
+
+	for _, tt := range tests {
+		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+		_, err := b.BusinessDB.UpdateBusinessDIById(ctx, tt.in, tt.img)
+
+		b.Assert().Equal(tt.err, err)
+	}
+}
+
 func (b *BusinessSuite) TestListMenuItem() {
 	tests := []struct {
 		in     string
