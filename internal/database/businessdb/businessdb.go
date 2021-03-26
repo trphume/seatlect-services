@@ -31,7 +31,7 @@ func (b *BusinessDB) ListBusiness(ctx context.Context, searchParams typedb.ListB
 
 	// TODO: construct sorting option
 
-	businesses, err := b.BusCol.Find(ctx, bson.M{}, &options.FindOptions{
+	businesses, err := b.BusCol.Find(ctx, bson.M{"status": 1}, &options.FindOptions{
 		Limit: limit,
 	})
 
