@@ -78,7 +78,11 @@ db.business.insertMany([
     address: 'Keki Ngam 4, Chalong Krung 1, Latkrabang, Bangkok, 10520',
     displayImage: '',
     images: [],
-    placement: {},
+    placement: {
+      width: 400,
+      height: 400,
+      seats: []
+    },
     menu: [],
     status: 1,
   },
@@ -98,7 +102,11 @@ db.business.insertMany([
     address: '611 Chalong Krung 1, Latkrabang, Bangkok, 10520',
     displayImage: '',
     images: [],
-    placement: {},
+    placement: {
+      width: 400,
+      height: 400,
+      seats: []
+    },
     menu: [
       { name: "Fries", description: "Just fries", image: "", price: 10 },
       { name: "Salty Fries", description: "Just salty fries", image: "", price: 10 }
@@ -121,7 +129,11 @@ db.business.insertMany([
     address: '44 Chalong Krung 1, Latkrabang, Bangkok 10520',
     displayImage: '',
     images: [],
-    placement: {},
+    placement: {
+      width: 400,
+      height: 400,
+      seats: []
+    },
     menu: [
       { name: "Fries", description: "Just fries", image: "", price: 10 },
       { name: "Salty Fries", description: "Just salty fries", image: "", price: 10 }
@@ -144,7 +156,11 @@ db.business.insertMany([
     address: 'this is honestly, just some made up address',
     displayImage: '',
     images: [],
-    placement: {},
+    placement: {
+      width: 400,
+      height: 400,
+      seats: []
+    },
     menu: [],
     status: 1
   }
