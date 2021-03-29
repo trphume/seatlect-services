@@ -17,6 +17,12 @@ type Seat struct {
 	Rotation float64 `bson:"rotation"`
 }
 
+type Placement struct {
+	Width  int    `bson:"width"`
+	Height int    `bson:"height"`
+	Seats  []Seat `bson:"seats"`
+}
+
 type MenuItems struct {
 	Name        string  `bson:"name"`
 	Description string  `bson:"description"`

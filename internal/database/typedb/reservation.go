@@ -6,13 +6,13 @@ import (
 )
 
 type Reservation struct {
-	Id         primitive.ObjectID `bson:"_id"`
-	BusinessId primitive.ObjectID `bson:"businessId"`
-	Name       string             `bson:"name"`
-	Start      time.Time          `bson:"start"`
-	End        time.Time          `bson:"end"`
-	Placement  []ReservationSeat  `bson:"placement"`
-	Image      string             `bson:"image"`
+	Id         primitive.ObjectID   `bson:"_id"`
+	BusinessId primitive.ObjectID   `bson:"businessId"`
+	Name       string               `bson:"name"`
+	Start      time.Time            `bson:"start"`
+	End        time.Time            `bson:"end"`
+	Placement  ReservationPlacement `bson:"placement"`
+	Image      string               `bson:"image"`
 }
 
 type ReservationSeat struct {
@@ -27,4 +27,10 @@ type ReservationSeat struct {
 	Width    float64            `bson:"width"`
 	Height   float64            `bson:"height"`
 	Rotation float64            `bson:"rotation"`
+}
+
+type ReservationPlacement struct {
+	Width  int               `bson:"width"`
+	Height int               `bson:"height"`
+	Seats  []ReservationSeat `bson:"seats"`
 }

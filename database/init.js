@@ -31,12 +31,17 @@ db.createCollection('business', {
           bsonType: 'string', minLength: 3,
           maxLength: 50
         }, displayImage: { bsonType: 'string' }, images: { bsonType: 'array', items: { bsonType: 'string', maxItems: 10 } }, placement: {
-          bsonType: 'array', items: {
-            required: ['name', 'floor', 'type', 'space', 'x', 'y', 'width', 'height', 'rotation'], properties: {
-              name: {
-                bsonType: 'string', minLength: 1,
-                maxLength: 2
-              }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE'] }, space: { bsonType: 'int', min: 1 }, x: { bsonType: 'double' }, y: { bsonType: 'double' }, width: { bsonType: 'double' }, height: { bsonType: 'double' }, rotation: { bsonType: 'double' }
+          bsonType: 'object',
+          required: ['width', 'height', 'seats'], properties: {
+            width: { bsonType: 'int' }, height: { bsonType: 'int' }, seats: {
+              bsonType: 'array', items: {
+                required: ['name', 'floor', 'type', 'space', 'x', 'y', 'width', 'height', 'rotation'], properties: {
+                  name: {
+                    bsonType: 'string', minLength: 1,
+                    maxLength: 2
+                  }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string', enum: ['SEAT', 'TABLE'] }, space: { bsonType: 'int', min: 1 }, x: { bsonType: 'double' }, y: { bsonType: 'double' }, width: { bsonType: 'double' }, height: { bsonType: 'double' }, rotation: { bsonType: 'double' }
+                }
+              }
             }
           }
         }, menu: {
@@ -59,12 +64,17 @@ db.createCollection('reservation', {
     $jsonSchema: {
       bsonType: 'object', required: ['businessId', 'name', 'start', 'end', 'placement', 'image'], properties: {
         businessId: { bsonType: 'objectId' }, name: { bsonType: 'string' }, start: { bsonType: 'date' }, end: { bsonType: 'date' }, placement: {
-          bsonType: 'array', items: {
-            required: ['name', 'floor', 'type', 'space', 'user', 'status', 'x', 'y', 'width', 'height', 'rotation'], properties: {
-              name: {
-                bsonType: 'string', minLength: 1,
-                maxLength: 2
-              }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string' }, space: { bsonType: 'int', min: 1 }, user: { bsonType: 'objectId' }, status: { bsonType: 'string', enum: ['EMPTY', 'TAKEN', 'IN PROGRESS'] }, x: { bsonType: 'double' }, y: { bsonType: 'double' }, width: { bsonType: 'double' }, height: { bsonType: 'double' }, rotation: { bsonType: 'double' }
+          bsonType: 'object',
+          required: ['width', 'height', 'seats'], properties: {
+            width: { bsonType: 'int' }, height: { bsonType: 'int' }, seats: {
+              bsonType: 'array', items: {
+                required: ['name', 'floor', 'type', 'space', 'user', 'status', 'x', 'y', 'width', 'height', 'rotation'], properties: {
+                  name: {
+                    bsonType: 'string', minLength: 1,
+                    maxLength: 2
+                  }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string' }, space: { bsonType: 'int', min: 1 }, user: { bsonType: 'objectId' }, status: { bsonType: 'string', enum: ['EMPTY', 'TAKEN', 'IN PROGRESS'] }, x: { bsonType: 'double' }, y: { bsonType: 'double' }, width: { bsonType: 'double' }, height: { bsonType: 'double' }, rotation: { bsonType: 'double' }
+                }
+              }
             }
           }
         }, image: { bsonType: 'string' }

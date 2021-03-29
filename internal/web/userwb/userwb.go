@@ -64,7 +64,7 @@ func (s *Server) PostUserRegister(ctx echo.Context) error {
 		Address:      *req.Address,
 		DisplayImage: "",
 		Images:       make([]string, 0),
-		Placement:    make([]typedb.Seat, 0),
+		Placement:    typedb.Placement{},
 		Menu:         make([]typedb.MenuItems, 0),
 		Status:       0,
 		Verified:     false,

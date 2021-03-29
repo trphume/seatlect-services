@@ -56,8 +56,12 @@ func typedbToCommonpb(resv []typedb.Reservation) []*commonpb.Reservation {
 			Name:       r.Name,
 			Start:      r.Start.Format(iso8601),
 			End:        r.End.Format(iso8601),
-			Placement:  seatsToCommonpb(r.Placement),
-			Image:      r.Image,
+			Placement: &commonpb.ReservationPlacement{
+				Height: int32(r.Placement.Height),
+				Width:  int32(r.Placement.Width),
+				Seats:  seatsToCommonpb(r.Placement.Seats),
+			},
+			Image: r.Image,
 		}
 	}
 

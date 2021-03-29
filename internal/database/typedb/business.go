@@ -18,7 +18,7 @@ type Business struct {
 	Address      string             `bson:"address"`
 	DisplayImage string             `bson:"displayImage"`
 	Images       []string           `bson:"images"`
-	Placement    []Seat             `bson:"placement"`
+	Placement    Placement          `bson:"placement"`
 	Menu         []MenuItems        `bson:"menu"`
 	Status       int                `bson:"status"`
 	Verified     bool               `bson:"verified"`
