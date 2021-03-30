@@ -42,6 +42,10 @@ func (s *Server) ListReservation(ctx context.Context, req *reservationpb.ListRes
 	return &reservationpb.ListReservationResponse{Reservation: typedbToCommonpb(reservations)}, nil
 }
 
+func (s *Server) ReserveSeats(context.Context, *reservationpb.ReserveSeatsRequest) (*reservationpb.ReserveSeatsResponse, error) {
+	panic("implement me")
+}
+
 type Repo interface {
 	ListReservation(ctx context.Context, id string, start time.Time, end time.Time) ([]typedb.Reservation, error)
 }

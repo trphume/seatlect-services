@@ -7,6 +7,7 @@ import "common.proto";
 
 service ReservationService {
   rpc ListReservation (ListReservationRequest) returns (ListReservationResponse);
+  rpc ReserveSeats(ReserveSeatsRequest) returns (ReserveSeatsResponse);
 }
 
 // For ListReservation endpoint
@@ -19,4 +20,15 @@ message ListReservationRequest {
 
 message ListReservationResponse {
   repeated Reservation reservation = 1;
+}
+
+// For ReserveSeats endpoint
+message ReserveSeatsRequest {
+  string resId = 1;
+  string userId = 2;
+  repeated string name = 3;
+}
+
+message ReserveSeatsResponse {
+  Order order = 1;
 }
