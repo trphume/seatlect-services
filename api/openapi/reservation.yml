@@ -1,0 +1,124 @@
+openapi: "3.0.2"
+info:
+  title: Reservation
+  description: Endpoint for Seatlect admin management platform
+  version: "1.0"
+servers:
+  - url: http://localhost:{port}/api/v1
+    description: Local server
+    variables:
+      port:
+        default: "9000"
+paths:
+  /reservation/{businessId}:
+    get:
+      description: List a business reservations
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+          description: ID of the Business
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ListReservationRequest"
+      responses:
+        "200":
+          description: Retrieved list of reservations successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListReservationResponse"
+    post:
+      description: Create a new reservation
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+          description: ID of the Business
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateReservationRequest"
+      responses:
+        "201":
+          description: Reservation Created
+components:
+  schemas:
+    Seat:
+      type: object
+      properties:
+        name:
+          type: string
+        floor:
+          type: integer
+        space:
+          type: integer
+        user:
+          type: string
+        status:
+          type: string
+        x:
+          type: number
+        y:
+          type: number
+        width:
+          type: integer
+        height:
+          type: integer
+        rotation:
+          type: number
+    Placement:
+      type: object
+      properties:
+        width:
+          type: integer
+        height:
+          type: integer
+        seats:
+          type: array
+          items:
+            $ref: "#/components/schemas/Seat"
+    Reservation:
+      type: object
+      properties:
+        name:
+          type: string
+        start:
+          type: string
+        end:
+          type: string
+        placement:
+          type: object
+          $ref: "#/components/schemas/Placement"
+    CreateReservationRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        start:
+          type: string
+        end:
+          type: string
+    ListReservationRequest:
+      type: object
+      properties:
+        start:
+          type: string
+        end:
+          type: string
+    ListReservationResponse:
+      type: object
+      properties:
+        reservations:
+          type: array
+          items:
+          $ref: "#/components/schemas/Reservation"

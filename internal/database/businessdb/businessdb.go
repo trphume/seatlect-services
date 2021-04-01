@@ -77,7 +77,7 @@ func (b *BusinessDB) ListBusinessByIds(ctx context.Context, ids []string) ([]typ
 }
 
 func (b *BusinessDB) AuthenticateBusiness(ctx context.Context, business *typedb.Business) (string, error) {
-	res := b.BusCol.FindOne(ctx, bson.M{"username": business.Username})
+	res := b.BusCol.FindOne(ctx, bson.M{"status": 1, "username": business.Username})
 	if res.Err() != nil {
 		if res.Err() == mongo.ErrNoDocuments {
 			return "", commonErr.NOTFOUND
