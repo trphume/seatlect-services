@@ -121,4 +121,4 @@ components:
         reservations:
           type: array
           items:
-          $ref: "#/components/schemas/Reservation"
+            $ref: "#/components/schemas/Reservation"
