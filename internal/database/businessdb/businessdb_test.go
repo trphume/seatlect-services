@@ -128,7 +128,7 @@ func (b *BusinessSuite) TestCreateAndDelete() {
 			Images:       nil,
 			Placement:    typedb.Placement{},
 			Menu:         nil,
-			Status:       0,
+			Status:       1,
 			Verified:     false,
 		}, err: nil},
 		{in: &typedb.Business{
@@ -148,7 +148,7 @@ func (b *BusinessSuite) TestCreateAndDelete() {
 			Images:       nil,
 			Placement:    typedb.Placement{},
 			Menu:         nil,
-			Status:       0,
+			Status:       1,
 			Verified:     false,
 		}, err: commonErr.INTERNAL},
 	}

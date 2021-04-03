@@ -121,6 +121,24 @@ func (r *RequestDB) CreateRequest(ctx context.Context, request *typedb.Request) 
 	return nil
 }
 
+func (r *RequestDB) DeleteRequest(ctx context.Context, id string) error {
+	rId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return commonErr.INVALID
+	}
+
+	res, err := r.ReqCol.DeleteOne(ctx, bson.M{"_id": rId})
+	if err != nil {
+		return commonErr.INTERNAL
+	}
+
+	if res.DeletedCount == 0 {
+		return commonErr.NOTFOUND
+	}
+
+	return nil
+}
+
 // helper function
 func createBool(b bool) *bool {
 	return &b
