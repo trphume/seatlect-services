@@ -83,6 +83,10 @@ func (s *Server) PostRequestBusinessId(ctx echo.Context, businessId string) erro
 	return ctx.String(http.StatusCreated, "Business change request created successfully")
 }
 
+func (s *Server) DeleteRequestBusinessId(ctx echo.Context, businessId string) error {
+	panic("implement me")
+}
+
 func (s *Server) PostRequestBusinessIdApprove(ctx echo.Context, businessId string) error {
 	if err := s.Repo.ApproveRequest(ctx.Request().Context(), businessId); err != nil {
 		if err == commonErr.NOTFOUND {
