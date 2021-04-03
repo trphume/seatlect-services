@@ -84,7 +84,15 @@ func (s *Server) PostRequestBusinessId(ctx echo.Context, businessId string) erro
 }
 
 func (s *Server) DeleteRequestBusinessId(ctx echo.Context, businessId string) error {
-	panic("implement me")
+	if err := s.Repo.DeleteRequest(ctx.Request().Context(), businessId); err != nil {
+		if err == commonErr.NOTFOUND {
+			return ctx.String(http.StatusNotFound, "Error change request of business with given id")
+		}
+
+		return ctx.String(http.StatusInternalServerError, "Database error")
+	}
+
+	return ctx.String(http.StatusNoContent, "Business change request rejected successfully")
 }
 
 func (s *Server) PostRequestBusinessIdApprove(ctx echo.Context, businessId string) error {
@@ -104,6 +112,7 @@ type Repo interface {
 	ApproveRequest(ctX context.Context, id string) error
 	GetRequestById(ctx context.Context, request *typedb.Request) error
 	CreateRequest(ctx context.Context, request *typedb.Request) error
+	DeleteRequest(ctx context.Context, id string) error
 }
 
 // Helper functions
