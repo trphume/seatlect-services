@@ -12,6 +12,7 @@ import (
 
 type ReservationDB struct {
 	ResCol *mongo.Collection
+	BusCol *mongo.Collection
 }
 
 func (r *ReservationDB) ListReservation(ctx context.Context, id string, start time.Time, end time.Time) ([]typedb.Reservation, error) {
@@ -48,4 +49,12 @@ func (r *ReservationDB) ListReservation(ctx context.Context, id string, start ti
 	}
 
 	return res, nil
+}
+
+func (r *ReservationDB) CreateReservation(ctx context.Context, placement typedb.Placement) error {
+	panic("implement me")
+}
+
+func (r *ReservationDB) ReserveSeats(ctx context.Context, id string, user string, seats []string) (typedb.Order, error) {
+	panic("implement me")
 }
