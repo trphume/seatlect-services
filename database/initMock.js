@@ -79,8 +79,8 @@ db.business.insertMany([
     displayImage: '',
     images: [],
     placement: {
-      width: 400,
-      height: 400,
+      width: 800,
+      height: 800,
       seats: []
     },
     menu: [],
@@ -103,8 +103,8 @@ db.business.insertMany([
     displayImage: '',
     images: [],
     placement: {
-      width: 400,
-      height: 400,
+      width: 800,
+      height: 800,
       seats: []
     },
     menu: [
@@ -130,8 +130,8 @@ db.business.insertMany([
     displayImage: '',
     images: [],
     placement: {
-      width: 400,
-      height: 400,
+      width: 800,
+      height: 800,
       seats: []
     },
     menu: [
@@ -157,9 +157,54 @@ db.business.insertMany([
     displayImage: '',
     images: [],
     placement: {
-      width: 400,
-      height: 400,
-      seats: []
+      width: 800,
+      height: 800,
+      seats: [
+        {
+          name: 'A1',
+          floor: 1,
+          type: 'TABLE',
+          space: 4,
+          x: 100,
+          y: 100,
+          width: 80,
+          height: 80,
+          rotation: 0,
+        },
+        {
+          name: 'A2',
+          floor: 1,
+          type: 'TABLE',
+          space: 4,
+          x: 200,
+          y: 100,
+          width: 80,
+          height: 80,
+          rotation: 0,
+        },
+        {
+          name: 'B1',
+          floor: 1,
+          type: 'TABLE',
+          space: 4,
+          x: 100,
+          y: 200,
+          width: 80,
+          height: 80,
+          rotation: 0,
+        },
+        {
+          name: 'B2',
+          floor: 1,
+          type: 'TABLE',
+          space: 4,
+          x: 200,
+          y: 200,
+          width: 80,
+          height: 80,
+          rotation: 0,
+        },
+      ]
     },
     menu: [],
     status: 1
@@ -181,7 +226,7 @@ db.reservation.insertMany([
         {
           name: 'A1',
           floor: 1,
-          type: 'table1',
+          type: 'TABLE',
           space: 4,
           user: jakeId,
           status: 'TAKEN',
@@ -194,13 +239,13 @@ db.reservation.insertMany([
         {
           name: 'A2',
           floor: 1,
-          type: 'table2',
+          type: 'TABLE',
           space: 4,
           user: null,
           status: 'EMPTY',
           x: 470.2353,
           y: 368.8553,
-          width: 100,
+          width: 80,
           height: 80,
           rotation: 0,
         },
@@ -221,7 +266,7 @@ db.reservation.insertMany([
         {
           name: 'A1',
           floor: 1,
-          type: 'table1',
+          type: 'TABLE',
           space: 4,
           user: null,
           status: 'EMPTY',
@@ -234,13 +279,13 @@ db.reservation.insertMany([
         {
           name: 'A2',
           floor: 1,
-          type: 'table2',
+          type: 'TABLE',
           space: 4,
           user: null,
           status: 'EMPTY',
           x: 470.2353,
           y: 368.8553,
-          width: 100,
+          width: 80,
           height: 80,
           rotation: 0,
         },
@@ -263,7 +308,7 @@ db.order.insertMany([
       {
         name: 'A1',
         floor: 1,
-        type: 'table1',
+        type: 'TABLE',
         space: 4,
         x: 471.1235,
         y: 124.2363,
