@@ -25,7 +25,7 @@ func (s *Server) GetPlacementBusinessId(ctx echo.Context, businessId string) err
 		return ctx.String(http.StatusInternalServerError, "Database error")
 	}
 
-	res := typedbToOapi(placement)
+	res := typedbToOapi(*placement)
 	return ctx.JSONPretty(http.StatusOK, res, "  ")
 }
 
@@ -51,7 +51,7 @@ func (s *Server) PutPlacementBusinessId(ctx echo.Context, businessId string) err
 }
 
 type Repo interface {
-	GetPlacement(ctx context.Context, id string) (typedb.Placement, error)
+	GetPlacement(ctx context.Context, id string) (*typedb.Placement, error)
 	UpdatePlacement(ctx context.Context, id string, placement typedb.Placement) error
 }
 
