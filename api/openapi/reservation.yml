@@ -60,6 +60,8 @@ components:
           type: string
         floor:
           type: integer
+        type:
+          type: string
         space:
           type: integer
         user:
@@ -68,12 +70,12 @@ components:
           type: string
         x:
           type: number
-        y:
+        "y":
           type: number
         width:
-          type: integer
+          type: number
         height:
-          type: integer
+          type: number
         rotation:
           type: number
     Placement:

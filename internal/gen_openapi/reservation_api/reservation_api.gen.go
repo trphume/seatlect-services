@@ -52,15 +52,16 @@ type Reservation struct {
 // Seat defines model for Seat.
 type Seat struct {
 	Floor    *int     `json:"floor,omitempty"`
-	Height   *int     `json:"height,omitempty"`
+	Height   *float32 `json:"height,omitempty"`
 	Name     *string  `json:"name,omitempty"`
 	Rotation *float32 `json:"rotation,omitempty"`
 	Space    *int     `json:"space,omitempty"`
 	Status   *string  `json:"status,omitempty"`
-	True     *float32 `json:"true,omitempty"`
+	Type     *string  `json:"type,omitempty"`
 	User     *string  `json:"user,omitempty"`
-	Width    *int     `json:"width,omitempty"`
+	Width    *float32 `json:"width,omitempty"`
 	X        *float32 `json:"x,omitempty"`
+	Y        *float32 `json:"y,omitempty"`
 }
 
 // GetReservationBusinessIdJSONBody defines parameters for GetReservationBusinessId.
@@ -158,17 +159,17 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/+RVQW/bPAz9KwK/72jUaXeaj92GoUAPRXccemBsOlYhSypFpwuC/PdBctI4tVJ0KHba",
-	"KbFEPT4+PlFbqF3vnSUrAaothLqjHtPfL0wodE+BeI2inb2np4GCxD3PzhOLphRJtok/svEEFQRhbVew",
-	"K8BiT9mNIMiS2dkVhxW3fKRaYuytDvIREh/KFbyzgebJ+BiUvrVQn/78z9RCBf+VR1nLvablBBmO2ZEZ",
-	"N3k6dwZr6slmqu1Ir7ppWdoKrYhTxYTyflY/CGVOp4Bn3UiXS5BjOi3t4/bw07rf4n4U6A8bnYqeEW2N",
-	"c5zX9C29z9bBTl4k2W/aoV/uu+SxpjMNFJQhZCGFB8rCDYE4e+JsHwv4lUGaqxWXtG1dDG4o1Kz9WBR8",
-	"s4132opqHasoqaFaFDa9tqpHi6vUG+UNSuu4hwJEi4nYU78UsCYOI+LlxSISc54seg0VfLpYXFxBAR6l",
-	"S4qUk6tXbpdD0JZCuGl2cXNFMmcZL7VCdQhVJ3c35eL0cdNABd9pOgCuX+ATBcaehDhA9fN1kpuvyrVK",
-	"OlKHMxBVgyoxh4NJYDlFZHoaNFMDVWxrsR++OQs/jMEU5No1mxhROyv7G4LeG12PijyG0W5HqLfuz5nZ",
-	"mlp+Si4tjNMwteFqsfh7LPZTN9E4lfmehDWtqVEmdtW1J91UYahrCqEdjNmMx70LGUuMT5tCZel5ijCz",
-	"w50L/5Ifzj7573LE5VzoCZQawZuItUuvFK8P2g1soIJOxFdlaVyNpnNBqq13LLsSvS7Xl/DaC7cxTo0w",
-	"cYgga1yakUw8OLJpcTACFXxeLBYx9cPudwAAAP//8d2jO/MIAAA=",
+	"H4sIAAAAAAAC/+RWQW/bPAz9KwK/7xjUbneaj92GoUAPRXccemBsOlZhSypFpwuC/PdBUtI4tVJ0KHba",
+	"KTZJPT4+UnS2UNvBWUNGPFRb8HVHA8bHL0wodE+eeI2irbmnp5G8BJ9j64hFU4wk04Qf2TiCCrywNivY",
+	"LcDgQFmHF2TJeHaLg8UuH6mWEHurvXyExIdyeWeNp3kyPgbFdy00xIf/mVqo4L/iKGux17SYIMMxOzLj",
+	"Jk/nrseaBjKZajvSq25aljZCK+JYMaG8n9UPQpnTWcCzbqTLJcgxnZb28fFw07rf4n4U6A8bHYueEW17",
+	"azmv6UxvMw7L5DpbBlt5UWR2yjus6Uz/BGX0WchkyDhGT5x1vG7jkcGvrHWTsc4VDCZtWhuCG/I1a5cq",
+	"hW+mcVYbUa1lFWTuqRaFzaCNGtDgKvZLuR6ltTzAAkRLH7CnM7SANbFPiJcXZSBmHRl0Gir4dFFeXMEC",
+	"HEoXZSom17HYLkevDXl/0+yCc0UyZxkuukJ1CFUn9znm4vhy00AF32m6FK5f4CMFxoGE2EP183WSm6/K",
+	"tko6UoczEFSDKjKHw+TAcorI9DRqpgYq4ZEW+4WcG+uHFExerm0T21ZbI/tbg871uk6KPPo0g0eot+7U",
+	"mX0bW35KLhrShoxtuCrLv8div4kjjVOZ70lY05oa1Yeu2vakm8qPdU3et2Pfb9JxZ31mJNLnTqEy9DxF",
+	"mI3DnfX/0jyc/Rvwrom4nAs9gVIJvAlYu/jl4vVBu5F7qKATcVVR9LbGvrNeqq2zLLsCnS7Wl/B6Fm5D",
+	"nEowYYkga1z2iUw4mNi0OPYCFXwuyzKkftj9DgAA//8cV6AWBwkAAA==",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code
