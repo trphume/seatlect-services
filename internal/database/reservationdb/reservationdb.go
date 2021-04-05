@@ -51,7 +51,7 @@ func (r *ReservationDB) ListReservation(ctx context.Context, id string, start ti
 	return res, nil
 }
 
-func (r *ReservationDB) CreateReservation(ctx context.Context, placement typedb.Placement) error {
+func (r *ReservationDB) CreateReservation(ctx context.Context, placement typedb.Reservation) error {
 	panic("implement me")
 }
 

@@ -49,12 +49,59 @@ func (s *Server) GetReservationBusinessId(ctx echo.Context, businessId string) e
 }
 
 func (s *Server) PostReservationBusinessId(ctx echo.Context, businessId string) error {
-	panic("implement me")
+	var req reservation_api.CreateReservationRequest
+	if err := ctx.Bind(&req); err != nil {
+		return ctx.String(http.StatusBadRequest, "Error binding request body")
+	}
+
+	start, err := time.Parse(iso8601, *req.Start)
+	if err != nil {
+		return ctx.String(http.StatusBadRequest, "Error parsing start date")
+	}
+
+	end, err := time.Parse(iso8601, *req.Start)
+	if err != nil {
+		return ctx.String(http.StatusBadRequest, "Error parsing end date")
+	}
+
+	// Check that start is before end
+	if start.After(end) {
+		return ctx.String(http.StatusBadRequest, "Start time cannot be after end time")
+	}
+
+	// Create empty Placement object
+	id := primitive.NewObjectIDFromTimestamp(time.Now())
+
+	bId, err := primitive.ObjectIDFromHex(businessId)
+	if err != nil {
+		return ctx.String(http.StatusBadRequest, "Business id format is incorrect")
+	}
+
+	// Placement and image to be filled after querying business via repo
+	reservation := typedb.Reservation{
+		Id:         id,
+		BusinessId: bId,
+		Name:       *req.Name,
+		Start:      start,
+		End:        end,
+		Placement:  typedb.ReservationPlacement{},
+		Image:      "",
+	}
+
+	if err := s.Repo.CreateReservation(ctx.Request().Context(), reservation); err != nil {
+		if err == commonErr.NOTFOUND {
+			return ctx.String(http.StatusNotFound, "Cannot find reservations of given business id")
+		}
+
+		return ctx.String(http.StatusInternalServerError, "Database error")
+	}
+
+	return ctx.String(http.StatusCreated, "Reservation created successfully")
 }
 
 type Repo interface {
 	ListReservation(ctx context.Context, id string, start time.Time, end time.Time) ([]typedb.Reservation, error)
-	CreateReservation(ctx context.Context, placement typedb.Placement) error
+	CreateReservation(ctx context.Context, placement typedb.Reservation) error
 }
 
 // Parsing function - kill me please
