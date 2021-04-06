@@ -96,7 +96,7 @@ func toReservationSeats(seats []typedb.Seat) []typedb.ReservationSeat {
 			Floor:    s.Floor,
 			Type:     s.Type,
 			Space:    s.Space,
-			User:     nil,
+			User:     primitive.ObjectID{},
 			Status:   "EMPTY",
 			X:        s.X,
 			Y:        s.Y,

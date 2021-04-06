@@ -9,15 +9,18 @@ import (
 	"github.com/tphume/seatlect-services/internal/database/businessdb"
 	"github.com/tphume/seatlect-services/internal/database/placementdb"
 	"github.com/tphume/seatlect-services/internal/database/requestdb"
+	"github.com/tphume/seatlect-services/internal/database/reservationdb"
 	"github.com/tphume/seatlect-services/internal/gen_openapi/admin_api"
 	"github.com/tphume/seatlect-services/internal/gen_openapi/business_api"
 	"github.com/tphume/seatlect-services/internal/gen_openapi/placement_api"
 	"github.com/tphume/seatlect-services/internal/gen_openapi/request_api"
+	"github.com/tphume/seatlect-services/internal/gen_openapi/reservation_api"
 	"github.com/tphume/seatlect-services/internal/gen_openapi/user_api"
 	"github.com/tphume/seatlect-services/internal/web/adminwb"
 	"github.com/tphume/seatlect-services/internal/web/businesswb"
 	"github.com/tphume/seatlect-services/internal/web/placementwb"
 	"github.com/tphume/seatlect-services/internal/web/requestwb"
+	"github.com/tphume/seatlect-services/internal/web/reservationwb"
 	"github.com/tphume/seatlect-services/internal/web/userwb"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -50,6 +53,7 @@ func main() {
 	adminCol := client.Database("test").Collection("admin")
 	busCol := client.Database("test").Collection("business")
 	reqCol := client.Database("test").Collection("request")
+	resCol := client.Database("test").Collection("reservation")
 
 	// Connect to google cloud and get image bucket
 	ctx, cancel = context.WithTimeout(context.Background(), time.Second*15)
@@ -76,6 +80,9 @@ func main() {
 	pmtRepo := &placementdb.PlacementDB{BusCol: busCol}
 	pmtServer := &placementwb.Server{Repo: pmtRepo}
 
+	resRepo := &reservationdb.ReservationDB{ResCol: resCol, BusCol: busCol}
+	resServer := &reservationwb.Server{Repo: resRepo}
+
 	// Register routes
 	server := echo.New()
 	server.Use(middleware.CORS())
@@ -86,6 +93,7 @@ func main() {
 	user_api.RegisterHandlers(apiV1, userServer)
 	request_api.RegisterHandlers(apiV1, reqServer)
 	placement_api.RegisterHandlers(apiV1, pmtServer)
+	reservation_api.RegisterHandlers(apiV1, resServer)
 
 	// Start the server
 	log.Println("Starting the server on port 0.0.0.0:9999")

@@ -68,15 +68,15 @@ func typedbSeatsToOapi(seats []typedb.Seat) *[]placement_api.Seat {
 	res := make([]placement_api.Seat, len(seats))
 	for i, s := range seats {
 		res[i] = placement_api.Seat{
-			Floor:    &s.Floor,
+			Floor:    createInt(s.Floor),
 			Height:   createFloat32(float32(s.Height)),
-			Name:     &s.Name,
+			Name:     createString(s.Name),
 			Rotation: createFloat32(float32(s.Rotation)),
-			Space:    &s.Space,
+			Space:    createInt(s.Space),
 			Y:        createFloat32(float32(s.Y)),
 			Width:    createFloat32(float32(s.Width)),
 			X:        createFloat32(float32(s.X)),
-			Type:     &s.Type,
+			Type:     createString(s.Type),
 		}
 	}
 
@@ -117,4 +117,8 @@ func createString(s string) *string {
 
 func createFloat32(f float32) *float32 {
 	return &f
+}
+
+func createInt(i int) *int {
+	return &i
 }

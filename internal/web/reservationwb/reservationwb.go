@@ -28,9 +28,14 @@ func (s *Server) GetReservationBusinessId(ctx echo.Context, businessId string) e
 		return ctx.String(http.StatusBadRequest, "Error parsing start date")
 	}
 
-	end, err := time.Parse(iso8601, *req.Start)
+	end, err := time.Parse(iso8601, *req.End)
 	if err != nil {
 		return ctx.String(http.StatusBadRequest, "Error parsing end date")
+	}
+
+	// Check that start is before end
+	if start.After(end) {
+		return ctx.String(http.StatusBadRequest, "Start time cannot be after end time")
 	}
 
 	reservations, err := s.Repo.ListReservation(ctx.Request().Context(), businessId, start, end)
@@ -67,6 +72,8 @@ func (s *Server) PostReservationBusinessId(ctx echo.Context, businessId string) 
 	// Check that start is before end
 	if start.After(end) {
 		return ctx.String(http.StatusBadRequest, "Start time cannot be after end time")
+	} else if start.Before(time.Now()) {
+		return ctx.String(http.StatusBadRequest, "Start time cannot be before current time")
 	}
 
 	// Create empty Placement object
@@ -142,14 +149,14 @@ func typedbSeatsToOapi(seats []typedb.ReservationSeat) *[]reservation_api.Seat {
 		}
 
 		res[i] = reservation_api.Seat{
-			Floor:    &s.Floor,
+			Floor:    createInt(s.Floor),
 			Height:   createFloat32(float32(s.Height)),
-			Name:     &s.Name,
+			Name:     createString(s.Name),
 			Rotation: createFloat32(float32(s.Rotation)),
-			Space:    &s.Space,
-			Status:   &s.Status,
-			Type:     &s.Type,
-			User:     &userId,
+			Space:    createInt(s.Space),
+			Status:   createString(s.Status),
+			Type:     createString(s.Type),
+			User:     createString(userId),
 			Width:    createFloat32(float32(s.Width)),
 			X:        createFloat32(float32(s.X)),
 			Y:        createFloat32(float32(s.Y)),
@@ -166,4 +173,8 @@ func createString(s string) *string {
 
 func createFloat32(f float32) *float32 {
 	return &f
+}
+
+func createInt(i int) *int {
+	return &i
 }
