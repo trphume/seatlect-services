@@ -86,6 +86,7 @@ func (r *ReservationDB) CreateReservation(ctx context.Context, reservation typed
 }
 
 func (r *ReservationDB) ReserveSeats(ctx context.Context, id string, user string, seats []string) (*typedb.Order, error) {
+	// query plan: [match _id = id, match on placement.seats.name = seats[] --> status = EMPTY]
 	panic("implement me")
 }
 
@@ -99,7 +100,7 @@ func toReservationSeats(seats []typedb.Seat) []typedb.ReservationSeat {
 			Type:     s.Type,
 			Space:    s.Space,
 			User:     primitive.ObjectID{},
-			Status:   "EMPTY",
+			Status:   "AVAILABLE",
 			X:        s.X,
 			Y:        s.Y,
 			Width:    s.Width,
