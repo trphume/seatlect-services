@@ -83,7 +83,7 @@ func (r *ReservationDB) CreateReservation(ctx context.Context, reservation typed
 	return nil
 }
 
-func (r *ReservationDB) ReserveSeats(ctx context.Context, id string, user string, seats []string) (typedb.Order, error) {
+func (r *ReservationDB) ReserveSeats(ctx context.Context, id string, user string, seats []string) (*typedb.Order, error) {
 	panic("implement me")
 }
 

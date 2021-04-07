@@ -2,6 +2,7 @@ package reservationmb
 
 import (
 	"context"
+	"github.com/tphume/seatlect-services/internal/commonErr"
 	"github.com/tphume/seatlect-services/internal/database/typedb"
 	"github.com/tphume/seatlect-services/internal/genproto/commonpb"
 	"github.com/tphume/seatlect-services/internal/genproto/reservationpb"
@@ -42,13 +43,41 @@ func (s *Server) ListReservation(ctx context.Context, req *reservationpb.ListRes
 	return &reservationpb.ListReservationResponse{Reservation: typedbToCommonpb(reservations)}, nil
 }
 
-func (s *Server) ReserveSeats(context.Context, *reservationpb.ReserveSeatsRequest) (*reservationpb.ReserveSeatsResponse, error) {
-	panic("implement me")
+func (s *Server) ReserveSeats(ctx context.Context, req *reservationpb.ReserveSeatsRequest) (*reservationpb.ReserveSeatsResponse, error) {
+	o, err := s.Repo.ReserveSeats(ctx, req.ResId, req.UserId, req.Name)
+	if err != nil {
+		if err == commonErr.NOTFOUND {
+			return nil, status.Error(codes.NotFound, "Could not find with given id")
+		} else if err == commonErr.INVALID {
+			return nil, status.Error(codes.InvalidArgument, "Id format is incorrect")
+		} else if err == commonErr.CONFLICT {
+			return nil, status.Error(codes.AlreadyExists, "Seat have already been reserved")
+		}
+
+		return nil, status.Error(codes.Internal, "Database error")
+	}
+
+	res := reservationpb.ReserveSeatsResponse{
+		Order: &commonpb.Order{
+			XId:           o.Id.Hex(),
+			ReservationId: o.ReservationId.Hex(),
+			Business:      o.BusinessId.Hex(),
+			Start:         o.Start.Format(iso8601),
+			End:           o.End.Format(iso8601),
+			Seats:         orderSeatsToCommonpb(o.Seats),
+			Status:        o.Status,
+			Image:         o.Image,
+			ExtraSpace:    int32(o.ExtraSpace),
+			Name:          o.Name,
+		},
+	}
+
+	return &res, nil
 }
 
 type Repo interface {
 	ListReservation(ctx context.Context, id string, start time.Time, end time.Time) ([]typedb.Reservation, error)
-	ReserveSeats(ctx context.Context, id string, user string, seats []string) (typedb.Order, error)
+	ReserveSeats(ctx context.Context, id string, user string, seats []string) (*typedb.Order, error)
 }
 
 // Helper function
@@ -95,6 +124,38 @@ func seatsToCommonpb(seats []typedb.ReservationSeat) []*commonpb.ReservationSeat
 			Width:    s.Width,
 			Height:   s.Height,
 			Rotation: s.Rotation,
+		}
+	}
+
+	return res
+}
+
+func typedbOrderToCommonpb(orders []typedb.Order) []*commonpb.Order {
+	res := make([]*commonpb.Order, len(orders))
+	for i, o := range orders {
+		res[i] = &commonpb.Order{
+			XId:           o.Id.Hex(),
+			ReservationId: o.ReservationId.Hex(),
+			Business:      o.BusinessId.Hex(),
+			Start:         o.Start.Format(iso8601),
+			End:           o.End.Format(iso8601),
+			Seats:         orderSeatsToCommonpb(o.Seats),
+			Status:        o.Status,
+			Image:         o.Image,
+			ExtraSpace:    int32(o.ExtraSpace),
+			Name:          o.Name,
+		}
+	}
+
+	return res
+}
+
+func orderSeatsToCommonpb(seats []typedb.Seat) []*commonpb.OrderSeat {
+	res := make([]*commonpb.OrderSeat, len(seats))
+	for i, s := range seats {
+		res[i] = &commonpb.OrderSeat{
+			Name:  s.Name,
+			Space: int32(s.Space),
 		}
 	}
 
