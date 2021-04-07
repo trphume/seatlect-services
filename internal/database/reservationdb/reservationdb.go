@@ -7,6 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"time"
 )
 
@@ -36,6 +37,7 @@ func (r *ReservationDB) ListReservation(ctx context.Context, id string, start ti
 					{"$lte", end},
 				}},
 			},
+			&options.FindOptions{Sort: bson.M{"start": 1}},
 		)
 	}
 

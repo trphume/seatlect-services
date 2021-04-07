@@ -30,7 +30,7 @@ func (o *OrderDB) ListOrderByCustomer(ctx context.Context, customerId string, li
 	orders, err := o.OrdCol.Find(
 		ctx,
 		bson.D{{"customerId", pCustomerId}},
-		&options.FindOptions{Limit: pLimit, Skip: pSkip},
+		&options.FindOptions{Limit: pLimit, Skip: pSkip, Sort: bson.M{"start": 1}},
 	)
 
 	if err != nil {
