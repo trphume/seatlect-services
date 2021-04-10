@@ -49,7 +49,7 @@ func (s *Server) ReserveSeats(ctx context.Context, req *reservationpb.ReserveSea
 		if err == commonErr.NOTFOUND {
 			return nil, status.Error(codes.NotFound, "Could not find with given id")
 		} else if err == commonErr.INVALID {
-			return nil, status.Error(codes.InvalidArgument, "Id format is incorrect")
+			return nil, status.Error(codes.InvalidArgument, "Bad argument format")
 		} else if err == commonErr.CONFLICT {
 			return nil, status.Error(codes.AlreadyExists, "Seat have already been reserved")
 		}

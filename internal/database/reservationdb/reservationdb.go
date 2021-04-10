@@ -97,6 +97,10 @@ func (r *ReservationDB) ReserveSeats(ctx context.Context, id string, user string
 		return nil, commonErr.INVALID
 	}
 
+	if len(seats) == 0 {
+		return nil, commonErr.INVALID
+	}
+
 	// check seats availability first
 	reservation := r.ResCol.FindOne(ctx, bson.M{"_id": pId})
 	if reservation.Err() != nil {
