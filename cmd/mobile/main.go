@@ -61,7 +61,7 @@ func main() {
 	ordRepo := &orderdb.OrderDB{OrdCol: ordCol}
 	ordServer := &ordermb.Server{Repo: ordRepo}
 
-	resRepo := &reservationdb.ReservationDB{ResCol: resCol}
+	resRepo := &reservationdb.ReservationDB{ResCol: resCol, BusCol: busCol, OrdCol: ordCol}
 	resServer := &reservationmb.Server{Repo: resRepo}
 
 	// Setup the gRPC server

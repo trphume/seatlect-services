@@ -16,7 +16,7 @@ type Reservation struct {
 }
 
 type ReservationSeat struct {
-	Name     string             `bson:"Name"`
+	Name     string             `bson:"name"`
 	Floor    int                `bson:"floor"`
 	Type     string             `bson:"type"`
 	Space    int                `bson:"space"`

@@ -116,7 +116,7 @@ func (r *ReservationDB) ReserveSeats(ctx context.Context, id string, user string
 	typedbSeats := make([]typedb.Seat, len(seats))
 	for _, s := range resv.Placement.Seats {
 		for _, n := range seats {
-			if s.Name == n {
+			if s.Name == n && s.Status == "AVAILABLE" {
 				typedbSeats[count] = typedb.Seat{
 					Name:     s.Name,
 					Floor:    s.Floor,
