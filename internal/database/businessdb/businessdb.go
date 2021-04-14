@@ -298,7 +298,7 @@ func (b *BusinessDB) RemoveBusinessImage(ctx context.Context, id string, pos int
 	}
 
 	// Non-atomic version
-	if res := b.BusCol.FindOneAndUpdate(ctx, bson.M{"_id": pId}, bson.M{"$unset": bson.M{fmt.Sprintf("images/%d", pos): 1}}); res.Err() != nil {
+	if res := b.BusCol.FindOneAndUpdate(ctx, bson.M{"_id": pId}, bson.M{"$unset": bson.M{fmt.Sprintf("images.%d", pos): 1}}); res.Err() != nil {
 		if res.Err() == mongo.ErrNoDocuments {
 			return commonErr.NOTFOUND
 		}
