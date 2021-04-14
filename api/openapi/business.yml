@@ -99,9 +99,9 @@ paths:
             description: ID of the Business
       requestBody:
         content:
-          image/png:
+          application/json:
             schema:
-              $ref: "#/components/schemas/ImageUpload"
+              $ref: "#/components/schemas/AppendImageRequest"
       responses:
         "201":
           description: Image appended
@@ -248,9 +248,6 @@ components:
           type: string
         price:
           type: string
-    ImageUpload:
-      type: string
-      format: Binary
     ListBusinessResponse:
       type: object
       properties:
@@ -286,6 +283,11 @@ components:
       type: object
       properties:
         displayImage:
+          type: string
+    AppendImageRequest:
+      type: object
+      properties:
+        image:
           type: string
     AppendImageResponse:
       type: object

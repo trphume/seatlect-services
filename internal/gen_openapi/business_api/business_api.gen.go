@@ -16,6 +16,11 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// AppendImageRequest defines model for AppendImageRequest.
+type AppendImageRequest struct {
+	Image *string `json:"image,omitempty"`
+}
+
 // AppendImageResponse defines model for AppendImageResponse.
 type AppendImageResponse struct {
 	Image *string `json:"image,omitempty"`
@@ -43,9 +48,6 @@ type Business struct {
 type GetMenuResponse struct {
 	Menu *[]MenuItem `json:"menu,omitempty"`
 }
-
-// ImageUpload defines model for ImageUpload.
-type ImageUpload string
 
 // ListBusinessResponse defines model for ListBusinessResponse.
 type ListBusinessResponse struct {
@@ -104,6 +106,9 @@ type PatchBusinessBusinessIdJSONBody UpdateBusinessRequest
 // PutBusinessBusinessIdDisplayImageJSONBody defines parameters for PutBusinessBusinessIdDisplayImage.
 type PutBusinessBusinessIdDisplayImageJSONBody UpdateDisplayImageRequest
 
+// PostBusinessBusinessIdImagesJSONBody defines parameters for PostBusinessBusinessIdImages.
+type PostBusinessBusinessIdImagesJSONBody AppendImageRequest
+
 // PostBusinessBusinessIdMenuitemsJSONBody defines parameters for PostBusinessBusinessIdMenuitems.
 type PostBusinessBusinessIdMenuitemsJSONBody MenuItem
 
@@ -115,6 +120,9 @@ type PatchBusinessBusinessIdJSONRequestBody PatchBusinessBusinessIdJSONBody
 
 // PutBusinessBusinessIdDisplayImageRequestBody defines body for PutBusinessBusinessIdDisplayImage for application/json ContentType.
 type PutBusinessBusinessIdDisplayImageJSONRequestBody PutBusinessBusinessIdDisplayImageJSONBody
+
+// PostBusinessBusinessIdImagesRequestBody defines body for PostBusinessBusinessIdImages for application/json ContentType.
+type PostBusinessBusinessIdImagesJSONRequestBody PostBusinessBusinessIdImagesJSONBody
 
 // PostBusinessBusinessIdMenuitemsRequestBody defines body for PostBusinessBusinessIdMenuitems for application/json ContentType.
 type PostBusinessBusinessIdMenuitemsJSONRequestBody PostBusinessBusinessIdMenuitemsJSONBody
@@ -390,25 +398,24 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/9xYXW/bNhT9KwS3RyFyur1MbzMCDAaSomjRp6EYaOlaZiGRDHnlwTD03weS+rJFKUqT",
-	"rEae4ojkveQ55x5+nGgqSyUFCDQ0OVGT7qFk7uefSoHINiXL4TMYJYUB+1lpqUAjB9eJ22b7A48KaEIN",
-	"ai5yWtdR+0Vuv0OKtI6agA8gqg1C+Tox15XhAowZR/mHZ4EYEWVZppsBo7ZtE+0jKyHYIQOTaq6QSxFu",
-	"50YV7LiZWEHk1+ZXiVCGZ9F8YFqzo/2/kClrM/6qYUcT+kvc0xY3nMX3bT8bg+XPzOL/XwT6X4CWxWkG",
-	"SxDVWfa5abeCGE8qlNtB+1UVkjl6d1KXDGlC11wwfaTReKH33GArk+kpt9RfkDM38U57iyZ+P2DxPHXB",
-	"kGOVDdEXVbkF7ckX+VRrKE2H5ijNU9rlk6IVU+WgNE+XiuaryhhCT8RjBQavpGyvrsI8WHcDN5kE7AnL",
-	"WRp9qi5+OPwXZFhN82xc8yAiFwh5WNX2Exc76XpzLGxbV3wRPYA2jjx6e7O6WdkpSAWCKU4T+tvN6uYD",
-	"jahiuHfp4u1gy8gBR6Vh7Y0U3CCRO9LbAtkeiZ80YSIjiuVAmkJ0+bRTxibzAQbTU0yzEhC0ocnfJ8pt",
-	"iscKnFn5ymrBiKiGx4pryGiCuoKo2Y7DKIVD2Xk9L9A329vT7zD5sFrZP6kUCMLBw5QquFd+/N34MukD",
-	"zhZMyHsdn+eQfwbUHA6QdcCve+BNlaZgzK4qCuutdnRHYnxqf22yepbRNiCxSrKbBpfCcrq5m+Nv3UUf",
-	"M3meY3Nnp417IAPuHUNWej1B22HEJ2nq6uwtWeo3sjEzQdh0R9clN67Q0v2YAm8Kz2Hhkw20hIcfB3kB",
-	"g0EenKetZXZ8NQrCu6MD9Hz69UgHv49XEkS5cimy5eUUX3q/qvBpYoeDppitAvU13I7eM8ehTb1uiH6j",
-	"+p7Z7wMV3/Qj7jzYqmZeKP2tRkkT0Ii/+RFGBPzbxEU58AI/fCQTaQI62bSdr1YhbjmxEvlyhoa3mqAY",
-	"bl9NDKFrfUAFvn6Z67yM/vikpKk9oAUgjKG9c98JE40GuOg1kPMDCMLRECUNdwMu9eCHTynik/zZooiC",
-	"+ZQ0Lz2PBRze0+OBzshOy5IMd/Fprtqr+eQ5yS6yPYTZzsRfcBadkezl8xoq84189PLdI1A29yPkZg5L",
-	"8yx1F8sFntqls75qESo9E0sM9aHL9S533f556f/w1dHrZkAjDx1Zy+y1E0N8siQssljSDhoYq2Nwqal2",
-	"qvjoR12fsTbLeckV6jWNtX/QmL8BDdfaPijsOBTZ0gvQl/ax4N0ekc+fjoJ1G2DOjzo7sNYRNaAPLUKV",
-	"LmhC94gqieNCpqzYS4PJSUmNdcwUjw+3dOToth/xYWhED0xzti3a065unHnHqgJpQv9YrVY29bf6vwAA",
-	"AP//sUOgkVoZAAA=",
+	"H4sIAAAAAAAC/9xYXW/bNhT9KwS3RyFyur1MbwsCDAaSomixp6EYaOnaZiGRDHnlwTD03weSoiRblKK0",
+	"SRPkKY5I3kuec+7hx4nmslJSgEBDsxM1+R4q5n7+qRSIYl2xHXyGhxoM2q9KSwUaObg+3LbaH3hUQDNq",
+	"UHOxo02ThC9y8w1ypE1yHs8oKQw8R8B7EPUaoXqemDe14QKMGUf5lxeRGAllRaHbAaO2TRvtI6sg2qEA",
+	"k2uukEsRb+dGley4nlhB4tfmV4lQxWfRfmBas6P9v5Q5Cxl/1bClGf0l7WWQthpI70I/G4PtnpjF/78I",
+	"9L8ALYvTDFYg6rPsc9MOghhPKpb7jhsMpE9PIBB5AfXcNDolLZvGgJPz1CVDjnUxxFLU1Qa0p1Lsplpj",
+	"aTpsRmkeUyKflKCYErfSPF8qgb9VwRB6Iib85lWK8M3ViwfrduANk4A9YiBLo0/VxXeH/4IM62mejWse",
+	"ROQCYRdXtf3ExVa63hxL29YVX0IPoI0jj15fra5WdgpSgWCK04z+drW6+kATqhjuXbp0M9gAdoCj0rBm",
+	"RUpukMgt6W2BbI7ET5owURDFdkDaQnT5tFPGuvABBtNTTLMKELSh2T8nym2Khxr0kYbKCmAkVMNDzTUU",
+	"NENdQ9Ju1nGU4qHsvJ4W6Kvt7el3mHxYreyfXAoE4eBhSpXcKz/9ZnyZ9AFnCybmvY7Pc8g/A2oOByg6",
+	"4G964E2d52DMti5L6612dEdiegq/1kUzy2gISKySdOVWYzld387xd9NFHzN5nmN9a6eNeyAD7h1DVno9",
+	"QZthxEdp6ursJVnqN7IxM1HYdEfXJTeu0PL9mAJvCk9h4ZMNtISH7wd5AYNRHpyn3cji+GwUxHdHB+j5",
+	"9JuRDn4frySKcu1SFMvLKb30flXj48QOB00xW0fqa7gdvWeOY5t60xL9QvU9s99HKr7tR9x5MKhmXij9",
+	"HUVJE9GIv8cRRgT818ZFOfACP3wkE2kiOlmHzu9QIZELeVQa1y+TcVoTvpqZ67xMDOlJSdN4eEtAGAN9",
+	"674TJlpFcNErYscPIAhHQ5Q03A24VIcfPqWPT/K1JZJE8ylpfvR0FvF7T48HuiBbLSsy3NOnuQrX7slT",
+	"k11kOJLZzsRfdxadmOxV9C3U6Qu56uWbRqRs7kbIzRyd5lnqrpkLHLZLZ13WIlR5JpbY632X6106bP90",
+	"9DN8dfRyGdHIfUfWMnvtxJCeLAmLLJaEQQNjdQwuNdVOFR/9qLdnrO1yfuRC9ZzG2j9vzN+HhmsNzwtb",
+	"DmWx9Dr0JTwdvNsD8/lDUrRuI8z5UWfH1yahBvQhIFTrkmZ0j6iyNC1lzsq9NJidlNTYpEzx9HBNR45u",
+	"+xEfhib0wDRnmzKcfXXrzFtWl0gz+sdqtbKpvzb/BwAA//8zJhDphhkAAA==",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code
