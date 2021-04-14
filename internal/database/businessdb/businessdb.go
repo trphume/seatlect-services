@@ -292,7 +292,29 @@ func (b *BusinessDB) AppendBusinessImage(ctx context.Context, id string, image s
 }
 
 func (b *BusinessDB) RemoveBusinessImage(ctx context.Context, id string, pos int) error {
-	panic("implement me")
+	pId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return commonErr.INVALID
+	}
+
+	// Non-atomic version
+	if res := b.BusCol.FindOneAndUpdate(ctx, bson.M{"_id": pId}, bson.M{"$unset": bson.M{fmt.Sprintf("images/%d", pos): 1}}); res.Err() != nil {
+		if res.Err() == mongo.ErrNoDocuments {
+			return commonErr.NOTFOUND
+		}
+
+		return commonErr.INTERNAL
+	}
+
+	if res := b.BusCol.FindOneAndUpdate(ctx, bson.M{"_id": pId}, bson.M{"$pull": bson.M{"images": nil}}); res.Err() != nil {
+		if res.Err() == mongo.ErrNoDocuments {
+			return commonErr.NOTFOUND
+		}
+
+		return commonErr.INTERNAL
+	}
+
+	return nil
 }
 
 func (b *BusinessDB) ListMenuItem(ctx context.Context, id string) ([]typedb.MenuItems, error) {
