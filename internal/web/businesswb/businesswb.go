@@ -102,7 +102,24 @@ func (s *Server) PutBusinessBusinessIdDisplayImage(ctx echo.Context, businessId 
 }
 
 func (s *Server) PostBusinessBusinessIdImages(ctx echo.Context, businessId string) error {
-	panic("implement me")
+	var req business_api.AppendImageRequest
+	if err := ctx.Bind(&req); err != nil {
+		return ctx.String(http.StatusBadRequest, "Error binding request body")
+	}
+
+	img, err := s.Repo.AppendBusinessImage(ctx.Request().Context(), businessId, *req.Image)
+	if err != nil {
+		if err == commonErr.INVALID {
+			return ctx.String(http.StatusBadRequest, "Bad argument")
+		} else if err == commonErr.NOTFOUND {
+			return ctx.String(http.StatusNotFound, "Can't find business id with given id")
+		}
+
+		return ctx.String(http.StatusInternalServerError, "Internal error")
+	}
+
+	res := business_api.AppendImageResponse{Image: createString(img)}
+	return ctx.JSONPretty(http.StatusCreated, res, "  ")
 }
 
 func (s *Server) DeleteBusinessBusinessIdImagesPos(ctx echo.Context, businessId string, pos int) error {
@@ -206,7 +223,7 @@ type Repo interface {
 	GetBusinessById(ctx context.Context, id string) (*typedb.Business, error)
 	UpdateBusinessById(ctx context.Context, business typedb.Business) error
 	UpdateBusinessDIById(ctx context.Context, id string, image string) (string, error)
-	AppendBusinessImage(ctx context.Context, id string, image string) error
+	AppendBusinessImage(ctx context.Context, id string, image string) (string, error)
 	RemoveBusinessImage(ctx context.Context, id string, pos int) error
 	ListMenuItem(ctx context.Context, id string) ([]typedb.MenuItems, error)
 	AppendMenuItem(ctx context.Context, id string, item typedb.MenuItems) (string, error)

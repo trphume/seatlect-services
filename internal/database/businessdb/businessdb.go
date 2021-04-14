@@ -242,7 +242,7 @@ func (b *BusinessDB) UpdateBusinessDIById(ctx context.Context, id string, image 
 	return image, nil
 }
 
-func (b *BusinessDB) AppendBusinessImage(ctx context.Context, id string, image string) error {
+func (b *BusinessDB) AppendBusinessImage(ctx context.Context, id string, image string) (string, error) {
 	panic("implement me")
 }
 
