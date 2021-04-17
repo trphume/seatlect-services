@@ -36,15 +36,12 @@ func (s *Server) ListBusiness(ctx context.Context, req *businesspb.ListBusinessR
 		Sort:  int32(req.Sort),
 		Name:  req.Name,
 		Type:  req.Type,
-		Tags:  req.Tags,
 		Location: typedb.Location{
 			Type:        "Point",
 			Coordinates: []float64{req.Location.Longitude, req.Location.Latitude},
 		},
-		StartPrice: req.StartPrice,
-		EndPrice:   req.EndPrice,
-		StartDate:  startDate,
-		EndDate:    endDate,
+		StartDate: startDate,
+		EndDate:   endDate,
 	}
 
 	// Call repo method

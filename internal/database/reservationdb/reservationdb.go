@@ -78,6 +78,11 @@ func (r *ReservationDB) CreateReservation(ctx context.Context, reservation typed
 		Seats:  toReservationSeats(pmt.Seats),
 	}
 
+	// if a reservation name was not supplied
+	if reservation.Name == "" {
+		reservation.Name = business.BusinessName
+	}
+
 	// create in database
 	if _, err := r.ResCol.InsertOne(ctx, reservation); err != nil {
 		return commonErr.INTERNAL

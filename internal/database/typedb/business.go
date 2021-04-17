@@ -25,14 +25,11 @@ type Business struct {
 }
 
 type ListBusinessParams struct {
-	Limit      int32
-	Sort       int32
-	Name       string
-	Type       string
-	Tags       []string
-	Location   Location
-	StartPrice int32
-	EndPrice   int32
-	StartDate  time.Time
-	EndDate    time.Time
+	Limit     int32
+	Sort      int32
+	Name      string
+	Type      string
+	Location  Location
+	StartDate time.Time
+	EndDate   time.Time
 }
