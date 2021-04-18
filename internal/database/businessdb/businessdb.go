@@ -31,11 +31,34 @@ func (b *BusinessDB) ListBusiness(ctx context.Context, searchParams typedb.ListB
 
 	// TODO: construct sorting option
 
-	businesses, err := b.BusCol.Find(ctx, bson.M{"status": 1}, &options.FindOptions{
-		Limit: limit,
-	})
+	// Construct query
+	query := bson.D{
+		{"location", bson.D{
+			{"$geoWithin", bson.M{"$centerSphere": bson.A{searchParams.Location.Coordinates, 10000}}},
+		}},
+		{"status", 1},
+		{"type", searchParams.Type},
+	}
+
+	if searchParams.Name != "" {
+		query = bson.D{
+			{"$text", bson.M{"$search": searchParams.Name}},
+			{"location", bson.D{
+				{"$geoWithin", bson.M{"$centerSphere": bson.A{searchParams.Location.Coordinates, 10000}}},
+			}},
+			{"status", 1},
+			{"type", searchParams.Type},
+		}
+	}
+
+	// search for business by name
+	businesses, err := b.BusCol.Find(
+		ctx,
+		query,
+	)
 
 	if err != nil {
+		fmt.Println(err.Error())
 		return nil, commonErr.INTERNAL
 	}
 

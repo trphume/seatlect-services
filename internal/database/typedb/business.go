@@ -2,7 +2,6 @@ package typedb
 
 import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"time"
 )
 
 type Business struct {
@@ -30,6 +29,4 @@ type ListBusinessParams struct {
 	Name      string
 	Type      string
 	Location  Location
-	StartDate time.Time
-	EndDate   time.Time
 }

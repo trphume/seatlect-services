@@ -17,8 +17,6 @@ message ListBusinessRequest {
   string name = 3;
   string type = 4;
   Latlng location = 5;
-  string startDate= 6;
-  string endDate = 7;
 }
 
 message ListBusinessResponse {

@@ -8,7 +8,6 @@ import (
 	"github.com/tphume/seatlect-services/internal/genproto/commonpb"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"time"
 )
 
 const iso8601 = "2006-01-02T15:04:05-0700"
@@ -20,17 +19,6 @@ type Server struct {
 }
 
 func (s *Server) ListBusiness(ctx context.Context, req *businesspb.ListBusinessRequest) (*businesspb.ListBusinessResponse, error) {
-	// Construct search params
-	startDate, err := time.Parse(iso8601, req.StartDate)
-	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, "Argument is not valid")
-	}
-
-	endDate, err := time.Parse(iso8601, req.EndDate)
-	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, "Argument is not valid")
-	}
-
 	searchParams := typedb.ListBusinessParams{
 		Limit: req.Limit,
 		Sort:  int32(req.Sort),
@@ -40,8 +28,6 @@ func (s *Server) ListBusiness(ctx context.Context, req *businesspb.ListBusinessR
 			Type:        "Point",
 			Coordinates: []float64{req.Location.Longitude, req.Location.Latitude},
 		},
-		StartDate: startDate,
-		EndDate:   endDate,
 	}
 
 	// Call repo method
