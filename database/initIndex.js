@@ -9,8 +9,8 @@ db.business.createIndex({businessName: "text"})
 db.business.createIndex({ location: "2dsphere" });
 
 // reservation
-db.business.createIndex({ businessId: 1 });
-db.business.createIndex({name: "text"})
+db.reservation.createIndex({ businessId: 1 });
+db.reservation.createIndex({name: "text"})
 db.reservation.createIndex({location: "2dsphere"});
 
 // customer

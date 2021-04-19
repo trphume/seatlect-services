@@ -2,6 +2,7 @@ package reservationdb
 
 import (
 	"context"
+	"fmt"
 	"github.com/tphume/seatlect-services/internal/commonErr"
 	"github.com/tphume/seatlect-services/internal/database/typedb"
 	"go.mongodb.org/mongo-driver/bson"
@@ -57,7 +58,7 @@ func (r *ReservationDB) SearchReservation(ctx context.Context, searchParams type
 	// Construct query
 	query := bson.D{
 		{"location", bson.D{
-			{"$geoWithin", bson.M{"$centerSphere": bson.A{searchParams.Location.Coordinates, 10000}}},
+			{"$geoWithin", bson.M{"$centerSphere": bson.A{searchParams.Location.Coordinates, 0.02523213564}}},
 		}},
 		{"type", searchParams.Type},
 		{"start", bson.D{
@@ -72,7 +73,7 @@ func (r *ReservationDB) SearchReservation(ctx context.Context, searchParams type
 		query = bson.D{
 			{"$text", bson.M{"$search": searchParams.Name}},
 			{"location", bson.D{
-				{"$geoWithin", bson.M{"$centerSphere": bson.A{searchParams.Location.Coordinates, 10000}}},
+				{"$geoWithin", bson.M{"$centerSphere": bson.A{searchParams.Location.Coordinates, 0.02523213564}}},
 			}},
 			{"type", searchParams.Type},
 			{"start", bson.D{
@@ -87,6 +88,7 @@ func (r *ReservationDB) SearchReservation(ctx context.Context, searchParams type
 	// Database call
 	reservations, err := r.ResCol.Find(ctx, query)
 	if err != nil {
+		fmt.Println(err.Error())
 		return nil, commonErr.INTERNAL
 	}
 

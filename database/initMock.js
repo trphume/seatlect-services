@@ -252,6 +252,11 @@ db.reservation.insertMany([
       ]
     },
     image: '',
+    location: {
+      type: 'Point',
+      coordinates: [100.769652, 13.727892]
+    },
+    type: 'Bar',
   },
   {
     _id: reservationB,
@@ -292,6 +297,11 @@ db.reservation.insertMany([
       ]
     },
     image: '',
+    location: {
+      type: 'Point',
+      coordinates: [99.780103, 14.723117]
+    },
+    type: 'Bar',
   }
 ]);
 
