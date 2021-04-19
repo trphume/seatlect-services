@@ -77,6 +77,7 @@ func (s *Server) ReserveSeats(ctx context.Context, req *reservationpb.ReserveSea
 
 type Repo interface {
 	ListReservation(ctx context.Context, id string, start time.Time, end time.Time) ([]typedb.Reservation, error)
+	SearchReservation(ctx context.Context, searchParams typedb.SearchReservationParams) ([]typedb.Reservation, error)
 	ReserveSeats(ctx context.Context, id string, user string, seats []string) (*typedb.Order, error)
 }
 

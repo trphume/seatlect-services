@@ -53,6 +53,9 @@ func (r *ReservationDB) ListReservation(ctx context.Context, id string, start ti
 
 	return res, nil
 }
+func (r *ReservationDB) SearchReservation(ctx context.Context, searchParams typedb.SearchReservationParams) ([]typedb.Reservation, error) {
+	panic("implement me")
+}
 
 func (r *ReservationDB) CreateReservation(ctx context.Context, reservation typedb.Reservation) error {
 	// get business object first - this is needed to retrieve the placement schema and current display image
@@ -78,10 +81,14 @@ func (r *ReservationDB) CreateReservation(ctx context.Context, reservation typed
 		Seats:  toReservationSeats(pmt.Seats),
 	}
 
+	// Construct any other missing field
 	// if a reservation name was not supplied
 	if reservation.Name == "" {
 		reservation.Name = business.BusinessName
 	}
+
+	reservation.Location = business.Location
+	reservation.Type = business.Type
 
 	// create in database
 	if _, err := r.ResCol.InsertOne(ctx, reservation); err != nil {

@@ -13,6 +13,8 @@ type Reservation struct {
 	End        time.Time            `bson:"end"`
 	Placement  ReservationPlacement `bson:"placement"`
 	Image      string               `bson:"image"`
+	Location   Location             `bson:"location"`
+	Type       string               `bson:"type"`
 }
 
 type ReservationSeat struct {
@@ -33,4 +35,12 @@ type ReservationPlacement struct {
 	Width  int               `bson:"width"`
 	Height int               `bson:"height"`
 	Seats  []ReservationSeat `bson:"seats"`
+}
+
+type SearchReservationParams struct {
+	Name     string
+	Type     string
+	Location Location
+	Start    time.Time
+	End      time.Time
 }
