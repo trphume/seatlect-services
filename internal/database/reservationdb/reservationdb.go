@@ -58,7 +58,7 @@ func (r *ReservationDB) SearchReservation(ctx context.Context, searchParams type
 	// Construct query
 	query := bson.D{
 		{"location", bson.D{
-			{"$geoWithin", bson.M{"$centerSphere": bson.A{searchParams.Location.Coordinates, 0.02523213564}}},
+			{"$geoWithin", bson.M{"$centerSphere": bson.A{searchParams.Location.Coordinates, 0.00156786503}}},
 		}},
 		{"type", searchParams.Type},
 		{"start", bson.D{
@@ -73,7 +73,7 @@ func (r *ReservationDB) SearchReservation(ctx context.Context, searchParams type
 		query = bson.D{
 			{"$text", bson.M{"$search": searchParams.Name}},
 			{"location", bson.D{
-				{"$geoWithin", bson.M{"$centerSphere": bson.A{searchParams.Location.Coordinates, 0.02523213564}}},
+				{"$geoWithin", bson.M{"$centerSphere": bson.A{searchParams.Location.Coordinates, 0.00156786503}}},
 			}},
 			{"type", searchParams.Type},
 			{"start", bson.D{

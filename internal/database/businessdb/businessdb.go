@@ -33,7 +33,7 @@ func (b *BusinessDB) ListBusiness(ctx context.Context, searchParams typedb.ListB
 	// Construct query
 	query := bson.D{
 		{"location", bson.D{
-			{"$geoWithin", bson.M{"$centerSphere": bson.A{searchParams.Location.Coordinates, 0.02523213564}}},
+			{"$geoWithin", bson.M{"$centerSphere": bson.A{searchParams.Location.Coordinates, 0.00156786503}}},
 		}},
 		{"status", 1},
 		{"type", searchParams.Type},
@@ -43,7 +43,7 @@ func (b *BusinessDB) ListBusiness(ctx context.Context, searchParams typedb.ListB
 		query = bson.D{
 			{"$text", bson.M{"$search": searchParams.Name}},
 			{"location", bson.D{
-				{"$geoWithin", bson.M{"$centerSphere": bson.A{searchParams.Location.Coordinates, 0.02523213564}}},
+				{"$geoWithin", bson.M{"$centerSphere": bson.A{searchParams.Location.Coordinates, 0.00156786503}}},
 			}},
 			{"status", 1},
 			{"type", searchParams.Type},
@@ -54,6 +54,7 @@ func (b *BusinessDB) ListBusiness(ctx context.Context, searchParams typedb.ListB
 	businesses, err := b.BusCol.Find(
 		ctx,
 		query,
+		options.Find().SetLimit(*limit),
 	)
 
 	if err != nil {
