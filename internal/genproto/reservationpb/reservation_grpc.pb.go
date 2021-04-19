@@ -18,6 +18,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ReservationServiceClient interface {
 	ListReservation(ctx context.Context, in *ListReservationRequest, opts ...grpc.CallOption) (*ListReservationResponse, error)
+	SearchReservation(ctx context.Context, in *SearchReservationRequest, opts ...grpc.CallOption) (*SearchReservationResponse, error)
 	ReserveSeats(ctx context.Context, in *ReserveSeatsRequest, opts ...grpc.CallOption) (*ReserveSeatsResponse, error)
 }
 
@@ -38,6 +39,15 @@ func (c *reservationServiceClient) ListReservation(ctx context.Context, in *List
 	return out, nil
 }
 
+func (c *reservationServiceClient) SearchReservation(ctx context.Context, in *SearchReservationRequest, opts ...grpc.CallOption) (*SearchReservationResponse, error) {
+	out := new(SearchReservationResponse)
+	err := c.cc.Invoke(ctx, "/seatlect.ReservationService/SearchReservation", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *reservationServiceClient) ReserveSeats(ctx context.Context, in *ReserveSeatsRequest, opts ...grpc.CallOption) (*ReserveSeatsResponse, error) {
 	out := new(ReserveSeatsResponse)
 	err := c.cc.Invoke(ctx, "/seatlect.ReservationService/ReserveSeats", in, out, opts...)
@@ -52,6 +62,7 @@ func (c *reservationServiceClient) ReserveSeats(ctx context.Context, in *Reserve
 // for forward compatibility
 type ReservationServiceServer interface {
 	ListReservation(context.Context, *ListReservationRequest) (*ListReservationResponse, error)
+	SearchReservation(context.Context, *SearchReservationRequest) (*SearchReservationResponse, error)
 	ReserveSeats(context.Context, *ReserveSeatsRequest) (*ReserveSeatsResponse, error)
 	mustEmbedUnimplementedReservationServiceServer()
 }
@@ -62,6 +73,9 @@ type UnimplementedReservationServiceServer struct {
 
 func (UnimplementedReservationServiceServer) ListReservation(context.Context, *ListReservationRequest) (*ListReservationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListReservation not implemented")
+}
+func (UnimplementedReservationServiceServer) SearchReservation(context.Context, *SearchReservationRequest) (*SearchReservationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SearchReservation not implemented")
 }
 func (UnimplementedReservationServiceServer) ReserveSeats(context.Context, *ReserveSeatsRequest) (*ReserveSeatsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ReserveSeats not implemented")
@@ -97,6 +111,24 @@ func _ReservationService_ListReservation_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ReservationService_SearchReservation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchReservationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReservationServiceServer).SearchReservation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/seatlect.ReservationService/SearchReservation",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReservationServiceServer).SearchReservation(ctx, req.(*SearchReservationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ReservationService_ReserveSeats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ReserveSeatsRequest)
 	if err := dec(in); err != nil {
@@ -122,6 +154,10 @@ var _ReservationService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListReservation",
 			Handler:    _ReservationService_ListReservation_Handler,
+		},
+		{
+			MethodName: "SearchReservation",
+			Handler:    _ReservationService_SearchReservation_Handler,
 		},
 		{
 			MethodName: "ReserveSeats",
