@@ -25,7 +25,7 @@ func (r *ReservationDB) ListReservation(ctx context.Context, id string, start ti
 
 	var reservations *mongo.Cursor
 	if start.IsZero() || end.IsZero() {
-		reservations, err = r.ResCol.Find(ctx, bson.M{"businessId": pId})
+		reservations, err = r.ResCol.Find(ctx, bson.M{"businessId": pId, "start": bson.M{"$gte": time.Now()}})
 	} else {
 		reservations, err = r.ResCol.Find(
 			ctx,
@@ -54,7 +54,48 @@ func (r *ReservationDB) ListReservation(ctx context.Context, id string, start ti
 	return res, nil
 }
 func (r *ReservationDB) SearchReservation(ctx context.Context, searchParams typedb.SearchReservationParams) ([]typedb.Reservation, error) {
-	panic("implement me")
+	// Construct query
+	query := bson.D{
+		{"location", bson.D{
+			{"$geoWithin", bson.M{"$centerSphere": bson.A{searchParams.Location.Coordinates, 10000}}},
+		}},
+		{"type", searchParams.Type},
+		{"start", bson.D{
+			{"$gte", searchParams.Start},
+		}},
+		{"end", bson.D{
+			{"$lte", searchParams.End},
+		}},
+	}
+
+	if searchParams.Name != "" {
+		query = bson.D{
+			{"$text", bson.M{"$search": searchParams.Name}},
+			{"location", bson.D{
+				{"$geoWithin", bson.M{"$centerSphere": bson.A{searchParams.Location.Coordinates, 10000}}},
+			}},
+			{"type", searchParams.Type},
+			{"start", bson.D{
+				{"$gte", searchParams.Start},
+			}},
+			{"end", bson.D{
+				{"$lte", searchParams.End},
+			}},
+		}
+	}
+
+	// Database call
+	reservations, err := r.ResCol.Find(ctx, query)
+	if err != nil {
+		return nil, commonErr.INTERNAL
+	}
+
+	var res []typedb.Reservation
+	if err = reservations.All(ctx, &res); err != nil {
+		return nil, commonErr.INTERNAL
+	}
+
+	return res, nil
 }
 
 func (r *ReservationDB) CreateReservation(ctx context.Context, reservation typedb.Reservation) error {

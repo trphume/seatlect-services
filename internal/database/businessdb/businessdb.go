@@ -23,7 +23,6 @@ type BusinessDB struct {
 	ImageBucket *storage.BucketHandle
 }
 
-// TODO: proper search functionality
 func (b *BusinessDB) ListBusiness(ctx context.Context, searchParams typedb.ListBusinessParams) ([]typedb.Business, error) {
 	// Construcut params
 	limit := new(int64)

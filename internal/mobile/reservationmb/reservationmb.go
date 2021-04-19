@@ -55,6 +55,10 @@ func (s *Server) SearchReservation(ctx context.Context, req *reservationpb.Searc
 		return nil, status.Error(codes.InvalidArgument, "End time format does not match")
 	}
 
+	if start.After(end) {
+		return nil, status.Error(codes.InvalidArgument, "End time cannot be before start time")
+	}
+
 	searchParams := typedb.SearchReservationParams{
 		Name: req.Name,
 		Type: req.Type,
