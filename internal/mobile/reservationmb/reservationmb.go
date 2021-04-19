@@ -43,6 +43,38 @@ func (s *Server) ListReservation(ctx context.Context, req *reservationpb.ListRes
 	return &reservationpb.ListReservationResponse{Reservation: typedbToCommonpb(reservations)}, nil
 }
 
+func (s *Server) SearchReservation(ctx context.Context, req *reservationpb.SearchReservationRequest) (*reservationpb.SearchReservationResponse, error) {
+	// Construct params
+	start, err := time.Parse(iso8601, req.Start)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "Start time format does not match")
+	}
+
+	end, err := time.Parse(iso8601, req.End)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "End time format does not match")
+	}
+
+	searchParams := typedb.SearchReservationParams{
+		Name: req.Name,
+		Type: req.Type,
+		Location: typedb.Location{
+			Type:        "Point",
+			Coordinates: []float64{req.Location.Longitude, req.Location.Latitude},
+		},
+		Start: start,
+		End:   end,
+	}
+
+	// Call Repo
+	reservations, err := s.Repo.SearchReservation(ctx, searchParams)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "Database error")
+	}
+
+	return &reservationpb.SearchReservationResponse{Reservation: typedbToCommonpb(reservations)}, nil
+}
+
 func (s *Server) ReserveSeats(ctx context.Context, req *reservationpb.ReserveSeatsRequest) (*reservationpb.ReserveSeatsResponse, error) {
 	o, err := s.Repo.ReserveSeats(ctx, req.ResId, req.UserId, req.Name)
 	if err != nil {
