@@ -171,16 +171,22 @@ func (b *BusinessDB) SimpleListBusiness(ctx context.Context, status int, page in
 	return res, nil
 }
 
-func (b *BusinessDB) GetBusinessById(ctx context.Context, id string) (*typedb.Business, error) {
+func (b *BusinessDB) GetBusinessById(ctx context.Context, id string, withMenu int) (*typedb.Business, error) {
 	pId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return nil, commonErr.INVALID
 	}
 
+	// construct projection
+	projection := bson.M{"menu": 0, "placement": 0, "employee": 0}
+	if withMenu == 1 {
+		projection = bson.M{"placement": 0, "employee": 0}
+	}
+
 	business := b.BusCol.FindOne(
 		ctx,
 		bson.M{"_id": pId},
-		options.FindOne().SetProjection(bson.M{"menu": 0, "placement": 0, "employee": 0}),
+		options.FindOne().SetProjection(projection),
 	)
 
 	if business.Err() != nil {

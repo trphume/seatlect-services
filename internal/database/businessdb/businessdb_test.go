@@ -208,7 +208,7 @@ func (b *BusinessSuite) TestGetBusinessById() {
 
 	for _, tt := range tests {
 		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
-		out, err := b.BusinessDB.GetBusinessById(ctx, tt.in)
+		out, err := b.BusinessDB.GetBusinessById(ctx, tt.in, 0)
 
 		b.Assert().Equal(tt.err, err)
 		if err == nil {
@@ -350,7 +350,7 @@ func (b *BusinessSuite) TestUpdateBusinessStatus() {
 
 	// check updated status
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
-	brightio, err := b.BusinessDB.GetBusinessById(ctx, brightioID)
+	brightio, err := b.BusinessDB.GetBusinessById(ctx, brightioID, 0)
 
 	b.Assert().Equal(nil, err)
 	b.Assert().Equal(100, brightio.Status)

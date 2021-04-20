@@ -30,7 +30,7 @@ func (s *Server) GetBusiness(ctx echo.Context, params business_api.GetBusinessPa
 }
 
 func (s *Server) GetBusinessBusinessId(ctx echo.Context, businessId string) error {
-	business, err := s.Repo.GetBusinessById(ctx.Request().Context(), businessId)
+	business, err := s.Repo.GetBusinessById(ctx.Request().Context(), businessId, 0)
 	if err != nil {
 		if err == commonErr.NOTFOUND {
 			return ctx.String(http.StatusNotFound, "Business not found with given id")
@@ -220,7 +220,7 @@ func (s *Server) PatchBusinessBusinessIdStatus(ctx echo.Context, businessId stri
 
 type Repo interface {
 	SimpleListBusiness(ctx context.Context, status int, page int) ([]typedb.Business, error)
-	GetBusinessById(ctx context.Context, id string) (*typedb.Business, error)
+	GetBusinessById(ctx context.Context, id string, withMenu int) (*typedb.Business, error)
 	UpdateBusinessById(ctx context.Context, business typedb.Business) error
 	UpdateBusinessDIById(ctx context.Context, id string, image string) (string, error)
 	AppendBusinessImage(ctx context.Context, id string, image string) (string, error)
