@@ -8,6 +8,7 @@ import "common.proto";
 service BusinessService {
   rpc ListBusiness (ListBusinessRequest) returns (ListBusinessResponse);
   rpc ListBusinessById (ListBusinessByIdRequest) returns (ListBusinessByIdResponse);
+  rpc GetBusinessById (GetBusinessByIdRequest) returns (GetBusinessByIdResponse);
 }
 
 // For List business endpoint - the parameters are optional
@@ -30,6 +31,15 @@ message ListBusinessByIdRequest {
 
 message ListBusinessByIdResponse {
   repeated Business businesses = 1;
+}
+
+// For Get business by id endpoint
+message GetBusinessByIdRequest {
+  string id = 1;
+}
+
+message GetBusinessByIdResponse {
+  Business business = 1;
 }
 
 // Helper definitions
