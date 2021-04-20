@@ -3,6 +3,7 @@ package businessmb
 import (
 	"context"
 	"fmt"
+	"github.com/tphume/seatlect-services/internal/commonErr"
 	"github.com/tphume/seatlect-services/internal/database/typedb"
 	"github.com/tphume/seatlect-services/internal/genproto/businesspb"
 	"github.com/tphume/seatlect-services/internal/genproto/commonpb"
@@ -37,7 +38,7 @@ func (s *Server) ListBusiness(ctx context.Context, req *businesspb.ListBusinessR
 	}
 
 	// Convert typedb.Business to proto definition type
-	res := typedbBusinessToCommonpb(businesses)
+	res := typedbBusinessListToCommonpb(businesses)
 
 	return &businesspb.ListBusinessResponse{Businesses: res}, nil
 }
@@ -49,35 +50,58 @@ func (s *Server) ListBusinessById(ctx context.Context, req *businesspb.ListBusin
 	}
 
 	// Convert typedb.Business to proto definition type
-	res := typedbBusinessToCommonpb(businesses)
+	res := typedbBusinessListToCommonpb(businesses)
 
 	return &businesspb.ListBusinessByIdResponse{Businesses: res}, nil
+}
+
+func (s *Server) GetBusinessById(ctx context.Context, req *businesspb.GetBusinessByIdRequest) (*businesspb.GetBusinessByIdResponse, error) {
+	business, err := s.Repo.GetBusinessById(ctx, req.Id, true)
+	if err != nil {
+		if err == commonErr.NOTFOUND {
+			return nil, status.Error(codes.NotFound, "Business not found with given id")
+		}
+
+		return nil, status.Error(codes.Internal, "Database error")
+	}
+
+	// Convert typedb.Business to proto definition type
+	res := typedbBusinessToCommonpb(*business)
+
+	return &businesspb.GetBusinessByIdResponse{Business: res}, nil
 }
 
 type Repo interface {
 	ListBusiness(ctx context.Context, searchParams typedb.ListBusinessParams) ([]typedb.Business, error)
 	ListBusinessByIds(ctx context.Context, ids []string) ([]typedb.Business, error)
+	GetBusinessById(ctx context.Context, id string, withMenu bool) (*typedb.Business, error)
 }
 
 // Helper function
-func typedbBusinessToCommonpb(businesses []typedb.Business) []*commonpb.Business {
+func typedbBusinessListToCommonpb(businesses []typedb.Business) []*commonpb.Business {
 	res := make([]*commonpb.Business, len(businesses))
 	for i, b := range businesses {
-		res[i] = &commonpb.Business{
-			XId:         b.Id.Hex(),
-			Name:        b.BusinessName,
-			Type:        b.Type,
-			Tags:        b.Tags,
-			Description: b.Description,
-			Location: &commonpb.Latlng{
-				Latitude:  b.Location.Coordinates[1],
-				Longitude: b.Location.Coordinates[0],
-			},
-			Address:      b.Address,
-			DisplayImage: b.DisplayImage,
-			Images:       b.Images,
-			Menu:         MenuItemsToProto(b.Menu),
-		}
+		res[i] = typedbBusinessToCommonpb(b)
+	}
+
+	return res
+}
+
+func typedbBusinessToCommonpb(b typedb.Business) *commonpb.Business {
+	res := &commonpb.Business{
+		XId:         b.Id.Hex(),
+		Name:        b.BusinessName,
+		Type:        b.Type,
+		Tags:        b.Tags,
+		Description: b.Description,
+		Location: &commonpb.Latlng{
+			Latitude:  b.Location.Coordinates[1],
+			Longitude: b.Location.Coordinates[0],
+		},
+		Address:      b.Address,
+		DisplayImage: b.DisplayImage,
+		Images:       b.Images,
+		Menu:         MenuItemsToProto(b.Menu),
 	}
 
 	return res
