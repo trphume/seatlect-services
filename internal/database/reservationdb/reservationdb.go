@@ -102,7 +102,12 @@ func (r *ReservationDB) SearchReservation(ctx context.Context, searchParams type
 
 func (r *ReservationDB) CreateReservation(ctx context.Context, reservation typedb.Reservation) error {
 	// get business object first - this is needed to retrieve the placement schema and current display image
-	businessResult := r.BusCol.FindOne(ctx, bson.M{"_id": reservation.BusinessId})
+	businessResult := r.BusCol.FindOne(
+		ctx,
+		bson.M{"_id": reservation.BusinessId},
+		options.FindOne().SetProjection(bson.M{"placement": 1, "businessName": 1, "location": 1, "type": 1}),
+	)
+
 	if businessResult.Err() != nil {
 		if businessResult.Err() == mongo.ErrNoDocuments {
 			return commonErr.NOTFOUND

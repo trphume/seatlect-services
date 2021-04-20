@@ -54,7 +54,7 @@ func (b *BusinessDB) ListBusiness(ctx context.Context, searchParams typedb.ListB
 	businesses, err := b.BusCol.Find(
 		ctx,
 		query,
-		options.Find().SetLimit(*limit),
+		options.Find().SetLimit(*limit).SetProjection(bson.M{"placement": 0, "employee": 0}),
 	)
 
 	if err != nil {
@@ -85,6 +85,7 @@ func (b *BusinessDB) ListBusinessByIds(ctx context.Context, ids []string) ([]typ
 				},
 			},
 		},
+		options.Find().SetProjection(bson.M{"placement": 0, "employee": 0}),
 	)
 
 	if err != nil {
@@ -100,7 +101,12 @@ func (b *BusinessDB) ListBusinessByIds(ctx context.Context, ids []string) ([]typ
 }
 
 func (b *BusinessDB) AuthenticateBusiness(ctx context.Context, business *typedb.Business) (string, error) {
-	res := b.BusCol.FindOne(ctx, bson.M{"status": 1, "username": business.Username})
+	res := b.BusCol.FindOne(
+		ctx,
+		bson.M{"status": 1, "username": business.Username},
+		options.FindOne().SetProjection(bson.M{"_id": 1}),
+	)
+
 	if res.Err() != nil {
 		if res.Err() == mongo.ErrNoDocuments {
 			return "", commonErr.NOTFOUND
@@ -171,7 +177,12 @@ func (b *BusinessDB) GetBusinessById(ctx context.Context, id string) (*typedb.Bu
 		return nil, commonErr.INVALID
 	}
 
-	business := b.BusCol.FindOne(ctx, bson.M{"_id": pId})
+	business := b.BusCol.FindOne(
+		ctx,
+		bson.M{"_id": pId},
+		options.FindOne().SetProjection(bson.M{"menu": 0, "placement": 0, "employee": 0}),
+	)
+
 	if business.Err() != nil {
 		if business.Err() == mongo.ErrNoDocuments {
 			return nil, commonErr.NOTFOUND

@@ -24,9 +24,9 @@ type Business struct {
 }
 
 type ListBusinessParams struct {
-	Limit     int32
-	Sort      int32
-	Name      string
-	Type      string
-	Location  Location
+	Limit    int32
+	Sort     int32
+	Name     string
+	Type     string
+	Location Location
 }
