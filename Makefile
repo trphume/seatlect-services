@@ -1,6 +1,6 @@
 .PHONY: gen_proto clean_proto gen_proto_common gen_proto_user gen_proto_token gen_proto_business gen_proto_order gen_proto_reservation
 .PHONY: gen_client clean_openapi gen_client_common gen_client_business gen_client_order gen_client_reservation
-.PHONY: gen_openapi gen_openapi_user  gen_openapi_business gen_openapi_admin gen_openapi_request gen_openapi_reservation gen_openapi_placement clean_openapi
+.PHONY: gen_openapi gen_openapi_user  gen_openapi_business gen_openapi_admin gen_openapi_request gen_openapi_reservation gen_openapi_placement gen_openapi_employee clean_openapi
 
 # This section contains commands for working with proto files
 gen_proto: gen_proto_common gen_proto_user gen_proto_token gen_proto_business gen_proto_order gen_proto_reservation
@@ -48,7 +48,7 @@ gen_client_reservation:
 	@protoc --dart_out=grpc:../seatlect_mobile/packages/genproto/lib/src -I=api/protobuf reservation.proto
 
 # This section contains commands for working with openapi files
-gen_openapi: gen_openapi_user gen_openapi_business gen_openapi_admin gen_openapi_request gen_openapi_reservation gen_openapi_placement
+gen_openapi: gen_openapi_user gen_openapi_business gen_openapi_admin gen_openapi_request gen_openapi_reservation gen_openapi_placement gen_openapi_employee
 
 gen_openapi_user:
 	@oapi-codegen -o internal/gen_openapi/user_api/user_api.gen.go -package user_api -generate "types,server,spec" api/openapi/user.yml
@@ -67,6 +67,9 @@ gen_openapi_reservation:
 
 gen_openapi_placement:
 	@oapi-codegen -o internal/gen_openapi/placement_api/placement_api.gen.go -package placement_api -generate "types,server,spec" api/openapi/placement.yml
+
+gen_openapi_employee:
+	@oapi-codegen -o internal/gen_openapi/employee_api/employee_api.gen.go -package employee_api -generate "types,server,spec" api/openapi/employee.yml
 
 clean_openapi:
 	@rm -rf internal/gen_openapi
