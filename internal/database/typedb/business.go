@@ -21,6 +21,12 @@ type Business struct {
 	Menu         []MenuItems        `bson:"menu"`
 	Status       int                `bson:"status"`
 	Verified     bool               `bson:"verified"`
+	Employee     []Employee         `bson:"employee"`
+}
+
+type Employee struct {
+	Username string `bson:"username"`
+	Password string `bson:"password"`
 }
 
 type ListBusinessParams struct {

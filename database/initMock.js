@@ -85,6 +85,7 @@ db.business.insertMany([
     },
     menu: [],
     status: 1,
+    employee: [],
   },
   {
     _id: beerBurgerId,
@@ -112,6 +113,7 @@ db.business.insertMany([
       { name: "Salty Fries", description: "Just salty fries", image: "", price: 10 }
     ],
     status: 1,
+    employee: [],
   },
   {
     _id: ironBuffetId,
@@ -139,6 +141,7 @@ db.business.insertMany([
       { name: "Salty Fries", description: "Just salty fries", image: "", price: 10 }
     ],
     status: 1,
+    employee: [],
   },
   {
     _id: specialTaleId,
@@ -207,7 +210,8 @@ db.business.insertMany([
       ]
     },
     menu: [],
-    status: 1
+    status: 1,
+    employee: [],
   }
 ]);
 
