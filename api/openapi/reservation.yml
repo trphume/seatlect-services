@@ -51,10 +51,16 @@ paths:
       responses:
         "201":
           description: Reservation Created
-  /reservation/{reservationId}:
+  /reservation/{businessId}/{reservationId}:
     get:
       description: Get a reservation by id
       parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+          description: ID of the Business
         - in: path
           name: reservationId
           required: true

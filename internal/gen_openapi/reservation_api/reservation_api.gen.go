@@ -90,8 +90,8 @@ type ServerInterface interface {
 	// (POST /reservation/{businessId})
 	PostReservationBusinessId(ctx echo.Context, businessId string) error
 
-	// (GET /reservation/{reservationId})
-	GetReservationReservationId(ctx echo.Context, reservationId string) error
+	// (GET /reservation/{businessId}/{reservationId})
+	GetReservationBusinessIdReservationId(ctx echo.Context, businessId string, reservationId string) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -131,9 +131,17 @@ func (w *ServerInterfaceWrapper) PostReservationBusinessId(ctx echo.Context) err
 	return err
 }
 
-// GetReservationReservationId converts echo context to params.
-func (w *ServerInterfaceWrapper) GetReservationReservationId(ctx echo.Context) error {
+// GetReservationBusinessIdReservationId converts echo context to params.
+func (w *ServerInterfaceWrapper) GetReservationBusinessIdReservationId(ctx echo.Context) error {
 	var err error
+	// ------------- Path parameter "businessId" -------------
+	var businessId string
+
+	err = runtime.BindStyledParameter("simple", false, "businessId", ctx.Param("businessId"), &businessId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter businessId: %s", err))
+	}
+
 	// ------------- Path parameter "reservationId" -------------
 	var reservationId string
 
@@ -143,7 +151,7 @@ func (w *ServerInterfaceWrapper) GetReservationReservationId(ctx echo.Context) e
 	}
 
 	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.GetReservationReservationId(ctx, reservationId)
+	err = w.Handler.GetReservationBusinessIdReservationId(ctx, businessId, reservationId)
 	return err
 }
 
@@ -177,25 +185,25 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 
 	router.GET(baseURL+"/reservation/:businessId", wrapper.GetReservationBusinessId)
 	router.POST(baseURL+"/reservation/:businessId", wrapper.PostReservationBusinessId)
-	router.GET(baseURL+"/reservation/:reservationId", wrapper.GetReservationReservationId)
+	router.GET(baseURL+"/reservation/:businessId/:reservationId", wrapper.GetReservationBusinessIdReservationId)
 
 }
 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/+RWz27bPAx/FYHfdzTqtDvNx25DUaCHIjsOPSg2HauwJZWi0wVB3n2QlDSOrXQJip52",
-	"KBpLFPn7Q8reQGk6azRqdlBswJUNdjL8/EYoGefokFaSldFzfOnRsd+zZCwSKwyRqCv/j9cWoQDHpPQS",
-	"thlo2WFyw7EkTuxss/2KWTxjyT72DvkIg7NGO5yCoEOQf/yfsIYC/ssP/PIduXyQL13zQTn+CPFL+E1q",
-	"nUEwPCvGzl1E9a26JJLrNJzHVpbYoU6wbVAtmyEtpRmXSIExSj4f1U+UPIWTwauquEkVSCGdHxv+wZa0",
-	"Q97vYT8IdKHRgfQEaN0aQ2lNJ3rrvlvErZM0yPCbIpNTzsoST/jHknuXTBkXEhu9Q0pujG08IPidXF0n",
-	"VqcK+iWla+ODK3QlKRuZwg9dWaM0i9qQ8DK3WLKQVae06KSWy+CXsK3k2lAHGbDi1uce9lAGKyQXM15f",
-	"zTwwY1FLq6CAL1ezqxvIwEpugkz5YBzzzaJ3SqNz99XWby6Rpyj9oAsp9qHiaJ5DLQoP9xUUo1vv9i19",
-	"gECyQ0ZyUPwaF7n/LkwtuEGxPwNeNSgCcth3DiyGGQlfekVYQcHUY7Z7CaTa+ikGo+NbUwXbSqN5NzXS",
-	"2laVUZFnF3vwkOq9mTpx3wbLj8GFhXhDBhtuZrPPQ7G7iQOMY5nnyKRwhZVovaumPnJTuL4s0bm6b9t1",
-	"PG6NS7REfMUKKTS+DjNM2uHRuH+pH05+epzVEddToQepRExe+VzbbDTHg4f3RvkO/SQPgsViLVT1lyme",
-	"D5Ofb5z/O+6NhH80yn2hhZ80USe+3RID5RUd6jmeoG34xqDVXqyeWiigYbZFnremlG1jHBcba4i3ubQq",
-	"X13DuMiDjxMxjb/uJSm5aCNtfzAaXcu+ZSjg62w286Wftn8CAAD//yaZLwolCwAA",
+	"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",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code

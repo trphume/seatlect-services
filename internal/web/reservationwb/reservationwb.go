@@ -108,7 +108,7 @@ func (s *Server) PostReservationBusinessId(ctx echo.Context, businessId string) 
 	return ctx.String(http.StatusCreated, "Reservation created successfully")
 }
 
-func (s *Server) GetReservationReservationId(ctx echo.Context, reservationId string) error {
+func (s *Server) GetReservationBusinessIdReservationId(ctx echo.Context, businessId string, reservationId string) error {
 	panic("implement me")
 }
 
