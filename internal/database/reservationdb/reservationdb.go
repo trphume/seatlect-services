@@ -101,6 +101,31 @@ func (r *ReservationDB) SearchReservation(ctx context.Context, searchParams type
 }
 
 func (r *ReservationDB) CreateReservation(ctx context.Context, reservation typedb.Reservation) error {
+	// check that there is no overlapping reservation time first
+	overlapping := r.ResCol.FindOne(
+		ctx,
+		bson.M{
+			"businessId": reservation.BusinessId,
+			"$or": bson.A{
+				bson.M{"start": bson.M{
+					"$gte": reservation.Start,
+					"$lte": reservation.End,
+				}},
+				bson.M{
+					"end": bson.M{
+						"$gte": reservation.Start,
+						"$lte": reservation.End,
+					},
+				},
+			},
+		},
+		options.FindOne().SetProjection(bson.M{"_id": 1}),
+	)
+
+	if overlapping.Err() != mongo.ErrNoDocuments {
+		return commonErr.CONFLICT
+	}
+
 	// get business object first - this is needed to retrieve the placement schema and current display image
 	businessResult := r.BusCol.FindOne(
 		ctx,

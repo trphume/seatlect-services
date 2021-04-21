@@ -98,6 +98,8 @@ func (s *Server) PostReservationBusinessId(ctx echo.Context, businessId string) 
 	if err := s.Repo.CreateReservation(ctx.Request().Context(), reservation); err != nil {
 		if err == commonErr.NOTFOUND {
 			return ctx.String(http.StatusNotFound, "Cannot find reservations of given business id")
+		} else if err == commonErr.CONFLICT {
+			return ctx.String(http.StatusConflict, "No overlapping resevation are allowed")
 		}
 
 		return ctx.String(http.StatusInternalServerError, "Database error")
