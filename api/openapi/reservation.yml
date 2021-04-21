@@ -51,6 +51,23 @@ paths:
       responses:
         "201":
           description: Reservation Created
+  /reservation/{reservationId}:
+    get:
+      description: Get a reservation by id
+      parameters:
+        - in: path
+          name: reservationId
+          required: true
+          schema:
+            type: string
+          description: ID of the the reservation
+      responses:
+        "200":
+          description: Get reservation successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetReservationResponse"
 components:
   schemas:
     Seat:
@@ -124,3 +141,8 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Reservation"
+    GetReservationResponse:
+      type: object
+      properties:
+        reservation:
+          $ref: "#/components/schemas/Reservation"

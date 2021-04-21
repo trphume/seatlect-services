@@ -106,6 +106,10 @@ func (s *Server) PostReservationBusinessId(ctx echo.Context, businessId string) 
 	return ctx.String(http.StatusCreated, "Reservation created successfully")
 }
 
+func (s *Server) GetReservationReservationId(ctx echo.Context, reservationId string) error {
+	panic("implement me")
+}
+
 type Repo interface {
 	ListReservation(ctx context.Context, id string, start time.Time, end time.Time) ([]typedb.Reservation, error)
 	CreateReservation(ctx context.Context, placement typedb.Reservation) error

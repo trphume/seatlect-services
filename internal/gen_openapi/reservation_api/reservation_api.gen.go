@@ -23,6 +23,11 @@ type CreateReservationRequest struct {
 	Start *string `json:"start,omitempty"`
 }
 
+// GetReservationResponse defines model for GetReservationResponse.
+type GetReservationResponse struct {
+	Reservation *Reservation `json:"reservation,omitempty"`
+}
+
 // ListReservationRequest defines model for ListReservationRequest.
 type ListReservationRequest struct {
 	End   *string `json:"end,omitempty"`
@@ -84,6 +89,9 @@ type ServerInterface interface {
 
 	// (POST /reservation/{businessId})
 	PostReservationBusinessId(ctx echo.Context, businessId string) error
+
+	// (GET /reservation/{reservationId})
+	GetReservationReservationId(ctx echo.Context, reservationId string) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -123,6 +131,22 @@ func (w *ServerInterfaceWrapper) PostReservationBusinessId(ctx echo.Context) err
 	return err
 }
 
+// GetReservationReservationId converts echo context to params.
+func (w *ServerInterfaceWrapper) GetReservationReservationId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "reservationId" -------------
+	var reservationId string
+
+	err = runtime.BindStyledParameter("simple", false, "reservationId", ctx.Param("reservationId"), &reservationId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter reservationId: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.GetReservationReservationId(ctx, reservationId)
+	return err
+}
+
 // This is a simple interface which specifies echo.Route addition functions which
 // are present on both echo.Echo and echo.Group, since we want to allow using
 // either of them for path registration
@@ -153,23 +177,25 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 
 	router.GET(baseURL+"/reservation/:businessId", wrapper.GetReservationBusinessId)
 	router.POST(baseURL+"/reservation/:businessId", wrapper.PostReservationBusinessId)
+	router.GET(baseURL+"/reservation/:reservationId", wrapper.GetReservationReservationId)
 
 }
 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/+RWQW/bPAz9KwK/7xjUbneaj92GoUAPRXccemBsOlZhSypFpwuC/PdBUtI4tVJ0KHba",
-	"KTZJPT4+UnS2UNvBWUNGPFRb8HVHA8bHL0wodE+eeI2irbmnp5G8BJ9j64hFU4wk04Qf2TiCCrywNivY",
-	"LcDgQFmHF2TJeHaLg8UuH6mWEHurvXyExIdyeWeNp3kyPgbFdy00xIf/mVqo4L/iKGux17SYIMMxOzLj",
-	"Jk/nrseaBjKZajvSq25aljZCK+JYMaG8n9UPQpnTWcCzbqTLJcgxnZb28fFw07rf4n4U6A8bHYueEW17",
-	"azmv6UxvMw7L5DpbBlt5UWR2yjus6Uz/BGX0WchkyDhGT5x1vG7jkcGvrHWTsc4VDCZtWhuCG/I1a5cq",
-	"hW+mcVYbUa1lFWTuqRaFzaCNGtDgKvZLuR6ltTzAAkRLH7CnM7SANbFPiJcXZSBmHRl0Gir4dFFeXMEC",
-	"HEoXZSom17HYLkevDXl/0+yCc0UyZxkuukJ1CFUn9znm4vhy00AF32m6FK5f4CMFxoGE2EP183WSm6/K",
-	"tko6UoczEFSDKjKHw+TAcorI9DRqpgYq4ZEW+4WcG+uHFExerm0T21ZbI/tbg871uk6KPPo0g0eot+7U",
-	"mX0bW35KLhrShoxtuCrLv8div4kjjVOZ70lY05oa1Yeu2vakm8qPdU3et2Pfb9JxZ31mJNLnTqEy9DxF",
-	"mI3DnfX/0jyc/Rvwrom4nAs9gVIJvAlYu/jl4vVBu5F7qKATcVVR9LbGvrNeqq2zLLsCnS7Wl/B6Fm5D",
-	"nEowYYkga1z2iUw4mNi0OPYCFXwuyzKkftj9DgAA//8cV6AWBwkAAA==",
+	"H4sIAAAAAAAC/+RWz27bPAx/FYHfdzTqtDvNx25DUaCHIjsOPSg2HauwJZWi0wVB3n2QlDSOrXQJip52",
+	"KBpLFPn7Q8reQGk6azRqdlBswJUNdjL8/EYoGefokFaSldFzfOnRsd+zZCwSKwyRqCv/j9cWoQDHpPQS",
+	"thlo2WFyw7EkTuxss/2KWTxjyT72DvkIg7NGO5yCoEOQf/yfsIYC/ssP/PIduXyQL13zQTn+CPFL+E1q",
+	"nUEwPCvGzl1E9a26JJLrNJzHVpbYoU6wbVAtmyEtpRmXSIExSj4f1U+UPIWTwauquEkVSCGdHxv+wZa0",
+	"Q97vYT8IdKHRgfQEaN0aQ2lNJ3rrvlvErZM0yPCbIpNTzsoST/jHknuXTBkXEhu9Q0pujG08IPidXF0n",
+	"VqcK+iWla+ODK3QlKRuZwg9dWaM0i9qQ8DK3WLKQVae06KSWy+CXsK3k2lAHGbDi1uce9lAGKyQXM15f",
+	"zTwwY1FLq6CAL1ezqxvIwEpugkz5YBzzzaJ3SqNz99XWby6Rpyj9oAsp9qHiaJ5DLQoP9xUUo1vv9i19",
+	"gECyQ0ZyUPwaF7n/LkwtuEGxPwNeNSgCcth3DiyGGQlfekVYQcHUY7Z7CaTa+ikGo+NbUwXbSqN5NzXS",
+	"2laVUZFnF3vwkOq9mTpx3wbLj8GFhXhDBhtuZrPPQ7G7iQOMY5nnyKRwhZVovaumPnJTuL4s0bm6b9t1",
+	"PG6NS7REfMUKKTS+DjNM2uHRuH+pH05+epzVEddToQepRExe+VzbbDTHg4f3RvkO/SQPgsViLVT1lyme",
+	"D5Ofb5z/O+6NhH80yn2hhZ80USe+3RID5RUd6jmeoG34xqDVXqyeWiigYbZFnremlG1jHBcba4i3ubQq",
+	"X13DuMiDjxMxjb/uJSm5aCNtfzAaXcu+ZSjg62w286Wftn8CAAD//yaZLwolCwAA",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code
