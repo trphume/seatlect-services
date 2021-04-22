@@ -519,3 +519,15 @@ func (b *BusinessDB) UpdateBusinessStatus(ctx context.Context, id string, status
 
 	return nil
 }
+
+func (b *BusinessDB) ListEmployee(ctx context.Context, businessId string) ([]typedb.Employee, error) {
+	panic("implement me")
+}
+
+func (b *BusinessDB) CreateEmployee(ctx context.Context, businessId string, employee typedb.Employee) error {
+	panic("implement me")
+}
+
+func (b *BusinessDB) DeleteEmployee(ctx context.Context, businessId string, username string) error {
+	panic("implement me")
+}
