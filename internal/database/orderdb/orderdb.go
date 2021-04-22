@@ -44,3 +44,11 @@ func (o *OrderDB) ListOrderByCustomer(ctx context.Context, customerId string, li
 
 	return res, nil
 }
+
+func (o *OrderDB) CheckOrderReservationId(ctx context.Context, orderId string, reservationId string) error {
+	panic("implement me")
+}
+
+func (o *OrderDB) UpdateOrderStatus(ctx context.Context, orderId string, status string) error {
+	panic("implement me")
+}
