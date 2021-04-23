@@ -46,7 +46,39 @@ func (o *OrderDB) ListOrderByCustomer(ctx context.Context, customerId string, li
 }
 
 func (o *OrderDB) GetOrderWithReservationId(ctx context.Context, orderId string, reservationId string) (*typedb.Order, error) {
-	panic("implement me")
+	// parsing id
+	oId, err := primitive.ObjectIDFromHex(orderId)
+	if err != nil {
+		return nil, commonErr.INVALID
+	}
+
+	rId, err := primitive.ObjectIDFromHex(reservationId)
+	if err != nil {
+		return nil, commonErr.INVALID
+	}
+
+	// query db
+	res := o.OrdCol.FindOne(
+		ctx,
+		bson.M{"_id": oId, "reservationId": rId},
+		options.FindOne().SetProjection(bson.M{"seats": 1}),
+	)
+
+	if res.Err() != nil {
+		if res.Err() == mongo.ErrNoDocuments {
+			return nil, commonErr.NOTFOUND
+		}
+
+		return nil, commonErr.INTERNAL
+	}
+
+	// deocde result
+	var order typedb.Order
+	if err := res.Decode(&order); err != nil {
+		return nil, commonErr.INTERNAL
+	}
+
+	return &order, nil
 }
 
 func (o *OrderDB) UpdateOrderStatus(ctx context.Context, orderId string, status string) error {
