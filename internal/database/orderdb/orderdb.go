@@ -45,7 +45,7 @@ func (o *OrderDB) ListOrderByCustomer(ctx context.Context, customerId string, li
 	return res, nil
 }
 
-func (o *OrderDB) CheckOrderReservationId(ctx context.Context, orderId string, reservationId string) error {
+func (o *OrderDB) GetOrderWithReservationId(ctx context.Context, orderId string, reservationId string) (*typedb.Order, error) {
 	panic("implement me")
 }
 
