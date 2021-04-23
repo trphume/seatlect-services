@@ -56,7 +56,17 @@ func (s *Server) PostEmployeeBusinessId(ctx echo.Context, businessId string) err
 }
 
 func (s *Server) DeleteEmployeeBusinessIdUsername(ctx echo.Context, businessId string, username string) error {
-	panic("implement me")
+	if err := s.Repo.DeleteEmployee(ctx.Request().Context(), businessId, username); err != nil {
+		if err == commonErr.INVALID {
+			return ctx.String(http.StatusBadRequest, "Business id is incorrect")
+		} else if err == commonErr.NOTFOUND {
+			return ctx.String(http.StatusNotFound, "Business or employee not found with given id")
+		}
+
+		return ctx.String(http.StatusInternalServerError, "Database error")
+	}
+
+	return ctx.String(http.StatusNoContent, "Employee deleted successfully")
 }
 
 type Repo interface {
