@@ -82,5 +82,19 @@ func (o *OrderDB) GetOrderWithReservationId(ctx context.Context, orderId string,
 }
 
 func (o *OrderDB) UpdateOrderStatus(ctx context.Context, orderId string, status string) error {
-	panic("implement me")
+	oId, err := primitive.ObjectIDFromHex(orderId)
+	if err != nil {
+		return commonErr.INVALID
+	}
+
+	res, err := o.OrdCol.UpdateOne(ctx, bson.M{"_id": oId}, bson.M{"$set": bson.M{"status": status}})
+	if err != nil {
+		return commonErr.INTERNAL
+	}
+
+	if res.MatchedCount == 0 {
+		return commonErr.NOTFOUND
+	}
+
+	return nil
 }
