@@ -521,7 +521,26 @@ func (b *BusinessDB) UpdateBusinessStatus(ctx context.Context, id string, status
 }
 
 func (b *BusinessDB) ListEmployee(ctx context.Context, businessId string) ([]typedb.Employee, error) {
-	panic("implement me")
+	pId, err := primitive.ObjectIDFromHex(businessId)
+	if err != nil {
+		return nil, commonErr.INVALID
+	}
+
+	res := b.BusCol.FindOne(ctx, bson.M{"_id": pId}, options.FindOne().SetProjection(bson.M{"employee": 1}))
+	if res.Err() != nil {
+		if res.Err() == mongo.ErrNoDocuments {
+			return nil, commonErr.NOTFOUND
+		}
+
+		return nil, commonErr.INTERNAL
+	}
+
+	var business typedb.Business
+	if err := res.Decode(&business); err != nil {
+		return nil, commonErr.INTERNAL
+	}
+
+	return business.Employee, nil
 }
 
 func (b *BusinessDB) CreateEmployee(ctx context.Context, businessId string, employee typedb.Employee) error {
