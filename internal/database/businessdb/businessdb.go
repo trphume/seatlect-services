@@ -525,7 +525,21 @@ func (b *BusinessDB) ListEmployee(ctx context.Context, businessId string) ([]typ
 }
 
 func (b *BusinessDB) CreateEmployee(ctx context.Context, businessId string, employee typedb.Employee) error {
-	panic("implement me")
+	pId, err := primitive.ObjectIDFromHex(businessId)
+	if err != nil {
+		return commonErr.INVALID
+	}
+
+	res, err := b.BusCol.UpdateOne(ctx, bson.M{"_id": pId}, bson.M{"$push": bson.M{"employee": employee}})
+	if err != nil {
+		return commonErr.INTERNAL
+	}
+
+	if res.MatchedCount == 0 {
+		return commonErr.NOTFOUND
+	}
+
+	return nil
 }
 
 func (b *BusinessDB) DeleteEmployee(ctx context.Context, businessId string, username string) error {
