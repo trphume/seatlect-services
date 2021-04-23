@@ -562,5 +562,24 @@ func (b *BusinessDB) CreateEmployee(ctx context.Context, businessId string, empl
 }
 
 func (b *BusinessDB) DeleteEmployee(ctx context.Context, businessId string, username string) error {
-	panic("implement me")
+	pId, err := primitive.ObjectIDFromHex(businessId)
+	if err != nil {
+		return commonErr.INVALID
+	}
+
+	res, err := b.BusCol.UpdateOne(
+		ctx,
+		bson.M{"_id": pId},
+		bson.M{"$pull": bson.M{"employee": bson.M{"username": username}}},
+	)
+
+	if err != nil {
+		return commonErr.INTERNAL
+	}
+
+	if res.MatchedCount == 0 {
+		return commonErr.NOTFOUND
+	}
+
+	return nil
 }
