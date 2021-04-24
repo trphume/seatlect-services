@@ -8,12 +8,14 @@ import (
 	"github.com/tphume/seatlect-services/internal/database/typedb"
 	"github.com/tphume/seatlect-services/internal/gen_openapi/business_api"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"gopkg.in/gomail.v2"
 	"net/http"
 	"strconv"
 )
 
 type Server struct {
 	Repo Repo
+	Mail *gomail.Dialer
 }
 
 func (s *Server) GetBusiness(ctx echo.Context, params business_api.GetBusinessParams) error {
@@ -205,7 +207,8 @@ func (s *Server) PatchBusinessBusinessIdStatus(ctx echo.Context, businessId stri
 		return ctx.String(http.StatusBadRequest, "Error binding request body")
 	}
 
-	if err := s.Repo.UpdateBusinessStatus(ctx.Request().Context(), businessId, *req.Status); err != nil {
+	em, err := s.Repo.UpdateBusinessStatus(ctx.Request().Context(), businessId, *req.Status)
+	if err != nil {
 		if err == commonErr.NOTFOUND {
 			return ctx.String(http.StatusNotFound, "Business not found with given id")
 		} else if err == commonErr.INVALID {
@@ -213,6 +216,22 @@ func (s *Server) PatchBusinessBusinessIdStatus(ctx echo.Context, businessId stri
 		}
 
 		return ctx.String(http.StatusInternalServerError, "Database error")
+	}
+
+	// Send email notification
+	if *req.Status == 1 {
+		m := gomail.NewMessage()
+		m.SetHeader("From", "union5113@gmail.com")
+		m.SetHeader("To", em)
+		m.SetHeader("Subject", "Seatlect Business approved")
+		m.SetBody(
+			"text/html",
+			fmt.Sprintf("Your business registration have been approved. You can now login to the business web platform"),
+		)
+
+		if err := s.Mail.DialAndSend(m); err != nil {
+			return ctx.String(http.StatusNoContent, "Created successful but error sending email")
+		}
 	}
 
 	return ctx.String(http.StatusNoContent, "Business status updated successfully")
@@ -228,7 +247,7 @@ type Repo interface {
 	ListMenuItem(ctx context.Context, id string) ([]typedb.MenuItems, error)
 	AppendMenuItem(ctx context.Context, id string, item typedb.MenuItems) (string, error)
 	RemoveMenuItem(ctx context.Context, id string, name string) error
-	UpdateBusinessStatus(ctx context.Context, id string, status int) error
+	UpdateBusinessStatus(ctx context.Context, id string, status int) (string, error)
 }
 
 // Helper function

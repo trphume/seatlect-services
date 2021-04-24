@@ -491,13 +491,13 @@ func (b *BusinessDB) DeleteBusiness(ctx context.Context, id string) error {
 	return nil
 }
 
-func (b *BusinessDB) UpdateBusinessStatus(ctx context.Context, id string, status int) error {
+func (b *BusinessDB) UpdateBusinessStatus(ctx context.Context, id string, status int) (string, error) {
 	pId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		return commonErr.INVALID
+		return "", commonErr.INVALID
 	}
 
-	res, err := b.BusCol.UpdateOne(
+	res := b.BusCol.FindOneAndUpdate(
 		ctx,
 		bson.M{"_id": pId},
 		bson.D{
@@ -507,17 +507,23 @@ func (b *BusinessDB) UpdateBusinessStatus(ctx context.Context, id string, status
 				},
 			},
 		},
+		options.FindOneAndUpdate().SetProjection(bson.M{"email": 1}),
 	)
 
-	if err != nil {
-		return commonErr.INTERNAL
+	if res.Err() != nil {
+		if res.Err() == mongo.ErrNoDocuments {
+			return "", commonErr.NOTFOUND
+		}
+
+		return "", commonErr.INTERNAL
 	}
 
-	if res.ModifiedCount == 0 {
-		return commonErr.NOTFOUND
+	var business typedb.Business
+	if err := res.Decode(&business); err != nil {
+		return "", commonErr.INTERNAL
 	}
 
-	return nil
+	return business.Email, nil
 }
 
 func (b *BusinessDB) ListEmployee(ctx context.Context, businessId string) ([]typedb.Employee, error) {

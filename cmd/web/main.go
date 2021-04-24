@@ -98,12 +98,12 @@ func main() {
 	adminServer := &adminwb.Server{Repo: adminRepo}
 
 	busRepo := &businessdb.BusinessDB{BusCol: busCol, ImageBucket: imgBucket}
-	busServer := &businesswb.Server{Repo: busRepo}
+	busServer := &businesswb.Server{Repo: busRepo, Mail: mailClient}
 	userServer := &userwb.Server{Repo: busRepo, Mail: mailClient}
 	empServer := &employeewb.Server{Repo: busRepo}
 
 	reqRepo := &requestdb.RequestDB{ReqCol: reqCol, BusCol: busCol}
-	reqServer := &requestwb.Server{Repo: reqRepo, BusRepo: busRepo}
+	reqServer := &requestwb.Server{Repo: reqRepo, BusRepo: busRepo, Mail: mailClient}
 
 	pmtRepo := &placementdb.PlacementDB{BusCol: busCol}
 	pmtServer := &placementwb.Server{Repo: pmtRepo}
