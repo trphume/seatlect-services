@@ -31,18 +31,30 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"google.golang.org/api/option"
+	"gopkg.in/gomail.v2"
 	"log"
 	"os"
 	"time"
 )
 
 func main() {
-	// Construct mongo db client and collection
+	// Check env
 	mongoURI := os.Getenv("MONGO_URI")
 	if len(mongoURI) == 0 {
 		log.Fatal("missing mongo uri")
 	}
 
+	mailUsername := os.Getenv("MAIL_USERNAME")
+	if len(mailUsername) == 0 {
+		log.Fatal("missing mongo uri")
+	}
+
+	mailPassword := os.Getenv("MAIL_PASSWORD")
+	if len(mailPassword) == 0 {
+		log.Fatal("missing mongo uri")
+	}
+
+	// Construct mongo db client and collection
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*15)
 	defer cancel()
 
@@ -72,17 +84,26 @@ func main() {
 
 	imgBucket := imgClient.Bucket("seatlect-images")
 
+	// Construct mail client
+	mailClient := gomail.NewDialer("smtp.gmail.com", 587, mailUsername, mailPassword)
+
+	if closer, err := mailClient.Dial(); err != nil {
+		log.Fatal("error dialing gmail smtp server: ", err.Error())
+	} else {
+		_ = closer.Close()
+	}
+
 	// Construct route handlers and repo
 	adminRepo := &admindb.AdminDB{AdminCol: adminCol}
 	adminServer := &adminwb.Server{Repo: adminRepo}
 
 	busRepo := &businessdb.BusinessDB{BusCol: busCol, ImageBucket: imgBucket}
 	busServer := &businesswb.Server{Repo: busRepo}
-	userServer := &userwb.Server{Repo: busRepo}
+	userServer := &userwb.Server{Repo: busRepo, Mail: mailClient}
 	empServer := &employeewb.Server{Repo: busRepo}
 
 	reqRepo := &requestdb.RequestDB{ReqCol: reqCol, BusCol: busCol}
-	reqServer := &requestwb.Server{Repo: reqRepo}
+	reqServer := &requestwb.Server{Repo: reqRepo, BusRepo: busRepo}
 
 	pmtRepo := &placementdb.PlacementDB{BusCol: busCol}
 	pmtServer := &placementwb.Server{Repo: pmtRepo}
