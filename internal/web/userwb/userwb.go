@@ -2,16 +2,19 @@ package userwb
 
 import (
 	"context"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/tphume/seatlect-services/internal/commonErr"
 	"github.com/tphume/seatlect-services/internal/database/typedb"
 	"github.com/tphume/seatlect-services/internal/gen_openapi/user_api"
+	"gopkg.in/gomail.v2"
 	"net/http"
 	"time"
 )
 
 type Server struct {
 	Repo Repo
+	Mail *gomail.Dialer
 }
 
 func (s *Server) PostUserLogin(ctx echo.Context) error {
@@ -76,6 +79,20 @@ func (s *Server) PostUserRegister(ctx echo.Context) error {
 		}
 
 		return ctx.String(http.StatusConflict, "Business with that credentials already exist")
+	}
+
+	// Send email notification
+	m := gomail.NewMessage()
+	m.SetHeader("From", "union5113@gmail.com")
+	m.SetHeader("To", business.Email)
+	m.SetHeader("Subject", "Seatlect Business Registration")
+	m.SetBody(
+		"text/html",
+		fmt.Sprintf("Business registration with the username <b>%s</b> successful. We are now reviewing your information", business.Username),
+	)
+
+	if err := s.Mail.DialAndSend(m); err != nil {
+		return ctx.String(http.StatusCreated, "Created successful but error sending email")
 	}
 
 	return ctx.String(http.StatusCreated, "Business created")
