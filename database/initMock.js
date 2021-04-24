@@ -10,6 +10,7 @@ samuelId = ObjectId('5facaf7a35c1e1db56597485');
 gunId = ObjectId('5facaf818b4f49b3cf1f1792');
 
 brightioId = ObjectId('5facafef6b28446f285d7ae4');
+brightio2Id = ObjectId('6083f7e4630ee2a709fc8234');
 beerBurgerId = ObjectId('5facaff31c6d49b2c7256bf3');
 ironBuffetId = ObjectId('5facaff9e4d46967c9c2a558');
 specialTaleId = ObjectId('5fcde2ec209efa45620a08b6');
@@ -212,7 +213,32 @@ db.business.insertMany([
     menu: [],
     status: 1,
     employee: [],
-  }
+  },
+  {
+    _id: brightio2Id,
+    username: 'Brightio2',
+    email: 'traphumedev@gmail.com',
+    password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
+    businessName: 'Brightio',
+    type: 'Bar',
+    tags: ['BAR', 'JAPANESE', 'LIVE MUSIC'],
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    location: {
+      type: 'Point',
+      coordinates: [100.769652, 13.727892]
+    },
+    address: 'Keki Ngam 4, Chalong Krung 1, Latkrabang, Bangkok, 10520',
+    displayImage: '',
+    images: [],
+    placement: {
+      width: 800,
+      height: 800,
+      seats: []
+    },
+    menu: [],
+    status: 0,
+    employee: [],
+  },
 ]);
 
 // reservation
@@ -343,6 +369,19 @@ db.request.insertMany([
   {
     _id: brightioId,
     businessName: 'Brightio',
+    type: 'Cool Bar',
+    tags: ['BAR', 'JAPANESE', 'LIVE MUSIC'],
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    location: {
+      type: 'Point',
+      coordinates: [100.769652, 13.727892]
+    },
+    address: 'Keki Ngam 4, Chalong Krung 1, Latkrabang, Bangkok, 10520',
+    createdAt: new Date('2021-02-25T19:00:00Z')
+  },
+  {
+    _id: brightio2Id,
+    businessName: 'Brightio2',
     type: 'Cool Bar',
     tags: ['BAR', 'JAPANESE', 'LIVE MUSIC'],
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
