@@ -589,3 +589,32 @@ func (b *BusinessDB) DeleteEmployee(ctx context.Context, businessId string, user
 
 	return nil
 }
+
+func (b *BusinessDB) AuthenticateEmployee(ctx context.Context, username, password, businessName string) (string, error) {
+	res := b.BusCol.FindOne(
+		ctx,
+		bson.M{
+			"username": businessName,
+			"employee": bson.M{
+				"username": username,
+				"password": password,
+			},
+		},
+		options.FindOne().SetProjection(bson.M{"_id": 1}),
+	)
+
+	if res.Err() != nil {
+		if res.Err() == mongo.ErrNoDocuments {
+			return "", commonErr.NOTFOUND
+		}
+
+		return "", commonErr.INTERNAL
+	}
+
+	var business typedb.Business
+	if err := res.Decode(&business); err != nil {
+		return "", commonErr.INTERNAL
+	}
+
+	return business.Id.Hex(), nil
+}
