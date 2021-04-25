@@ -69,10 +69,29 @@ func (s *Server) DeleteEmployeeBusinessIdUsername(ctx echo.Context, businessId s
 	return ctx.String(http.StatusNoContent, "Employee deleted successfully")
 }
 
+func (s *Server) PostEmployeeLogin(ctx echo.Context) error {
+	var req employee_api.LoginRequest
+	if err := ctx.Bind(&req); err != nil {
+		return ctx.String(http.StatusBadRequest, "Error binding request body")
+	}
+
+	businessId, err := s.Repo.AuthenticateEmployee(ctx.Request().Context(), req.Username, req.Password, req.BusinessName)
+	if err != nil {
+		if err == commonErr.NOTFOUND {
+			return ctx.String(http.StatusNotFound, "Employee and business does not match")
+		}
+
+		return ctx.String(http.StatusInternalServerError, "Database error")
+	}
+
+	return ctx.JSONPretty(http.StatusOK, employee_api.LoginResponse{BusinessId: &businessId}, "  ")
+}
+
 type Repo interface {
 	ListEmployee(ctx context.Context, businessId string) ([]typedb.Employee, error)
 	CreateEmployee(ctx context.Context, businessId string, employee typedb.Employee) error
 	DeleteEmployee(ctx context.Context, businessId string, username string) error
+	AuthenticateEmployee(ctx context.Context, username, password, businessName string) (string, error)
 }
 
 // Helper function
