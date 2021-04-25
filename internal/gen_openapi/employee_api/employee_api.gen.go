@@ -27,14 +27,35 @@ type ListBusinessResponse struct {
 	Employees *[]Employee `json:"employees,omitempty"`
 }
 
+// LoginRequest defines model for LoginRequest.
+type LoginRequest struct {
+	BusinessName string `json:"businessName"`
+	Password     string `json:"password"`
+	Username     string `json:"username"`
+}
+
+// LoginResponse defines model for LoginResponse.
+type LoginResponse struct {
+	BusinessId *string `json:"businessId,omitempty"`
+}
+
+// PostEmployeeLoginJSONBody defines parameters for PostEmployeeLogin.
+type PostEmployeeLoginJSONBody LoginRequest
+
 // PostEmployeeBusinessIdJSONBody defines parameters for PostEmployeeBusinessId.
 type PostEmployeeBusinessIdJSONBody Employee
+
+// PostEmployeeLoginRequestBody defines body for PostEmployeeLogin for application/json ContentType.
+type PostEmployeeLoginJSONRequestBody PostEmployeeLoginJSONBody
 
 // PostEmployeeBusinessIdRequestBody defines body for PostEmployeeBusinessId for application/json ContentType.
 type PostEmployeeBusinessIdJSONRequestBody PostEmployeeBusinessIdJSONBody
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
+
+	// (POST /employee/login)
+	PostEmployeeLogin(ctx echo.Context) error
 
 	// (GET /employee/{businessId})
 	GetEmployeeBusinessId(ctx echo.Context, businessId string) error
@@ -49,6 +70,15 @@ type ServerInterface interface {
 // ServerInterfaceWrapper converts echo contexts to parameters.
 type ServerInterfaceWrapper struct {
 	Handler ServerInterface
+}
+
+// PostEmployeeLogin converts echo context to params.
+func (w *ServerInterfaceWrapper) PostEmployeeLogin(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.PostEmployeeLogin(ctx)
+	return err
 }
 
 // GetEmployeeBusinessId converts echo context to params.
@@ -135,6 +165,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 		Handler: si,
 	}
 
+	router.POST(baseURL+"/employee/login", wrapper.PostEmployeeLogin)
 	router.GET(baseURL+"/employee/:businessId", wrapper.GetEmployeeBusinessId)
 	router.POST(baseURL+"/employee/:businessId", wrapper.PostEmployeeBusinessId)
 	router.DELETE(baseURL+"/employee/:businessId/:username", wrapper.DeleteEmployeeBusinessIdUsername)
@@ -144,16 +175,18 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/8yVQW/bPAyG/4rA7zsatdvtMh+7DkOBYhgG7FT0oNhMo8KWVJJOERj+7wPl2EnjrOhh",
-	"wHaKbIkvX/ohlR6q0Mbg0QtD2QNXG2xtWn5pYxN2iLqOFCKSOEw70TK/BKp1LbuIUAILOf8IQwYdI3nb",
-	"4pnNIQPC584R1lDeH05mB8WHbAoKqyesRBXvHMt1x84j8w/kGDyfMYV7u+nBCbZp8T/hGkr4Lz+Ume9r",
-	"zOcChzmpJbK7ZPTEhb5yfh1SVU4a3ZvjM9gisQseSri8KFQvRPQ2Oijhw0VxcZVKlE2ylE9O8361r+q2",
-	"HnTnEUV/auSKXJRR8CuKaRyLCWsz16gP1kzhkPKR1YjbeoyZzF3PKZIHsi0KEkN534NTffUFGYzIYHV8",
-	"/ABLqMNs3xxLi7c36ufIzSn3B9UawaVPcFUU+lMFL+hTzTbGxlWpgvyJVbU/SvcWxbPdkXi9NjmdMYqR",
-	"2pTKEAo53GJtuKsqZF53TbMbw2PgMzg+E1rBmYSxVRU6L+bFycY8ui16M/W1sb42c2efMvoe+B+E9Nwh",
-	"y3Wod3+Mz2HKXs+/uh0WfXG5ND4JmI1ls0L0r1iZKgGpVX7IfjNceT8xGUb9BgWXmW7Se2P9Ae/bczYG",
-	"LCn+PL7Z/g7N7Gyuoyv3vZm+aScf3T3vGu+Pb2Acv/5y4hQfI22nT9VRAyVsRGKZ502obLMJLGUfA8mQ",
-	"2+jy7SWcTvmdnjOjjN7LlpxdNfu/rUD7gV7brhEo4VNRFJr6YfgVAAD//yBKmIIIBwAA",
+	"H4sIAAAAAAAC/8xWTWvcMBD9K2Lao4k3aS/1rWlKCJRSAj2FHLTy7FpBlhTNeMOy+L8XyWt7N3bSpaS0",
+	"N1kf897Mmyd5B8rV3lm0TFDsgFSFtUzDr7U3bosYxz44j4E1phUviZ5cKOOYtx6hAOKg7RraDBrCYGWN",
+	"M4ttBgEfGx2whOJu3JmNEe+z/pBbPqDiGPGbJr5sSFskukXyztIMKdzTTR+asU6D9wFXUMC7fEwz3+eY",
+	"Dwm2A6gMQW4T0SkLt9b2Fh8bJJ6iL/f8vs9nnr1VzY5wstNL2JF/qXZ91JtynsGzeHFK25VLmzWbuDYU",
+	"M4MNBtLOQgHnZ4uI7jxa6TUU8OFscXaRyHKVkPNettxEioma6wpcIqmgPXehUgbiSXMluELRJy6kLcWQ",
+	"eoIKMh6JqcAPR9wTSwGgqyYSX7pyG1GUs4w2AUrvjVbpdP5Azo5++F0nHfVGe6wZhwbTRFf8lPXFYvHW",
+	"2HtpE/hx5T43XKHlGB1LQY1SSLRqjImNHrePGuzGRmgj7hpnlLhGFkYTC7cSg+nihxT98YkQ1zjocDn2",
+	"WuyDIGtkDATF3Q5iA6TegAw6Pxy25vOqZgcVOqZ4cxX5HLB53tL3f1OQuetqRpd+j4hWCnWCEgE5aNzM",
+	"CJW9YIwvASXjoISQSrnGcmeVtd6g/QOz/D8ivb1Zx2v/FKOeT4n3AUQlSSwR7ZFWQiVBylfNle96Tdou",
+	"vkHGKdJVmhfSjvK+7rPuwFTFn4fvxL9RM5vFOnjATkWKT9/h3XOSvT++ImNX/Zmrsc2AMGz6UjXBQAEV",
+	"sy/y3DglTeWIi513gdtcep1vziGbvFtKGtGFiW+jDFouzf4/yoW9oVeyMQwFfFosFhH6vv0VAAD//3dm",
+	"EAGZCQAA",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code

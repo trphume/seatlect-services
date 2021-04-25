@@ -63,6 +63,22 @@ paths:
       responses:
         "204":
           description: Employee deleted successfully
+  /employee/login:
+    post:
+      description: Login with the username and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Authenticated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
 components:
   schemas:
     Employee:
@@ -82,3 +98,21 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Employee"
+    LoginRequest:
+      type: object
+      properties:
+        businessName:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - "businessName"
+        - "username"
+        - "password"
+    LoginResponse:
+      type: object
+      properties:
+        businessId:
+          type: string
