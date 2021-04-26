@@ -269,7 +269,41 @@ func (r *ReservationDB) ReserveSeats(ctx context.Context, id string, user string
 }
 
 func (r *ReservationDB) GetReservationById(ctx context.Context, businessId string, reservationId string) (*typedb.Reservation, error) {
-	panic("implement me")
+	rId, err := primitive.ObjectIDFromHex(reservationId)
+	if err != nil {
+		return nil, commonErr.INVALID
+	}
+
+	var bId primitive.ObjectID
+	if businessId != "" {
+		bId, err = primitive.ObjectIDFromHex(businessId)
+		if err != nil {
+			return nil, commonErr.INVALID
+		}
+	}
+
+	var query bson.M
+	if businessId != "" {
+		query = bson.M{"_id": rId, "businessId": bId}
+	} else {
+		query = bson.M{"_id": rId}
+	}
+
+	res := r.ResCol.FindOne(ctx, query)
+	if res.Err() != nil {
+		if res.Err() == mongo.ErrNoDocuments {
+			return nil, commonErr.NOTFOUND
+		}
+
+		return nil, commonErr.INTERNAL
+	}
+
+	var reservation typedb.Reservation
+	if err := res.Decode(&reservation); err != nil {
+		return nil, commonErr.INTERNAL
+	}
+
+	return &reservation, nil
 }
 
 // Parsing function
