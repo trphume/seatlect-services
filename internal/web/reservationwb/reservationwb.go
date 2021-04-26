@@ -115,6 +115,7 @@ func (s *Server) GetReservationBusinessIdReservationId(ctx echo.Context, busines
 type Repo interface {
 	ListReservation(ctx context.Context, id string, start time.Time, end time.Time) ([]typedb.Reservation, error)
 	CreateReservation(ctx context.Context, placement typedb.Reservation) error
+	GetReservationById(ctx context.Context, businessId string, reservationId string) (*typedb.Reservation, error)
 }
 
 // Parsing function - kill me please

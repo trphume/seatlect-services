@@ -268,6 +268,10 @@ func (r *ReservationDB) ReserveSeats(ctx context.Context, id string, user string
 	return &order, nil
 }
 
+func (r *ReservationDB) GetReservationById(ctx context.Context, businessId string, reservationId string) (*typedb.Reservation, error) {
+	panic("implement me")
+}
+
 // Parsing function
 func toReservationSeats(seats []typedb.Seat) []typedb.ReservationSeat {
 	res := make([]typedb.ReservationSeat, len(seats))
