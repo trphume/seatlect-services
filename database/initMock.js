@@ -323,8 +323,8 @@ db.reservation.insertMany([
     _id: reservationA,
     businessId: brightioId,
     name: 'Brightio',
-    start: new Date('2021-02-24T19:00:00Z'),
-    end: new Date('2021-02-25T00:00:00Z'),
+    start: new Date('2021-05-24T19:00:00Z'),
+    end: new Date('2021-05-25T00:00:00Z'),
     placement: exampleReservationPlacement,
     image: exampleDisplayImage,
     location: {
@@ -337,8 +337,8 @@ db.reservation.insertMany([
     _id: reservationB,
     businessId: jiaShinId,
     name: 'JiaShin',
-    start: new Date('2021-02-24T19:00:00Z'),
-    end: new Date('2021-02-25T00:00:00Z'),
+    start: new Date('2021-05-24T19:00:00Z'),
+    end: new Date('2021-05-25T00:00:00Z'),
     placement: exampleReservationPlacement,
     image: exampleDisplayImage,
     location: {

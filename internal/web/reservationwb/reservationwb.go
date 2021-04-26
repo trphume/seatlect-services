@@ -152,6 +152,7 @@ func typedbToOapi(reservation typedb.Reservation) reservation_api.Reservation {
 		Name:      &reservation.Name,
 		Placement: typedbPmtToOapi(reservation.Placement),
 		Start:     createString(reservation.End.Format(iso8601)),
+		Id:        createString(reservation.Id.Hex()),
 	}
 }
 

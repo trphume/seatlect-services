@@ -115,6 +115,8 @@ components:
     Reservation:
       type: object
       properties:
+        id:
+          type: string
         name:
           type: string
         start:

@@ -49,6 +49,7 @@ type Placement struct {
 // Reservation defines model for Reservation.
 type Reservation struct {
 	End       *string    `json:"end,omitempty"`
+	Id        *string    `json:"id,omitempty"`
 	Name      *string    `json:"name,omitempty"`
 	Placement *Placement `json:"placement,omitempty"`
 	Start     *string    `json:"start,omitempty"`
@@ -192,18 +193,18 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code
