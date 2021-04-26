@@ -20,6 +20,7 @@ type ReservationServiceClient interface {
 	ListReservation(ctx context.Context, in *ListReservationRequest, opts ...grpc.CallOption) (*ListReservationResponse, error)
 	SearchReservation(ctx context.Context, in *SearchReservationRequest, opts ...grpc.CallOption) (*SearchReservationResponse, error)
 	ReserveSeats(ctx context.Context, in *ReserveSeatsRequest, opts ...grpc.CallOption) (*ReserveSeatsResponse, error)
+	Susbscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (ReservationService_SusbscribeClient, error)
 }
 
 type reservationServiceClient struct {
@@ -57,6 +58,38 @@ func (c *reservationServiceClient) ReserveSeats(ctx context.Context, in *Reserve
 	return out, nil
 }
 
+func (c *reservationServiceClient) Susbscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (ReservationService_SusbscribeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_ReservationService_serviceDesc.Streams[0], "/seatlect.ReservationService/Susbscribe", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &reservationServiceSusbscribeClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type ReservationService_SusbscribeClient interface {
+	Recv() (*SubscribeReponse, error)
+	grpc.ClientStream
+}
+
+type reservationServiceSusbscribeClient struct {
+	grpc.ClientStream
+}
+
+func (x *reservationServiceSusbscribeClient) Recv() (*SubscribeReponse, error) {
+	m := new(SubscribeReponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // ReservationServiceServer is the server API for ReservationService service.
 // All implementations must embed UnimplementedReservationServiceServer
 // for forward compatibility
@@ -64,6 +97,7 @@ type ReservationServiceServer interface {
 	ListReservation(context.Context, *ListReservationRequest) (*ListReservationResponse, error)
 	SearchReservation(context.Context, *SearchReservationRequest) (*SearchReservationResponse, error)
 	ReserveSeats(context.Context, *ReserveSeatsRequest) (*ReserveSeatsResponse, error)
+	Susbscribe(*SubscribeRequest, ReservationService_SusbscribeServer) error
 	mustEmbedUnimplementedReservationServiceServer()
 }
 
@@ -79,6 +113,9 @@ func (UnimplementedReservationServiceServer) SearchReservation(context.Context, 
 }
 func (UnimplementedReservationServiceServer) ReserveSeats(context.Context, *ReserveSeatsRequest) (*ReserveSeatsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ReserveSeats not implemented")
+}
+func (UnimplementedReservationServiceServer) Susbscribe(*SubscribeRequest, ReservationService_SusbscribeServer) error {
+	return status.Errorf(codes.Unimplemented, "method Susbscribe not implemented")
 }
 func (UnimplementedReservationServiceServer) mustEmbedUnimplementedReservationServiceServer() {}
 
@@ -147,6 +184,27 @@ func _ReservationService_ReserveSeats_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ReservationService_Susbscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(SubscribeRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(ReservationServiceServer).Susbscribe(m, &reservationServiceSusbscribeServer{stream})
+}
+
+type ReservationService_SusbscribeServer interface {
+	Send(*SubscribeReponse) error
+	grpc.ServerStream
+}
+
+type reservationServiceSusbscribeServer struct {
+	grpc.ServerStream
+}
+
+func (x *reservationServiceSusbscribeServer) Send(m *SubscribeReponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 var _ReservationService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "seatlect.ReservationService",
 	HandlerType: (*ReservationServiceServer)(nil),
@@ -164,6 +222,12 @@ var _ReservationService_serviceDesc = grpc.ServiceDesc{
 			Handler:    _ReservationService_ReserveSeats_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Susbscribe",
+			Handler:       _ReservationService_Susbscribe_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "reservation.proto",
 }
