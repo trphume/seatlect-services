@@ -109,7 +109,25 @@ func (s *Server) PostReservationBusinessId(ctx echo.Context, businessId string) 
 }
 
 func (s *Server) GetReservationBusinessIdReservationId(ctx echo.Context, businessId string, reservationId string) error {
-	panic("implement me")
+	if businessId == "" {
+		return ctx.String(http.StatusBadRequest, "missing businessid")
+	}
+
+	reservation, err := s.Repo.GetReservationById(ctx.Request().Context(), businessId, reservationId)
+	if err != nil {
+		if err == commonErr.INVALID {
+			return ctx.String(http.StatusBadRequest, "invalid id format")
+		} else if err == commonErr.NOTFOUND {
+			return ctx.String(http.StatusNotFound, "reservation not found with given id")
+		}
+
+		return ctx.String(http.StatusNotFound, "database error")
+	}
+
+	resv := typedbToOapi(*reservation)
+	res := reservation_api.GetReservationResponse{Reservation: &resv}
+
+	return ctx.JSONPretty(http.StatusOK, &res, "  ")
 }
 
 type Repo interface {
