@@ -7,6 +7,7 @@ import (
 	"github.com/tphume/seatlect-services/internal/commonErr"
 	"github.com/tphume/seatlect-services/internal/database/typedb"
 	"github.com/tphume/seatlect-services/internal/gen_openapi/user_api"
+	"github.com/tphume/seatlect-services/internal/utils"
 	"gopkg.in/gomail.v2"
 	"net/http"
 	"time"
@@ -82,18 +83,12 @@ func (s *Server) PostUserRegister(ctx echo.Context) error {
 	}
 
 	// Send email notification
-	m := gomail.NewMessage()
-	m.SetHeader("From", "union5113@gmail.com")
-	m.SetHeader("To", business.Email)
-	m.SetHeader("Subject", "Seatlect Business Registration")
-	m.SetBody(
-		"text/html",
+	go utils.SendEmail(
+		s.Mail,
+		business.Email,
+		"Seatlect Business Registration",
 		fmt.Sprintf("Business registration with the username <b>%s</b> successful. We are now reviewing your information", business.Username),
 	)
-
-	if err := s.Mail.DialAndSend(m); err != nil {
-		return ctx.String(http.StatusCreated, "Created successful but error sending email")
-	}
 
 	return ctx.String(http.StatusCreated, "Business created")
 }

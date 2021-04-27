@@ -7,6 +7,7 @@ import (
 	"github.com/tphume/seatlect-services/internal/commonErr"
 	"github.com/tphume/seatlect-services/internal/database/typedb"
 	"github.com/tphume/seatlect-services/internal/gen_openapi/business_api"
+	"github.com/tphume/seatlect-services/internal/utils"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"gopkg.in/gomail.v2"
 	"net/http"
@@ -219,20 +220,12 @@ func (s *Server) PatchBusinessBusinessIdStatus(ctx echo.Context, businessId stri
 	}
 
 	// Send email notification
-	if *req.Status == 1 {
-		m := gomail.NewMessage()
-		m.SetHeader("From", "union5113@gmail.com")
-		m.SetHeader("To", em)
-		m.SetHeader("Subject", "Seatlect Business approved")
-		m.SetBody(
-			"text/html",
-			fmt.Sprintf("Your business registration have been approved. You can now login to the business web platform"),
-		)
-
-		if err := s.Mail.DialAndSend(m); err != nil {
-			return ctx.String(http.StatusNoContent, "Created successful but error sending email")
-		}
-	}
+	go utils.SendEmail(
+		s.Mail,
+		em,
+		"Seatlect Business Approved",
+		"Your business registration have been approved. You can now login to the web management platform.",
+	)
 
 	return ctx.String(http.StatusNoContent, "Business status updated successfully")
 }

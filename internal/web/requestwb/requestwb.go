@@ -2,11 +2,11 @@ package requestwb
 
 import (
 	"context"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/tphume/seatlect-services/internal/commonErr"
 	"github.com/tphume/seatlect-services/internal/database/typedb"
 	"github.com/tphume/seatlect-services/internal/gen_openapi/request_api"
+	"github.com/tphume/seatlect-services/internal/utils"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"gopkg.in/gomail.v2"
 	"net/http"
@@ -95,18 +95,12 @@ func (s *Server) PostRequestBusinessId(ctx echo.Context, businessId string) erro
 	}
 
 	// Send email notification
-	m := gomail.NewMessage()
-	m.SetHeader("From", "union5113@gmail.com")
-	m.SetHeader("To", business.Email)
-	m.SetHeader("Subject", "Seatlect Change Request Created")
-	m.SetBody(
-		"text/html",
-		fmt.Sprintf("Your change request have been created and is awaiting approval."),
+	go utils.SendEmail(
+		s.Mail,
+		business.Email,
+		"Seatlect Change Request Created",
+		"Your change request have been created and is awaiting approval.",
 	)
-
-	if err := s.Mail.DialAndSend(m); err != nil {
-		return ctx.String(http.StatusCreated, "Created successful but error sending email")
-	}
 
 	return ctx.String(http.StatusCreated, "Business change request created successfully")
 }
@@ -134,18 +128,12 @@ func (s *Server) PostRequestBusinessIdApprove(ctx echo.Context, businessId strin
 	}
 
 	// Send email notification
-	m := gomail.NewMessage()
-	m.SetHeader("From", "union5113@gmail.com")
-	m.SetHeader("To", em)
-	m.SetHeader("Subject", "Seatlect Change Request Approved")
-	m.SetBody(
-		"text/html",
-		fmt.Sprintf("Your latest change request have been approved."),
+	go utils.SendEmail(
+		s.Mail,
+		em,
+		"Seatlect Change Request Approved",
+		"Your latest change request have been approved.",
 	)
-
-	if err := s.Mail.DialAndSend(m); err != nil {
-		return ctx.String(http.StatusCreated, "Created successful but error sending email")
-	}
 
 	return ctx.String(http.StatusNoContent, "Business change request approved successfully")
 }
