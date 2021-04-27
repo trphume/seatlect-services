@@ -147,6 +147,7 @@ func (s *Server) Susbscribe(req *reservationpb.SubscribeRequest, serv reservatio
 
 	// new channel to receive from
 	c := make(chan typedb.ReservationPlacement)
+	defer close(c)
 
 	// update reservation subscribers channel map
 	s.mu.Lock()
@@ -171,8 +172,6 @@ func (s *Server) Susbscribe(req *reservationpb.SubscribeRequest, serv reservatio
 
 		if err := serv.Send(&res); err != nil {
 			// remove subscriber channel
-			close(c)
-
 			s.mu.Lock()
 			delete(s.SubscribersChannel[req.Id], c)
 			s.mu.Unlock()
