@@ -9,14 +9,17 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"sync"
 	"time"
 )
 
 const iso8601 = "2006-01-02T15:04:05-0700"
 
 type Server struct {
+	mu sync.Mutex
+
 	Repo               Repo
-	SubscribersChannel map[string][]chan typedb.ReservationPlacement
+	SubscribersChannel map[string]map[chan typedb.ReservationPlacement]bool
 
 	reservationpb.UnimplementedReservationServiceServer
 }
@@ -116,22 +119,82 @@ func (s *Server) ReserveSeats(ctx context.Context, req *reservationpb.ReserveSea
 	return &res, nil
 }
 
+func (s *Server) Susbscribe(req *reservationpb.SubscribeRequest, serv reservationpb.ReservationService_SusbscribeServer) error {
+	// fetch initial data
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	initial, err := s.Repo.GetReservationById(ctx, "", req.Id)
+	if err != nil {
+		if err == commonErr.NOTFOUND {
+			return status.Error(codes.NotFound, "reservation not found with given id")
+		} else if err == commonErr.INVALID {
+			return status.Error(codes.InvalidArgument, "error not found")
+		}
+
+		return status.Error(codes.Internal, "database error")
+	}
+
+	res := reservationpb.SubscribeReponse{Placement: &commonpb.ReservationPlacement{
+		Width:  int32(initial.Placement.Width),
+		Height: int32(initial.Placement.Height),
+		Seats:  seatsToCommonpb(initial.Placement.Seats),
+	}}
+
+	if err := serv.Send(&res); err != nil {
+		return status.Error(codes.Unknown, "connection failed")
+	}
+
+	// new channel to receive from
+	c := make(chan typedb.ReservationPlacement)
+
+	// update reservation subscribers channel map
+	s.mu.Lock()
+	if _, ok := s.SubscribersChannel[req.Id]; !ok {
+		// initialize an array if does not exist
+		s.SubscribersChannel[req.Id] = make(map[chan typedb.ReservationPlacement]bool)
+	}
+
+	s.SubscribersChannel[req.Id][c] = true
+
+	s.mu.Unlock()
+
+	// wait for notifications and send updates to client
+	for {
+		placement := <-c
+
+		res := reservationpb.SubscribeReponse{Placement: &commonpb.ReservationPlacement{
+			Width:  int32(placement.Width),
+			Height: int32(placement.Height),
+			Seats:  seatsToCommonpb(placement.Seats),
+		}}
+
+		if err := serv.Send(&res); err != nil {
+			// remove subscriber channel
+			close(c)
+
+			s.mu.Lock()
+			delete(s.SubscribersChannel[req.Id], c)
+			s.mu.Unlock()
+
+			return status.Error(codes.Unknown, "connection failed")
+		}
+	}
+}
+
+// helper functions
 func (s *Server) notifySubscribers(resId string) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second * 10)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
 	resv, err := s.Repo.GetReservationById(ctx, "", resId)
 	if err == nil {
 		if subs, ok := s.SubscribersChannel[resId]; ok {
-			for _, s := range subs {
-				s <- resv.Placement
+			for k, _ := range subs {
+				k <- resv.Placement
 			}
 		}
 	}
-}
-
-func (s *Server) Susbscribe(req *reservationpb.SubscribeRequest, serv reservationpb.ReservationService_SusbscribeServer) error {
-	panic("implement me")
 }
 
 type Repo interface {
