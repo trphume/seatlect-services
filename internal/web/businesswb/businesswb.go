@@ -7,16 +7,13 @@ import (
 	"github.com/tphume/seatlect-services/internal/commonErr"
 	"github.com/tphume/seatlect-services/internal/database/typedb"
 	"github.com/tphume/seatlect-services/internal/gen_openapi/business_api"
-	"github.com/tphume/seatlect-services/internal/utils"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"gopkg.in/gomail.v2"
 	"net/http"
 	"strconv"
 )
 
 type Server struct {
 	Repo Repo
-	Mail *gomail.Dialer
 }
 
 func (s *Server) GetBusiness(ctx echo.Context, params business_api.GetBusinessParams) error {
@@ -208,7 +205,7 @@ func (s *Server) PatchBusinessBusinessIdStatus(ctx echo.Context, businessId stri
 		return ctx.String(http.StatusBadRequest, "Error binding request body")
 	}
 
-	em, err := s.Repo.UpdateBusinessStatus(ctx.Request().Context(), businessId, *req.Status)
+	_, err := s.Repo.UpdateBusinessStatus(ctx.Request().Context(), businessId, *req.Status)
 	if err != nil {
 		if err == commonErr.NOTFOUND {
 			return ctx.String(http.StatusNotFound, "Business not found with given id")
@@ -218,14 +215,6 @@ func (s *Server) PatchBusinessBusinessIdStatus(ctx echo.Context, businessId stri
 
 		return ctx.String(http.StatusInternalServerError, "Database error")
 	}
-
-	// Send email notification
-	go utils.SendEmail(
-		s.Mail,
-		em,
-		"Seatlect Business Approved",
-		"Your business registration have been approved. You can now login to the web management platform.",
-	)
 
 	return ctx.String(http.StatusNoContent, "Business status updated successfully")
 }
