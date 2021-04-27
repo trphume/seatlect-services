@@ -81,6 +81,7 @@ func (s *Server) SearchReservation(ctx context.Context, req *reservationpb.Searc
 }
 
 func (s *Server) ReserveSeats(ctx context.Context, req *reservationpb.ReserveSeatsRequest) (*reservationpb.ReserveSeatsResponse, error) {
+	// attempt to make reservations
 	o, err := s.Repo.ReserveSeats(ctx, req.ResId, req.UserId, req.Name)
 	if err != nil {
 		if err == commonErr.NOTFOUND {
@@ -109,7 +110,24 @@ func (s *Server) ReserveSeats(ctx context.Context, req *reservationpb.ReserveSea
 		},
 	}
 
+	// notifity subscribers of changes - indepdendent of this handler
+	go s.notifySubscribers(req.ResId)
+
 	return &res, nil
+}
+
+func (s *Server) notifySubscribers(resId string) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second * 10)
+	defer cancel()
+
+	resv, err := s.Repo.GetReservationById(ctx, "", resId)
+	if err == nil {
+		if subs, ok := s.SubscribersChannel[resId]; ok {
+			for _, s := range subs {
+				s <- resv.Placement
+			}
+		}
+	}
 }
 
 func (s *Server) Susbscribe(req *reservationpb.SubscribeRequest, serv reservationpb.ReservationService_SusbscribeServer) error {
@@ -123,7 +141,7 @@ type Repo interface {
 	GetReservationById(ctx context.Context, businessId string, reservationId string) (*typedb.Reservation, error)
 }
 
-// Helper function
+// Parsing function
 func typedbToCommonpb(resv []typedb.Reservation) []*commonpb.Reservation {
 	res := make([]*commonpb.Reservation, len(resv))
 	for i, r := range resv {
