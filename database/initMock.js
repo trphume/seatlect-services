@@ -27,8 +27,8 @@ exampleDisplayImage = 'https://i.imgur.com/rXjqn0y.jpeg'
 exampleImages = ['https://i.imgur.com/g17EY2i.jpg', 'https://i.imgur.com/RjFgQSZ.jpeg']
 
 exampleMenu = [
-  { name: "Fries", description: "Just fries", image: "https://i.imgur.com/rXjqn0y.jpe", price: 10 },
-  { name: "Salty Fries", description: "Just salty fries", image: "https://i.imgur.com/rXjqn0y.jpe", price: 10 }
+  { name: "Fries", description: "Just fries", image: "https://i.imgur.com/rXjqn0y.jpeg", price: 10 },
+  { name: "Salty Fries", description: "Just salty fries", image: "https://i.imgur.com/rXjqn0y.jpeg", price: 10 }
 ]
 
 examplePlacement = {
