@@ -255,7 +255,7 @@ func (r *ReservationDB) ReserveSeats(ctx context.Context, id string, user string
 		Start:         resv.Start,
 		End:           resv.End,
 		Seats:         typedbSeats,
-		Status:        "UNUSED",
+		Status:        "AVAILABLE",
 		Image:         resv.Image,
 		ExtraSpace:    0,
 		Name:          resv.Name,
