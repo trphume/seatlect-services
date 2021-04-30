@@ -15,6 +15,7 @@ type Reservation struct {
 	Image      string               `bson:"image"`
 	Location   Location             `bson:"location"`
 	Type       string               `bson:"type"`
+	Status     int                  `bson:"status"`
 }
 
 type ReservationSeat struct {

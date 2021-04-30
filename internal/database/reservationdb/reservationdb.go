@@ -26,12 +26,13 @@ func (r *ReservationDB) ListReservation(ctx context.Context, id string, start ti
 
 	var reservations *mongo.Cursor
 	if start.IsZero() || end.IsZero() {
-		reservations, err = r.ResCol.Find(ctx, bson.M{"businessId": pId, "start": bson.M{"$gte": time.Now()}})
+		reservations, err = r.ResCol.Find(ctx, bson.M{"businessId": pId, "status": 1, "start": bson.M{"$gte": time.Now()}})
 	} else {
 		reservations, err = r.ResCol.Find(
 			ctx,
 			bson.D{
 				{"businessId", pId},
+				{"status", 1},
 				{"start", bson.D{
 					{"$gte", start},
 				}},
@@ -61,6 +62,7 @@ func (r *ReservationDB) SearchReservation(ctx context.Context, searchParams type
 			{"$geoWithin", bson.M{"$centerSphere": bson.A{searchParams.Location.Coordinates, 0.00156786503}}},
 		}},
 		{"type", searchParams.Type},
+		{"status", 1},
 		{"start", bson.D{
 			{"$gte", searchParams.Start},
 		}},
@@ -76,6 +78,7 @@ func (r *ReservationDB) SearchReservation(ctx context.Context, searchParams type
 				{"$geoWithin", bson.M{"$centerSphere": bson.A{searchParams.Location.Coordinates, 0.00156786503}}},
 			}},
 			{"type", searchParams.Type},
+			{"status", 1},
 			{"start", bson.D{
 				{"$gte", searchParams.Start},
 			}},
@@ -106,6 +109,7 @@ func (r *ReservationDB) CreateReservation(ctx context.Context, reservation typed
 		ctx,
 		bson.M{
 			"businessId": reservation.BusinessId,
+			"status":     1,
 			"$or": bson.A{
 				bson.M{"start": bson.M{
 					"$gte": reservation.Start,
@@ -115,6 +119,12 @@ func (r *ReservationDB) CreateReservation(ctx context.Context, reservation typed
 					"end": bson.M{
 						"$gte": reservation.Start,
 						"$lte": reservation.End,
+					},
+				},
+				bson.M{
+					"$and": bson.A{
+						bson.M{"start": bson.M{"$lte": reservation.Start}},
+						bson.M{"end": bson.M{"$gte": reservation.End}},
 					},
 				},
 			},

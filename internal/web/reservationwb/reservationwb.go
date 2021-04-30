@@ -64,7 +64,7 @@ func (s *Server) PostReservationBusinessId(ctx echo.Context, businessId string) 
 		return ctx.String(http.StatusBadRequest, "Error parsing start date")
 	}
 
-	end, err := time.Parse(iso8601, *req.Start)
+	end, err := time.Parse(iso8601, *req.End)
 	if err != nil {
 		return ctx.String(http.StatusBadRequest, "Error parsing end date")
 	}
@@ -93,6 +93,7 @@ func (s *Server) PostReservationBusinessId(ctx echo.Context, businessId string) 
 		End:        end,
 		Placement:  typedb.ReservationPlacement{},
 		Image:      "",
+		Status:     1,
 	}
 
 	if err := s.Repo.CreateReservation(ctx.Request().Context(), reservation); err != nil {
