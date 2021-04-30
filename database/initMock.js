@@ -332,6 +332,7 @@ db.reservation.insertMany([
       coordinates: [100.769652, 13.727892]
     },
     type: 'Bar',
+    status: 1,
   },
   {
     _id: reservationB,
@@ -346,6 +347,7 @@ db.reservation.insertMany([
       coordinates: [100.5018, 13.7563]
     },
     type: 'Bar',
+    status: 1,
   }
 ]);
 

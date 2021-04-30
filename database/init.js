@@ -65,7 +65,7 @@ db.createCollection('business', {
 db.createCollection('reservation', {
   validator: {
     $jsonSchema: {
-      bsonType: 'object', required: ['businessId', 'name', 'start', 'end', 'placement', 'image', 'location', 'type'], properties: {
+      bsonType: 'object', required: ['businessId', 'name', 'start', 'end', 'placement', 'image', 'location', 'type', 'status'], properties: {
         businessId: { bsonType: 'objectId' }, name: { bsonType: 'string' }, start: { bsonType: 'date' }, end: { bsonType: 'date' }, placement: {
           bsonType: 'object',
           required: ['width', 'height', 'seats'], properties: {
@@ -80,7 +80,7 @@ db.createCollection('reservation', {
               }
             }
           }
-        }, image: { bsonType: 'string' }, location: { bsonType: 'object' }, type: { bsonType: 'string' }
+        }, image: { bsonType: 'string' }, location: { bsonType: 'object' }, type: { bsonType: 'string' }, status: { bsonType: 'int' }
       }
     }
   }
