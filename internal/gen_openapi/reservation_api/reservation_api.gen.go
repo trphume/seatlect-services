@@ -70,17 +70,28 @@ type Seat struct {
 	Y        *float32 `json:"y,omitempty"`
 }
 
+// UpdateStatusRequest defines model for UpdateStatusRequest.
+type UpdateStatusRequest struct {
+	Status *int `json:"status,omitempty"`
+}
+
 // GetReservationBusinessIdJSONBody defines parameters for GetReservationBusinessId.
 type GetReservationBusinessIdJSONBody ListReservationRequest
 
 // PostReservationBusinessIdJSONBody defines parameters for PostReservationBusinessId.
 type PostReservationBusinessIdJSONBody CreateReservationRequest
 
+// PatchReservationReservationIdStatusJSONBody defines parameters for PatchReservationReservationIdStatus.
+type PatchReservationReservationIdStatusJSONBody UpdateStatusRequest
+
 // GetReservationBusinessIdRequestBody defines body for GetReservationBusinessId for application/json ContentType.
 type GetReservationBusinessIdJSONRequestBody GetReservationBusinessIdJSONBody
 
 // PostReservationBusinessIdRequestBody defines body for PostReservationBusinessId for application/json ContentType.
 type PostReservationBusinessIdJSONRequestBody PostReservationBusinessIdJSONBody
+
+// PatchReservationReservationIdStatusRequestBody defines body for PatchReservationReservationIdStatus for application/json ContentType.
+type PatchReservationReservationIdStatusJSONRequestBody PatchReservationReservationIdStatusJSONBody
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
@@ -93,6 +104,9 @@ type ServerInterface interface {
 
 	// (GET /reservation/{businessId}/{reservationId})
 	GetReservationBusinessIdReservationId(ctx echo.Context, businessId string, reservationId string) error
+
+	// (PATCH /reservation/{reservationId}/status)
+	PatchReservationReservationIdStatus(ctx echo.Context, reservationId string) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -156,6 +170,22 @@ func (w *ServerInterfaceWrapper) GetReservationBusinessIdReservationId(ctx echo.
 	return err
 }
 
+// PatchReservationReservationIdStatus converts echo context to params.
+func (w *ServerInterfaceWrapper) PatchReservationReservationIdStatus(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "reservationId" -------------
+	var reservationId string
+
+	err = runtime.BindStyledParameter("simple", false, "reservationId", ctx.Param("reservationId"), &reservationId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter reservationId: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.PatchReservationReservationIdStatus(ctx, reservationId)
+	return err
+}
+
 // This is a simple interface which specifies echo.Route addition functions which
 // are present on both echo.Echo and echo.Group, since we want to allow using
 // either of them for path registration
@@ -187,24 +217,27 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.GET(baseURL+"/reservation/:businessId", wrapper.GetReservationBusinessId)
 	router.POST(baseURL+"/reservation/:businessId", wrapper.PostReservationBusinessId)
 	router.GET(baseURL+"/reservation/:businessId/:reservationId", wrapper.GetReservationBusinessIdReservationId)
+	router.PATCH(baseURL+"/reservation/:reservationId/status", wrapper.PatchReservationReservationIdStatus)
 
 }
 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"H4sIAAAAAAAC/+RWwW7jOAz9FUG7R6NOu3tZH7szKAr0UKSY06AHxaZjFbakUnQ6QZB/H0hKGjuSgwRF",
+	"Zw5zKBpLFPnI90hpw0vdGa1AkeXFhtuygU74n/8jCII5WMCVIKnVHF57sOT2DGoDSBK8JajK/aO1AV5w",
+	"SyjVkm8zrkQHyQ1LAimxs832K3rxAiU52zugEQZrtLIQg8CDkfv8G6HmBf8rP+SX75LLB/7SMR+kpY8k",
+	"fkl+UawzEvTfkqCzF6X6Hl0ginUazmMrSuhAJbJtQC6bYVpSESwBfcYg6HxUTyAohpPxN1lRkwqQQjof",
+	"E34eM/JCpZphOU6ldKjbhfz7WkT461ZrTJc6okH13SJsTaaBmt4LFZ2yRpQwQSsJ6m3SZVhIbPQWMLlx",
+	"zO4BwY/k6jqxmqrgN1MJgicPdbJVo0xOaMstSVVrZ12BLVGaUDz+VVVGS0Ws1sgccy2UxETVScU6ocTS",
+	"S4CZVlCtseMZJ0mt8z1Ua8ZXgDZ4vL6auRy0ASWM5AX/52p2dcMzbgQ1Hm8+aPx8s+itVGDtfbV1m0ug",
+	"GKUbKUywvSkbTQ4fC/3HfcWLo/l6++7eQ0DRAQFaXnw/DnL/hemaUQNsf4a7qvHCI+d7MfLF0CPCay8R",
+	"Kl4Q9pDtrptUpzwHY7B0qyuvhFIr2jWiMKaVZajIiw2yPrg61aYTk91TPgbnF8Is9jTczGafh2I38z2M",
+	"cZnnQChhBRVrHau6HrHJbF+WYG3dt+06HDfaJiQRLnMmmIK3oYdIDo/a/kl6mHzknKWI67jQA1csOK+c",
+	"r2023cf5ZrBzqq/vwLX1wJgt1kxWZ7f0fBjmN/OZTcdzf2OJJsLiUS4XKumTGnvisZroa8flkMnjRo4E",
+	"M9ZIfrjPjKCyicUSbkVfzKEmwzlWS2hj4Tw6V+MEDjHDBRvL5kPkTGlgfF3+omGQekhsd4NgJJh/Y+jh",
+	"FOu9i9Dy/lmMq32demx5wRsiU+R5q0vRNtpSsTEaaZsLI/PVNT+WyYOzY8GNezcIlGLRBhzuYABSi74l",
+	"XvD/ZrOZC/28/RkAAP//p3hv/dgNAAA=",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code

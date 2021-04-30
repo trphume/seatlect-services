@@ -131,6 +131,10 @@ func (s *Server) GetReservationBusinessIdReservationId(ctx echo.Context, busines
 	return ctx.JSONPretty(http.StatusOK, &res, "  ")
 }
 
+func (s *Server) PatchReservationReservationIdStatus(ctx echo.Context, reservationId string) error {
+	panic("implement me")
+}
+
 type Repo interface {
 	ListReservation(ctx context.Context, id string, start time.Time, end time.Time) ([]typedb.Reservation, error)
 	CreateReservation(ctx context.Context, placement typedb.Reservation) error

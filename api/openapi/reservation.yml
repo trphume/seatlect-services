@@ -74,6 +74,24 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GetReservationResponse"
+  /reservation/{reservationId}/status:
+    patch:
+      description: Update the Reservation status field
+      parameters:
+        - in: path
+          name: reservationId
+          required: true
+          schema:
+            type: string
+            description: ID of the Reservation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateStatusRequest"
+      responses:
+        "204":
+          description: "Status updated"
 components:
   schemas:
     Seat:
@@ -154,3 +172,8 @@ components:
       properties:
         reservation:
           $ref: "#/components/schemas/Reservation"
+    UpdateStatusRequest:
+      type: object
+      properties:
+        status:
+          type: integer
