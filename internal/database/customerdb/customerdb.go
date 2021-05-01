@@ -109,3 +109,7 @@ func (c *CustomerDB) RemoveFavorite(ctx context.Context, customerId string, busi
 
 	return nil
 }
+
+func (c *CustomerDB) ListUserEmailById(ctx context.Context, users []string) ([]string, error) {
+	panic("implement me")
+}

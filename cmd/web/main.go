@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/tphume/seatlect-services/internal/database/admindb"
 	"github.com/tphume/seatlect-services/internal/database/businessdb"
+	"github.com/tphume/seatlect-services/internal/database/customerdb"
 	"github.com/tphume/seatlect-services/internal/database/orderdb"
 	"github.com/tphume/seatlect-services/internal/database/placementdb"
 	"github.com/tphume/seatlect-services/internal/database/requestdb"
@@ -69,6 +70,7 @@ func main() {
 
 	adminCol := client.Database("test").Collection("admin")
 	busCol := client.Database("test").Collection("business")
+	cusCol := client.Database("test").Collection("customer")
 	reqCol := client.Database("test").Collection("request")
 	resCol := client.Database("test").Collection("reservation")
 	ordCol := client.Database("test").Collection("order")
@@ -109,7 +111,8 @@ func main() {
 	pmtServer := &placementwb.Server{Repo: pmtRepo}
 
 	resRepo := &reservationdb.ReservationDB{ResCol: resCol, BusCol: busCol}
-	resServer := &reservationwb.Server{Repo: resRepo}
+	cusRepo := &customerdb.CustomerDB{CusCol: cusCol, BusCol: busCol}
+	resServer := &reservationwb.Server{Repo: resRepo, UserRepo: cusRepo}
 
 	ordRepo := &orderdb.OrderDB{OrdCol: ordCol}
 	ordServer := &orderwb.Server{Repo: ordRepo}

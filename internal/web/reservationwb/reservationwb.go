@@ -6,7 +6,9 @@ import (
 	"github.com/tphume/seatlect-services/internal/commonErr"
 	"github.com/tphume/seatlect-services/internal/database/typedb"
 	"github.com/tphume/seatlect-services/internal/gen_openapi/reservation_api"
+	"github.com/tphume/seatlect-services/internal/utils"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"gopkg.in/gomail.v2"
 	"net/http"
 	"time"
 )
@@ -14,7 +16,10 @@ import (
 const iso8601 = "2006-01-02T15:04:05-0700"
 
 type Server struct {
-	Repo Repo
+	Repo     Repo
+	UserRepo UserRepo
+
+	Mail *gomail.Dialer
 }
 
 func (s *Server) GetReservationBusinessId(ctx echo.Context, businessId string) error {
@@ -132,13 +137,48 @@ func (s *Server) GetReservationBusinessIdReservationId(ctx echo.Context, busines
 }
 
 func (s *Server) PatchReservationReservationIdStatus(ctx echo.Context, reservationId string) error {
-	panic("implement me")
+	// update reservation status
+	users, err := s.Repo.UpdateReservationStatus(ctx.Request().Context(), reservationId)
+	if err != nil {
+		if err == commonErr.INVALID {
+			return ctx.String(http.StatusBadRequest, "Invalid id format")
+		} else if err == commonErr.NOTFOUND {
+			return ctx.String(http.StatusNotFound, "Reservation not found with given id")
+		}
+
+		return ctx.String(http.StatusInternalServerError, "Database error")
+	}
+
+	// get user email send email notification to each user
+	go s.notifyReservationStatusUpdate(users)
+
+	return ctx.String(http.StatusOK, "Updated successfully")
+}
+
+func (s *Server) notifyReservationStatusUpdate(users []string) {
+	// get list of emails to send
+	ctx := context.Background()
+	emails, _ := s.UserRepo.ListUserEmailById(ctx, users)
+
+	// send email to each user
+	for _, e := range emails {
+		go utils.SendEmail(
+			s.Mail,
+			e,
+			"Business have cancelled Reservation",
+			"Unfortunately, one of your reservation has been cancelled by the Business. We apologize of any inconveniences")
+	}
 }
 
 type Repo interface {
 	ListReservation(ctx context.Context, id string, start time.Time, end time.Time) ([]typedb.Reservation, error)
 	CreateReservation(ctx context.Context, placement typedb.Reservation) error
 	GetReservationById(ctx context.Context, businessId string, reservationId string) (*typedb.Reservation, error)
+	UpdateReservationStatus(ctx context.Context, reservationId string) ([]string, error)
+}
+
+type UserRepo interface {
+	ListUserEmailById(ctx context.Context, users []string) ([]string, error)
 }
 
 // Parsing function - kill me please
