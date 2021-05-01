@@ -155,7 +155,7 @@ func (s *Server) PatchReservationReservationIdStatus(ctx echo.Context, reservati
 	return ctx.String(http.StatusOK, "Updated successfully")
 }
 
-func (s *Server) notifyReservationStatusUpdate(users []string) {
+func (s *Server) notifyReservationStatusUpdate(users []primitive.ObjectID) {
 	// get list of emails to send
 	ctx := context.Background()
 	emails, _ := s.UserRepo.ListUserEmailById(ctx, users)
@@ -174,11 +174,11 @@ type Repo interface {
 	ListReservation(ctx context.Context, id string, start time.Time, end time.Time) ([]typedb.Reservation, error)
 	CreateReservation(ctx context.Context, placement typedb.Reservation) error
 	GetReservationById(ctx context.Context, businessId string, reservationId string) (*typedb.Reservation, error)
-	UpdateReservationStatus(ctx context.Context, reservationId string) ([]string, error)
+	UpdateReservationStatus(ctx context.Context, reservationId string) ([]primitive.ObjectID, error)
 }
 
 type UserRepo interface {
-	ListUserEmailById(ctx context.Context, users []string) ([]string, error)
+	ListUserEmailById(ctx context.Context, users []primitive.ObjectID) ([]string, error)
 }
 
 // Parsing function - kill me please

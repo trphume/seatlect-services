@@ -7,6 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/crypto/bcrypt"
 	"time"
 )
@@ -110,6 +111,25 @@ func (c *CustomerDB) RemoveFavorite(ctx context.Context, customerId string, busi
 	return nil
 }
 
-func (c *CustomerDB) ListUserEmailById(ctx context.Context, users []string) ([]string, error) {
-	panic("implement me")
+func (c *CustomerDB) ListUserEmailById(ctx context.Context, users []primitive.ObjectID) ([]string, error) {
+	ctxWithTimeout, cancel := context.WithTimeout(ctx, time.Second*15)
+	defer cancel()
+
+	cursor, err := c.CusCol.Find(ctxWithTimeout, bson.M{"_id": bson.M{"$in": users}}, options.Find().SetProjection(bson.M{"email": 1}))
+	if err != nil {
+		return nil, commonErr.INTERNAL
+	}
+
+	// parse to get email of users only
+	var customers []typedb.Customer
+	if err := cursor.All(ctx, &customers); err != nil {
+		return nil, commonErr.INTERNAL
+	}
+
+	res := make([]string, len(customers))
+	for i, c := range customers {
+		res[i] = c.Email
+	}
+
+	return res, nil
 }

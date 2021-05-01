@@ -316,7 +316,7 @@ func (r *ReservationDB) GetReservationById(ctx context.Context, businessId strin
 	return &reservation, nil
 }
 
-func (r *ReservationDB) UpdateReservationStatus(ctx context.Context, reservationId string) ([]string, error) {
+func (r *ReservationDB) UpdateReservationStatus(ctx context.Context, reservationId string) ([]primitive.ObjectID, error) {
 	rId, err := primitive.ObjectIDFromHex(reservationId)
 	if err != nil {
 		return nil, commonErr.INVALID
@@ -344,12 +344,12 @@ func (r *ReservationDB) UpdateReservationStatus(ctx context.Context, reservation
 		return nil, commonErr.INVALID
 	}
 
-	tmp := make(map[string]bool)
+	tmp := make(map[primitive.ObjectID]bool)
 	for _, s := range resv.Placement.Seats {
-		tmp[s.User.Hex()] = true
+		tmp[s.User] = true
 	}
 
-	res := make([]string, len(tmp))
+	res := make([]primitive.ObjectID, len(tmp))
 	i := 0
 	for k := range tmp {
 		res[i] = k
