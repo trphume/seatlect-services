@@ -359,6 +359,20 @@ func (r *ReservationDB) UpdateReservationStatus(ctx context.Context, reservation
 	return res, nil
 }
 
+func (r *ReservationDB) UpdateOrderStatus(ctx context.Context, reservationId string) error {
+	rId, err := primitive.ObjectIDFromHex(reservationId)
+	if err != nil {
+		return commonErr.INVALID
+	}
+
+	_, err = r.OrdCol.UpdateMany(ctx, bson.M{"reservationId": rId}, bson.M{"$set": bson.M{"status": "CANCELLED"}})
+	if err != nil {
+		return commonErr.INTERNAL
+	}
+
+	return nil
+}
+
 // Parsing function
 func toReservationSeats(seats []typedb.Seat) []typedb.ReservationSeat {
 	res := make([]typedb.ReservationSeat, len(seats))

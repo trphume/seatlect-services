@@ -149,10 +149,20 @@ func (s *Server) PatchReservationReservationIdStatus(ctx echo.Context, reservati
 		return ctx.String(http.StatusInternalServerError, "Database error")
 	}
 
+	// update order status
+	go s.updateOrderStatus(reservationId)
+
 	// get user email send email notification to each user
 	go s.notifyReservationStatusUpdate(users)
 
 	return ctx.String(http.StatusOK, "Updated successfully")
+}
+
+func (s *Server) updateOrderStatus(reservationId string) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*15)
+	defer cancel()
+
+	_ = s.Repo.UpdateOrderStatus(ctx, reservationId)
 }
 
 func (s *Server) notifyReservationStatusUpdate(users []primitive.ObjectID) {
@@ -175,6 +185,7 @@ type Repo interface {
 	CreateReservation(ctx context.Context, placement typedb.Reservation) error
 	GetReservationById(ctx context.Context, businessId string, reservationId string) (*typedb.Reservation, error)
 	UpdateReservationStatus(ctx context.Context, reservationId string) ([]primitive.ObjectID, error)
+	UpdateOrderStatus(ctx context.Context, reservationId string) error
 }
 
 type UserRepo interface {

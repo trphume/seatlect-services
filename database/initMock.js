@@ -160,7 +160,7 @@ db.customer.insertMany([
   {
     _id: jakeId,
     username: 'Jake',
-    email: 'fake1@email.com',
+    email: 'traphumem@gmail.com',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     dob: new Date('2000-10-15'),
     favorite: [],
@@ -169,7 +169,7 @@ db.customer.insertMany([
   {
     _id: samuelId,
     username: 'Samuel',
-    email: 'fake2@email.com',
+    email: '60090043@kmitl.acth',
     password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
     dob: new Date('1999-07-10'),
     favorite: [],
