@@ -317,7 +317,46 @@ func (r *ReservationDB) GetReservationById(ctx context.Context, businessId strin
 }
 
 func (r *ReservationDB) UpdateReservationStatus(ctx context.Context, reservationId string) ([]string, error) {
-	panic("implement me")
+	rId, err := primitive.ObjectIDFromHex(reservationId)
+	if err != nil {
+		return nil, commonErr.INVALID
+	}
+
+	// update query
+	reservation := r.ResCol.FindOneAndUpdate(
+		ctx,
+		bson.M{"_id": rId},
+		bson.M{"$set": bson.M{"status": 0}},
+		options.FindOneAndUpdate().SetProjection(bson.M{"placement": 1}),
+	)
+
+	if reservation.Err() != nil {
+		if reservation.Err() == mongo.ErrNoDocuments {
+			return nil, commonErr.NOTFOUND
+		}
+
+		return nil, commonErr.INVALID
+	}
+
+	// parse reservation.placement to get list of user id
+	var resv typedb.Reservation
+	if err := reservation.Decode(&resv); err != nil {
+		return nil, commonErr.INVALID
+	}
+
+	tmp := make(map[string]bool)
+	for _, s := range resv.Placement.Seats {
+		tmp[s.User.Hex()] = true
+	}
+
+	res := make([]string, len(tmp))
+	i := 0
+	for k := range tmp {
+		res[i] = k
+		i++
+	}
+
+	return res, nil
 }
 
 // Parsing function
