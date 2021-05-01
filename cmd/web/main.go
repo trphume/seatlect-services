@@ -110,9 +110,9 @@ func main() {
 	pmtRepo := &placementdb.PlacementDB{BusCol: busCol}
 	pmtServer := &placementwb.Server{Repo: pmtRepo}
 
-	resRepo := &reservationdb.ReservationDB{ResCol: resCol, BusCol: busCol}
+	resRepo := &reservationdb.ReservationDB{ResCol: resCol, BusCol: busCol, OrdCol: ordCol}
 	cusRepo := &customerdb.CustomerDB{CusCol: cusCol, BusCol: busCol}
-	resServer := &reservationwb.Server{Repo: resRepo, UserRepo: cusRepo}
+	resServer := &reservationwb.Server{Repo: resRepo, UserRepo: cusRepo, Mail: mailClient}
 
 	ordRepo := &orderdb.OrderDB{OrdCol: ordCol}
 	ordServer := &orderwb.Server{Repo: ordRepo}

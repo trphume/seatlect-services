@@ -103,7 +103,7 @@ func (r *ReservationDB) SearchReservation(ctx context.Context, searchParams type
 	return res, nil
 }
 
-func (r *ReservationDB) CreateReservation(ctx context.Context, reservation typedb.Reservation) error {
+func (r *ReservationDB) CreateReservation(ctx context.Context, reservation *typedb.Reservation) error {
 	// check that there is no overlapping reservation time first
 	overlapping := r.ResCol.FindOne(
 		ctx,

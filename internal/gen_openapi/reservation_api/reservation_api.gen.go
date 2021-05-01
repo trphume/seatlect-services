@@ -23,6 +23,11 @@ type CreateReservationRequest struct {
 	Start *string `json:"start,omitempty"`
 }
 
+// CreateReservationResponse defines model for CreateReservationResponse.
+type CreateReservationResponse struct {
+	Reservation *Reservation `json:"reservation,omitempty"`
+}
+
 // GetReservationResponse defines model for GetReservationResponse.
 type GetReservationResponse struct {
 	Reservation *Reservation `json:"reservation,omitempty"`
@@ -224,20 +229,20 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/+RWwW7jOAz9FUG7R6NOu3tZH7szKAr0UKSY06AHxaZjFbakUnQ6QZB/H0hKGjuSgwRF",
-	"Zw5zKBpLFPnI90hpw0vdGa1AkeXFhtuygU74n/8jCII5WMCVIKnVHF57sOT2DGoDSBK8JajK/aO1AV5w",
-	"SyjVkm8zrkQHyQ1LAimxs832K3rxAiU52zugEQZrtLIQg8CDkfv8G6HmBf8rP+SX75LLB/7SMR+kpY8k",
-	"fkl+UawzEvTfkqCzF6X6Hl0ginUazmMrSuhAJbJtQC6bYVpSESwBfcYg6HxUTyAohpPxN1lRkwqQQjof",
-	"E34eM/JCpZphOU6ldKjbhfz7WkT461ZrTJc6okH13SJsTaaBmt4LFZ2yRpQwQSsJ6m3SZVhIbPQWMLlx",
-	"zO4BwY/k6jqxmqrgN1MJgicPdbJVo0xOaMstSVVrZ12BLVGaUDz+VVVGS0Ws1sgccy2UxETVScU6ocTS",
-	"S4CZVlCtseMZJ0mt8z1Ua8ZXgDZ4vL6auRy0ASWM5AX/52p2dcMzbgQ1Hm8+aPx8s+itVGDtfbV1m0ug",
-	"GKUbKUywvSkbTQ4fC/3HfcWLo/l6++7eQ0DRAQFaXnw/DnL/hemaUQNsf4a7qvHCI+d7MfLF0CPCay8R",
-	"Kl4Q9pDtrptUpzwHY7B0qyuvhFIr2jWiMKaVZajIiw2yPrg61aYTk91TPgbnF8Is9jTczGafh2I38z2M",
-	"cZnnQChhBRVrHau6HrHJbF+WYG3dt+06HDfaJiQRLnMmmIK3oYdIDo/a/kl6mHzknKWI67jQA1csOK+c",
-	"r2023cf5ZrBzqq/vwLX1wJgt1kxWZ7f0fBjmN/OZTcdzf2OJJsLiUS4XKumTGnvisZroa8flkMnjRo4E",
-	"M9ZIfrjPjKCyicUSbkVfzKEmwzlWS2hj4Tw6V+MEDjHDBRvL5kPkTGlgfF3+omGQekhsd4NgJJh/Y+jh",
-	"FOu9i9Dy/lmMq32demx5wRsiU+R5q0vRNtpSsTEaaZsLI/PVNT+WyYOzY8GNezcIlGLRBhzuYABSi74l",
-	"XvD/ZrOZC/28/RkAAP//p3hv/dgNAAA=",
+	"H4sIAAAAAAAC/+RWQW/rNgz+K4K2o1Gn3S7zsdtQFOihSLHT0INi07EKWVIpOn1BkP/+IClp7FgOEvS1",
+	"7/AORWNR4veR/Ehpw0vTWqNBk+PFhruygVaEn38jCII5OMCVIGn0HF47cORtFo0FJAlhJ+jK/6O1BV5w",
+	"Ryj1km8zrkULSYMjgZSwbLP9ilm8QEl+b4KGs0Y7GPPAwyb/+TtCzQv+W34IMd/Fl/f8pWHvgL4c80E6",
+	"+ki+L0nrCOuMAMO3JGjdRaG+owtEsU7TeVSihBZ0ItoG5LLphyU1wRIwRAyCzmf1BILGdDL+JitqUgAp",
+	"pvNhwc+rjLywQWw/HadCOuTtwvqHXIz418oYTKd6VAbdtYtomgwDDb0nanTKWVHCRFlJUOeSLuNCwtA5",
+	"wKThuLoHBt+Sq+vEaiqD/9lKEDwFqpOtOorkhLb8ktS18bsrcCVKG5PH/9WVNVITqw0yXzkFJTFRtVKz",
+	"VmixDBJgVgmqDbY84yRJed99tWZ8Beiix+urmY/BWNDCSl7wP65mVzc841ZQE/jmvcbPN4vOSQ3O3Vdb",
+	"b1wCjVn6kcIE229lg8kRsDB83Fe8OJqvt+/uAwUULRCg48X/xyD3/zBTM2qA7c9wnzVeBOZ8L0a+6HtE",
+	"eO0kQsULwg6y3S2X6pTnuBkc3ZoqKKE0mnaNKKxVsowZeXFR1gdXp9p0YrKHkg/JhYU4i0MZbmazz2Ox",
+	"m/mBxjDNcyCUsIKKKV9VUw+qyVxXluBc3Sm1jsetcQlJxMubCabhre9hJIdH434lPUy+rc5SxPVn8pjW",
+	"xB1Qv4YjEWyz6aGRb3qWU0PEg4gBzGLNZHX2/Jj3YX6yeLJpPP837IcELB7FcqFsP2mKTLyMf4RghhrJ",
+	"D5enFVQ2Y7HEKzgkc97HCedYLUGNhfPoXQ0DOGDG23wsmw8VZ0oDw7v5iyZP6tWy3U2dgWD+HFOPp1gX",
+	"XFThWHiD42qfpw4VL3hDZIs8V6YUqjGOio01SNtcWJmvrvmxTB78Phbd+EeKQCkWKvLwByORWnSKeMH/",
+	"ms1mHvp5+z0AAP//ajsvY7wOAAA=",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code

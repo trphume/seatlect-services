@@ -101,7 +101,7 @@ func (s *Server) PostReservationBusinessId(ctx echo.Context, businessId string) 
 		Status:     1,
 	}
 
-	if err := s.Repo.CreateReservation(ctx.Request().Context(), reservation); err != nil {
+	if err := s.Repo.CreateReservation(ctx.Request().Context(), &reservation); err != nil {
 		if err == commonErr.NOTFOUND {
 			return ctx.String(http.StatusNotFound, "Cannot find reservations of given business id")
 		} else if err == commonErr.CONFLICT {
@@ -111,7 +111,10 @@ func (s *Server) PostReservationBusinessId(ctx echo.Context, businessId string) 
 		return ctx.String(http.StatusInternalServerError, "Database error")
 	}
 
-	return ctx.String(http.StatusCreated, "Reservation created successfully")
+	resv := typedbToOapi(reservation)
+	res := reservation_api.CreateReservationResponse{Reservation: &resv}
+
+	return ctx.JSONPretty(http.StatusCreated, res, "  ")
 }
 
 func (s *Server) GetReservationBusinessIdReservationId(ctx echo.Context, businessId string, reservationId string) error {
@@ -176,13 +179,13 @@ func (s *Server) notifyReservationStatusUpdate(users []primitive.ObjectID) {
 			s.Mail,
 			e,
 			"Business have cancelled Reservation",
-			"Unfortunately, one of your reservation has been cancelled by the Business. We apologize of any inconveniences")
+			"Unfortunately, one of your reservation have been cancelled by the Business. We apologize of any inconveniences.")
 	}
 }
 
 type Repo interface {
 	ListReservation(ctx context.Context, id string, start time.Time, end time.Time) ([]typedb.Reservation, error)
-	CreateReservation(ctx context.Context, placement typedb.Reservation) error
+	CreateReservation(ctx context.Context, reservation *typedb.Reservation) error
 	GetReservationById(ctx context.Context, businessId string, reservationId string) (*typedb.Reservation, error)
 	UpdateReservationStatus(ctx context.Context, reservationId string) ([]primitive.ObjectID, error)
 	UpdateOrderStatus(ctx context.Context, reservationId string) error
@@ -204,10 +207,10 @@ func typedbListToOapi(reservations []typedb.Reservation) *[]reservation_api.Rese
 
 func typedbToOapi(reservation typedb.Reservation) reservation_api.Reservation {
 	return reservation_api.Reservation{
-		End:       createString(reservation.Start.Format(iso8601)),
+		End:       createString(reservation.End.Format(iso8601)),
 		Name:      &reservation.Name,
 		Placement: typedbPmtToOapi(reservation.Placement),
-		Start:     createString(reservation.End.Format(iso8601)),
+		Start:     createString(reservation.Start.Format(iso8601)),
 		Id:        createString(reservation.Id.Hex()),
 	}
 }

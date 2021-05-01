@@ -50,7 +50,11 @@ paths:
               $ref: "#/components/schemas/CreateReservationRequest"
       responses:
         "201":
-          description: Reservation Created
+          description: Get reservation successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateReservationResponse"
   /reservation/{businessId}/{reservationId}:
     get:
       description: Get a reservation by id
@@ -153,6 +157,12 @@ components:
           type: string
         end:
           type: string
+    CreateReservationResponse:
+      type: object
+      properties:
+        reservation:
+          type: object
+          $ref: "#/components/schemas/Reservation"
     ListReservationRequest:
       type: object
       properties:
