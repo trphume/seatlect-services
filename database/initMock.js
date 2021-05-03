@@ -16,8 +16,12 @@ beerBurgerId = ObjectId('5facaff31c6d49b2c7256bf3');
 ironBuffetId = ObjectId('5facaff9e4d46967c9c2a558');
 specialTaleId = ObjectId('5fcde2ec209efa45620a08b6');
 
-reservationA = ObjectId('6035f3a48d505df0b9d043a3');
-reservationB = ObjectId('604c80551714a597557abc2e');
+reservation_1 = ObjectId('6035f3a48d505df0b9d043a3');
+reservation_2 = ObjectId('604c80551714a597557abc2e');
+reservation_3 = ObjectId('608f5977ce9b402eda2432be');
+reservation_4 = ObjectId('608f59c053a970a744ce14ac');
+reservation_5 = ObjectId('608f59c96f17b50ec1ad94e2');
+reservation_6 = ObjectId('608f59d0e58318c67666fced');
 
 orderA = ObjectId('6035fb35bf78e591bea86350');
 
@@ -320,11 +324,11 @@ db.business.insertMany([
 // reservation
 db.reservation.insertMany([
   {
-    _id: reservationA,
+    _id: reservation_1,
     businessId: brightioId,
     name: 'Brightio',
-    start: new Date('2021-05-24T19:00:00Z'),
-    end: new Date('2021-05-25T00:00:00Z'),
+    start: new Date('2021-06-03T19:00:00Z'),
+    end: new Date('2021-06-03T00:23:00Z'),
     placement: exampleReservationPlacement,
     image: exampleDisplayImage,
     location: {
@@ -335,11 +339,11 @@ db.reservation.insertMany([
     status: 1,
   },
   {
-    _id: reservationB,
+    _id: reservation_2,
     businessId: jiaShinId,
     name: 'JiaShin',
-    start: new Date('2021-05-24T19:00:00Z'),
-    end: new Date('2021-05-25T00:00:00Z'),
+    start: new Date('2021-06-03T19:00:00Z'),
+    end: new Date('2021-06-03T23:00:00Z'),
     placement: exampleReservationPlacement,
     image: exampleDisplayImage,
     location: {
@@ -348,7 +352,67 @@ db.reservation.insertMany([
     },
     type: 'Bar',
     status: 1,
-  }
+  },
+  {
+    _id: reservation_3,
+    businessId: centralBrightioId,
+    name: 'Central Brightio',
+    start: new Date('2021-06-03T19:00:00Z'),
+    end: new Date('2021-06-03T23:00:00Z'),
+    placement: exampleReservationPlacement,
+    image: exampleDisplayImage,
+    location: {
+      type: 'Point',
+      coordinates: [100.53793107547114, 13.745226384751511]
+    },
+    type: 'Bar',
+    status: 1,
+  },
+  {
+    _id: reservation_4,
+    businessId: ironBuffetId,
+    name: 'Iron Buffet',
+    start: new Date('2021-06-03T19:00:00Z'),
+    end: new Date('2021-06-03T23:00:00Z'),
+    placement: exampleReservationPlacement,
+    image: exampleDisplayImage,
+    location: {
+      type: 'Point',
+      coordinates: [100.780103, 13.723117]
+    },
+    type: 'Restaurant',
+    status: 1,
+  },
+  {
+    _id: reservation_5,
+    businessId: specialTaleId,
+    name: 'Special Tale',
+    start: new Date('2021-06-03T19:00:00Z'),
+    end: new Date('2021-06-03T23:00:00Z'),
+    placement: exampleReservationPlacement,
+    image: exampleDisplayImage,
+    location: {
+      type: 'Point',
+      coordinates: [99.780103, 14.723117]
+    },
+    type: 'Bar',
+    status: 1,
+  },
+  {
+    _id: reservation_6,
+    businessId: beerBurgerId,
+    name: 'Beer Burger',
+    start: new Date('2021-06-03T19:00:00Z'),
+    end: new Date('2021-06-03T23:00:00Z'),
+    placement: exampleReservationPlacement,
+    image: exampleDisplayImage,
+    location: {
+      type: 'Point',
+      coordinates: [100.765001, 13.727830]
+    },
+    type: 'Restaurant',
+    status: 1,
+  },
 ]);
 
 // order
