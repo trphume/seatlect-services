@@ -22,18 +22,13 @@ type Server struct {
 	Mail *gomail.Dialer
 }
 
-func (s *Server) GetReservationBusinessId(ctx echo.Context, businessId string) error {
-	var req reservation_api.ListReservationRequest
-	if err := ctx.Bind(&req); err != nil {
-		return ctx.String(http.StatusBadRequest, "Error binding request body")
-	}
-
-	start, err := time.Parse(iso8601, *req.Start)
+func (s *Server) GetReservationBusinessId(ctx echo.Context, businessId string, params reservation_api.GetReservationBusinessIdParams) error {
+	start, err := time.Parse(iso8601, params.Start)
 	if err != nil {
 		return ctx.String(http.StatusBadRequest, "Error parsing start date")
 	}
 
-	end, err := time.Parse(iso8601, *req.End)
+	end, err := time.Parse(iso8601, params.End)
 	if err != nil {
 		return ctx.String(http.StatusBadRequest, "Error parsing end date")
 	}

@@ -20,12 +20,16 @@ paths:
           schema:
             type: string
           description: ID of the Business
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ListReservationRequest"
+        - in: query
+          name: start
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: end
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: Retrieved list of reservations successfully

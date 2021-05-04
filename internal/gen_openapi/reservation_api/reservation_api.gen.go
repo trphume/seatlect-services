@@ -33,12 +33,6 @@ type GetReservationResponse struct {
 	Reservation *Reservation `json:"reservation,omitempty"`
 }
 
-// ListReservationRequest defines model for ListReservationRequest.
-type ListReservationRequest struct {
-	End   *string `json:"end,omitempty"`
-	Start *string `json:"start,omitempty"`
-}
-
 // ListReservationResponse defines model for ListReservationResponse.
 type ListReservationResponse struct {
 	Reservations *[]Reservation `json:"reservations,omitempty"`
@@ -80,17 +74,17 @@ type UpdateStatusRequest struct {
 	Status *int `json:"status,omitempty"`
 }
 
-// GetReservationBusinessIdJSONBody defines parameters for GetReservationBusinessId.
-type GetReservationBusinessIdJSONBody ListReservationRequest
+// GetReservationBusinessIdParams defines parameters for GetReservationBusinessId.
+type GetReservationBusinessIdParams struct {
+	Start string `json:"start"`
+	End   string `json:"end"`
+}
 
 // PostReservationBusinessIdJSONBody defines parameters for PostReservationBusinessId.
 type PostReservationBusinessIdJSONBody CreateReservationRequest
 
 // PatchReservationReservationIdStatusJSONBody defines parameters for PatchReservationReservationIdStatus.
 type PatchReservationReservationIdStatusJSONBody UpdateStatusRequest
-
-// GetReservationBusinessIdRequestBody defines body for GetReservationBusinessId for application/json ContentType.
-type GetReservationBusinessIdJSONRequestBody GetReservationBusinessIdJSONBody
 
 // PostReservationBusinessIdRequestBody defines body for PostReservationBusinessId for application/json ContentType.
 type PostReservationBusinessIdJSONRequestBody PostReservationBusinessIdJSONBody
@@ -102,7 +96,7 @@ type PatchReservationReservationIdStatusJSONRequestBody PatchReservationReservat
 type ServerInterface interface {
 
 	// (GET /reservation/{businessId})
-	GetReservationBusinessId(ctx echo.Context, businessId string) error
+	GetReservationBusinessId(ctx echo.Context, businessId string, params GetReservationBusinessIdParams) error
 
 	// (POST /reservation/{businessId})
 	PostReservationBusinessId(ctx echo.Context, businessId string) error
@@ -130,8 +124,24 @@ func (w *ServerInterfaceWrapper) GetReservationBusinessId(ctx echo.Context) erro
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter businessId: %s", err))
 	}
 
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetReservationBusinessIdParams
+	// ------------- Required query parameter "start" -------------
+
+	err = runtime.BindQueryParameter("form", true, true, "start", ctx.QueryParams(), &params.Start)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter start: %s", err))
+	}
+
+	// ------------- Required query parameter "end" -------------
+
+	err = runtime.BindQueryParameter("form", true, true, "end", ctx.QueryParams(), &params.End)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter end: %s", err))
+	}
+
 	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.GetReservationBusinessId(ctx, businessId)
+	err = w.Handler.GetReservationBusinessId(ctx, businessId, params)
 	return err
 }
 
@@ -229,20 +239,20 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/+RWQW/rNgz+K4K2o1Gn3S7zsdtQFOihSLHT0INi07EKWVIpOn1BkP/+IClp7FgOEvS1",
-	"7/AORWNR4veR/Ehpw0vTWqNBk+PFhruygVaEn38jCII5OMCVIGn0HF47cORtFo0FJAlhJ+jK/6O1BV5w",
-	"Ryj1km8zrkULSYMjgZSwbLP9ilm8QEl+b4KGs0Y7GPPAwyb/+TtCzQv+W34IMd/Fl/f8pWHvgL4c80E6",
-	"+ki+L0nrCOuMAMO3JGjdRaG+owtEsU7TeVSihBZ0ItoG5LLphyU1wRIwRAyCzmf1BILGdDL+JitqUgAp",
-	"pvNhwc+rjLywQWw/HadCOuTtwvqHXIz418oYTKd6VAbdtYtomgwDDb0nanTKWVHCRFlJUOeSLuNCwtA5",
-	"wKThuLoHBt+Sq+vEaiqD/9lKEDwFqpOtOorkhLb8ktS18bsrcCVKG5PH/9WVNVITqw0yXzkFJTFRtVKz",
-	"VmixDBJgVgmqDbY84yRJed99tWZ8Beiix+urmY/BWNDCSl7wP65mVzc841ZQE/jmvcbPN4vOSQ3O3Vdb",
-	"b1wCjVn6kcIE229lg8kRsDB83Fe8OJqvt+/uAwUULRCg48X/xyD3/zBTM2qA7c9wnzVeBOZ8L0a+6HtE",
-	"eO0kQsULwg6y3S2X6pTnuBkc3ZoqKKE0mnaNKKxVsowZeXFR1gdXp9p0YrKHkg/JhYU4i0MZbmazz2Ox",
-	"m/mBxjDNcyCUsIKKKV9VUw+qyVxXluBc3Sm1jsetcQlJxMubCabhre9hJIdH434lPUy+rc5SxPVn8pjW",
-	"xB1Qv4YjEWyz6aGRb3qWU0PEg4gBzGLNZHX2/Jj3YX6yeLJpPP837IcELB7FcqFsP2mKTLyMf4RghhrJ",
-	"D5enFVQ2Y7HEKzgkc97HCedYLUGNhfPoXQ0DOGDG23wsmw8VZ0oDw7v5iyZP6tWy3U2dgWD+HFOPp1gX",
-	"XFThWHiD42qfpw4VL3hDZIs8V6YUqjGOio01SNtcWJmvrvmxTB78Phbd+EeKQCkWKvLwByORWnSKeMH/",
-	"ms1mHvp5+z0AAP//ajsvY7wOAAA=",
+	"H4sIAAAAAAAC/8xWwW7jOAz9FUG7R6NOu3tZH7szKAr0UKSY06AHxaZjFbakUnQ6QeB/H0hKajuWgwbT",
+	"6fRQpBYpvkfyidKO57oxWoEiy7Mdt3kFjfD//o8gCJZgATeCpFZLeG7BkrMZ1AaQJHhPUIX7oa0BnnFL",
+	"KNWadwlXooGowZJAili65LCiV0+Qk/ON0LBGKwtTHtg7uc+/EUqe8b/SPsV0n186iBeHvQH6cMw7ac8G",
+	"9d+SoLFnwb+iC0SxjdO5r0UODahIxyuQ62rYQakI1oC+uSDo7aweQNCUTsJfZEFVDCDGdDluwtvUKc8U",
+	"rRmW41RKfd3OlLqvxYR/WWuN8VJP2qDaZhVMs2mgptdCTXZZI3KYaSsJam00ZFiIGFoLGDUcd7dn8CO6",
+	"uo2sxir4zRSC4MFTnR1Xk0xOaMstSVVq512AzVGaUDz+VRVGS0Ws1Mhc52rIiYmikYo1Qom1lwAztaBS",
+	"Y8MTTpJqF3uo1oRvAG2IeHmxcDloA0oYyTP+z8Xi4oon3AiqPN90cPDT3aq1UoG1t0XnjGugKUs3Uphg",
+	"B1c2mhweC/3HbcGzo5l3/RreU0DRAAFann0/Brn9wnTJqAJ22MNd1XjmmfODGPlqGBHhuZUIBc8IW0j2",
+	"N0/0pOxCsOcWcNtHCyfrHQK5AXFOmEfnHEaz78rVYuF+cq1oPx2EMbXMQ5uebDhrfbxTs2PuCvBCHFd9",
+	"CYQSNlCw2jVZl6PmMtvmOVhbtnW9DduNthGFhPuVCabgZRhhoo57bT+lPB6DM1i61sX23Tox+/zxtRzT",
+	"6yaKuPydPOY1cQM07OFEBF0yP0PS3cByaqY4EDGCWW2ZLN48TpZDmD8/W+bw3N/4PERg8SiXzzFFZh6v",
+	"7yGYsUbS/i41gvJqKpZwI/tiLoc4fh8rJdRT4dy7UOMEesxwuU9l80vNmdPA+Kr+oMkTe8R0+6kzEsy/",
+	"U+phF2t9iMJv809y3Bzq1GLNM14RmSxNa52LutKWsp3RSF0qjEw3l/xYJnfOj4Uw7s0iUIpVHXi4jYFI",
+	"KdqaeMb/WywWDvqx+xkAAP//a9H89V8OAAA=",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code
