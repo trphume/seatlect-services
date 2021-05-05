@@ -14,6 +14,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/crypto/bcrypt"
 	"io"
+	"log"
 	"strings"
 	"time"
 )
@@ -104,11 +105,12 @@ func (b *BusinessDB) AuthenticateBusiness(ctx context.Context, business *typedb.
 	res := b.BusCol.FindOne(
 		ctx,
 		bson.M{"status": 1, "username": business.Username},
-		options.FindOne().SetProjection(bson.M{"_id": 1}),
+		options.FindOne().SetProjection(bson.M{"_id": 1, "password": 1}),
 	)
 
 	if res.Err() != nil {
 		if res.Err() == mongo.ErrNoDocuments {
+			log.Println("Not found")
 			return "", commonErr.NOTFOUND
 		}
 

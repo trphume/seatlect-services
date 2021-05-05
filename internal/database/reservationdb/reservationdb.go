@@ -140,7 +140,7 @@ func (r *ReservationDB) CreateReservation(ctx context.Context, reservation *type
 	businessResult := r.BusCol.FindOne(
 		ctx,
 		bson.M{"_id": reservation.BusinessId},
-		options.FindOne().SetProjection(bson.M{"placement": 1, "businessName": 1, "location": 1, "type": 1}),
+		options.FindOne().SetProjection(bson.M{"placement": 1, "businessName": 1, "location": 1, "type": 1, "displayImage": 1}),
 	)
 
 	if businessResult.Err() != nil {
@@ -172,6 +172,7 @@ func (r *ReservationDB) CreateReservation(ctx context.Context, reservation *type
 
 	reservation.Location = business.Location
 	reservation.Type = business.Type
+	reservation.Image = business.DisplayImage
 
 	// create in database
 	if _, err := r.ResCol.InsertOne(ctx, reservation); err != nil {
