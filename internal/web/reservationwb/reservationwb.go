@@ -237,6 +237,7 @@ func typedbSeatsToOapi(seats []typedb.ReservationSeat) *[]reservation_api.Seat {
 			Status:   createString(s.Status),
 			Type:     createString(s.Type),
 			User:     createString(userId),
+			Username: createString(s.Username),
 			Width:    createFloat32(float32(s.Width)),
 			X:        createFloat32(float32(s.X)),
 			Y:        createFloat32(float32(s.Y)),

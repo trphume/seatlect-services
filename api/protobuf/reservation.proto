@@ -42,6 +42,7 @@ message ReserveSeatsRequest {
   string resId = 1;
   string userId = 2;
   repeated string name = 3;
+  string username = 4;
 }
 
 message ReserveSeatsResponse {

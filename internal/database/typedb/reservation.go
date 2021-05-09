@@ -24,6 +24,7 @@ type ReservationSeat struct {
 	Type     string             `bson:"type"`
 	Space    int                `bson:"space"`
 	User     primitive.ObjectID `bson:"user"`
+	Username string             `bson:"username"`
 	Status   string             `bson:"status"`
 	X        float64            `bson:"x"`
 	Y        float64            `bson:"y"`

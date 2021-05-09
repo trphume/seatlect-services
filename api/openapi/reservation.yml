@@ -115,6 +115,8 @@ components:
           type: integer
         user:
           type: string
+        username:
+          type: string
         status:
           type: string
         x:

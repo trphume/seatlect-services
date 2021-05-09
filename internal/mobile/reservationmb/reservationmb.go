@@ -85,7 +85,7 @@ func (s *Server) SearchReservation(ctx context.Context, req *reservationpb.Searc
 
 func (s *Server) ReserveSeats(ctx context.Context, req *reservationpb.ReserveSeatsRequest) (*reservationpb.ReserveSeatsResponse, error) {
 	// attempt to make reservations
-	o, err := s.Repo.ReserveSeats(ctx, req.ResId, req.UserId, req.Name)
+	o, err := s.Repo.ReserveSeats(ctx, req.ResId, req.UserId, req.Username, req.Name)
 	if err != nil {
 		if err == commonErr.NOTFOUND {
 			return nil, status.Error(codes.NotFound, "Could not find with given id")
@@ -199,7 +199,7 @@ func (s *Server) notifySubscribers(resId string) {
 type Repo interface {
 	ListReservation(ctx context.Context, id string, start time.Time, end time.Time) ([]typedb.Reservation, error)
 	SearchReservation(ctx context.Context, searchParams typedb.SearchReservationParams) ([]typedb.Reservation, error)
-	ReserveSeats(ctx context.Context, id string, user string, seats []string) (*typedb.Order, error)
+	ReserveSeats(ctx context.Context, id string, user string, username string, seats []string) (*typedb.Order, error)
 	GetReservationById(ctx context.Context, businessId string, reservationId string) (*typedb.Reservation, error)
 }
 

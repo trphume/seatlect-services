@@ -71,11 +71,11 @@ db.createCollection('reservation', {
           required: ['width', 'height', 'seats'], properties: {
             width: { bsonType: 'int' }, height: { bsonType: 'int' }, seats: {
               bsonType: 'array', items: {
-                required: ['name', 'floor', 'type', 'space', 'user', 'status', 'x', 'y', 'width', 'height', 'rotation'], properties: {
+                required: ['name', 'floor', 'type', 'space', 'user', 'username', 'status', 'x', 'y', 'width', 'height', 'rotation'], properties: {
                   name: {
                     bsonType: 'string', minLength: 1,
                     maxLength: 2
-                  }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string' }, space: { bsonType: 'int', min: 1 }, user: { bsonType: 'objectId' }, status: { bsonType: 'string', enum: ['EMPTY', 'TAKEN', 'IN PROGRESS'] }, x: { bsonType: 'double' }, y: { bsonType: 'double' }, width: { bsonType: 'double' }, height: { bsonType: 'double' }, rotation: { bsonType: 'double' }
+                  }, floor: { bsonType: 'int', min: 1 }, type: { bsonType: 'string' }, space: { bsonType: 'int', min: 1 }, user: { bsonType: 'objectId' }, username: { bsonType: 'string' }, status: { bsonType: 'string', enum: ['EMPTY', 'TAKEN', 'IN PROGRESS'] }, x: { bsonType: 'double' }, y: { bsonType: 'double' }, width: { bsonType: 'double' }, height: { bsonType: 'double' }, rotation: { bsonType: 'double' }
                 }
               }
             }

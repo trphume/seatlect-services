@@ -182,7 +182,7 @@ func (r *ReservationDB) CreateReservation(ctx context.Context, reservation *type
 	return nil
 }
 
-func (r *ReservationDB) ReserveSeats(ctx context.Context, id string, user string, seats []string) (*typedb.Order, error) {
+func (r *ReservationDB) ReserveSeats(ctx context.Context, id string, user string, username string, seats []string) (*typedb.Order, error) {
 	pId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return nil, commonErr.INVALID
@@ -246,6 +246,7 @@ func (r *ReservationDB) ReserveSeats(ctx context.Context, id string, user string
 				"$set",
 				bson.M{
 					"placement.seats.$[elem].user":   uId,
+					"placement.seats.$[elem].username": username,
 					"placement.seats.$[elem].status": "TAKEN",
 				},
 			},
