@@ -14,6 +14,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/crypto/bcrypt"
 	"io"
+	"log"
 	"strings"
 	"time"
 )
@@ -23,7 +24,6 @@ type BusinessDB struct {
 	ImageBucket *storage.BucketHandle
 }
 
-// TODO: proper search functionality
 func (b *BusinessDB) ListBusiness(ctx context.Context, searchParams typedb.ListBusinessParams) ([]typedb.Business, error) {
 	// Construcut params
 	limit := new(int64)
@@ -31,11 +31,35 @@ func (b *BusinessDB) ListBusiness(ctx context.Context, searchParams typedb.ListB
 
 	// TODO: construct sorting option
 
-	businesses, err := b.BusCol.Find(ctx, bson.M{}, &options.FindOptions{
-		Limit: limit,
-	})
+	// Construct query
+	query := bson.D{
+		{"location", bson.D{
+			{"$geoWithin", bson.M{"$centerSphere": bson.A{searchParams.Location.Coordinates, 0.00156786503}}},
+		}},
+		{"status", 1},
+		{"type", searchParams.Type},
+	}
+
+	if searchParams.Name != "" {
+		query = bson.D{
+			{"$text", bson.M{"$search": searchParams.Name}},
+			{"location", bson.D{
+				{"$geoWithin", bson.M{"$centerSphere": bson.A{searchParams.Location.Coordinates, 0.00156786503}}},
+			}},
+			{"status", 1},
+			{"type", searchParams.Type},
+		}
+	}
+
+	// search for business by name
+	businesses, err := b.BusCol.Find(
+		ctx,
+		query,
+		options.Find().SetLimit(*limit).SetProjection(bson.M{"placement": 0, "employee": 0}),
+	)
 
 	if err != nil {
+		fmt.Println(err.Error())
 		return nil, commonErr.INTERNAL
 	}
 
@@ -62,6 +86,7 @@ func (b *BusinessDB) ListBusinessByIds(ctx context.Context, ids []string) ([]typ
 				},
 			},
 		},
+		options.Find().SetProjection(bson.M{"placement": 0, "employee": 0}),
 	)
 
 	if err != nil {
@@ -77,9 +102,15 @@ func (b *BusinessDB) ListBusinessByIds(ctx context.Context, ids []string) ([]typ
 }
 
 func (b *BusinessDB) AuthenticateBusiness(ctx context.Context, business *typedb.Business) (string, error) {
-	res := b.BusCol.FindOne(ctx, bson.M{"username": business.Username})
+	res := b.BusCol.FindOne(
+		ctx,
+		bson.M{"status": 1, "username": business.Username},
+		options.FindOne().SetProjection(bson.M{"_id": 1, "password": 1}),
+	)
+
 	if res.Err() != nil {
 		if res.Err() == mongo.ErrNoDocuments {
+			log.Println("Not found")
 			return "", commonErr.NOTFOUND
 		}
 
@@ -142,13 +173,24 @@ func (b *BusinessDB) SimpleListBusiness(ctx context.Context, status int, page in
 	return res, nil
 }
 
-func (b *BusinessDB) GetBusinessById(ctx context.Context, id string) (*typedb.Business, error) {
+func (b *BusinessDB) GetBusinessById(ctx context.Context, id string, withMenu bool) (*typedb.Business, error) {
 	pId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return nil, commonErr.INVALID
 	}
 
-	business := b.BusCol.FindOne(ctx, bson.M{"_id": pId})
+	// construct projection
+	projection := bson.M{"menu": 0, "placement": 0, "employee": 0}
+	if withMenu {
+		projection = bson.M{"placement": 0, "employee": 0}
+	}
+
+	business := b.BusCol.FindOne(
+		ctx,
+		bson.M{"_id": pId},
+		options.FindOne().SetProjection(projection),
+	)
+
 	if business.Err() != nil {
 		if business.Err() == mongo.ErrNoDocuments {
 			return nil, commonErr.NOTFOUND
@@ -193,15 +235,128 @@ func (b *BusinessDB) UpdateBusinessById(ctx context.Context, business typedb.Bus
 }
 
 func (b *BusinessDB) UpdateBusinessDIById(ctx context.Context, id string, image string) (string, error) {
-	panic("implement me")
+	pId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return "", commonErr.INVALID
+	}
+
+	// Upload Image to bucket
+	wr := b.ImageBucket.Object(uuid.NewString()).NewWriter(ctx)
+
+	index := strings.Index(image, ",")
+	imgDecoder := base64.NewDecoder(base64.StdEncoding, strings.NewReader(image[index+1:]))
+
+	if _, err = io.Copy(wr, imgDecoder); err != nil {
+		return "", commonErr.INVALID
+	}
+
+	if err = wr.Close(); err != nil {
+		return "", commonErr.INVALID
+	}
+
+	attrs, err := b.ImageBucket.Attrs(ctx)
+	if err != nil {
+		return "", commonErr.INTERNAL
+	}
+
+	image = fmt.Sprintf("https://storage.googleapis.com/%s/%s", attrs.Name, wr.Name)
+
+	// Update in Mongo
+	res := b.BusCol.FindOneAndUpdate(
+		ctx,
+		bson.M{"_id": pId},
+		bson.D{
+			{
+				"$set",
+				bson.D{{"displayImage", image}},
+			},
+		},
+	)
+
+	if res.Err() != nil {
+		if res.Err() == mongo.ErrNoDocuments {
+			return "", commonErr.NOTFOUND
+		}
+
+		return "", commonErr.INTERNAL
+	}
+
+	return image, nil
 }
 
-func (b *BusinessDB) AppendBusinessImage(ctx context.Context, id string, image string) error {
-	panic("implement me")
+func (b *BusinessDB) AppendBusinessImage(ctx context.Context, id string, image string) (string, error) {
+	pId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return "", commonErr.INVALID
+	}
+
+	// Upload Image to bucket
+	wr := b.ImageBucket.Object(uuid.NewString()).NewWriter(ctx)
+
+	index := strings.Index(image, ",")
+	imgDecoder := base64.NewDecoder(base64.StdEncoding, strings.NewReader(image[index+1:]))
+
+	if _, err = io.Copy(wr, imgDecoder); err != nil {
+		return "", commonErr.INVALID
+	}
+
+	if err = wr.Close(); err != nil {
+		return "", commonErr.INVALID
+	}
+
+	attrs, err := b.ImageBucket.Attrs(ctx)
+	if err != nil {
+		return "", commonErr.INTERNAL
+	}
+
+	image = fmt.Sprintf("https://storage.googleapis.com/%s/%s", attrs.Name, wr.Name)
+
+	// Update in Mongo
+	res := b.BusCol.FindOneAndUpdate(
+		ctx,
+		bson.M{"_id": pId},
+		bson.D{
+			{"$push", bson.D{
+				{"images", image},
+			}},
+		},
+	)
+
+	if res.Err() != nil {
+		if res.Err() == mongo.ErrNoDocuments {
+			return "", commonErr.NOTFOUND
+		}
+
+		return "", commonErr.INTERNAL
+	}
+
+	return image, nil
 }
 
 func (b *BusinessDB) RemoveBusinessImage(ctx context.Context, id string, pos int) error {
-	panic("implement me")
+	pId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return commonErr.INVALID
+	}
+
+	// Non-atomic version
+	if res := b.BusCol.FindOneAndUpdate(ctx, bson.M{"_id": pId}, bson.M{"$unset": bson.M{fmt.Sprintf("images.%d", pos): 1}}); res.Err() != nil {
+		if res.Err() == mongo.ErrNoDocuments {
+			return commonErr.NOTFOUND
+		}
+
+		return commonErr.INTERNAL
+	}
+
+	if res := b.BusCol.FindOneAndUpdate(ctx, bson.M{"_id": pId}, bson.M{"$pull": bson.M{"images": nil}}); res.Err() != nil {
+		if res.Err() == mongo.ErrNoDocuments {
+			return commonErr.NOTFOUND
+		}
+
+		return commonErr.INTERNAL
+	}
+
+	return nil
 }
 
 func (b *BusinessDB) ListMenuItem(ctx context.Context, id string) ([]typedb.MenuItems, error) {
@@ -338,13 +493,13 @@ func (b *BusinessDB) DeleteBusiness(ctx context.Context, id string) error {
 	return nil
 }
 
-func (b *BusinessDB) UpdateBusinessStatus(ctx context.Context, id string, status int) error {
+func (b *BusinessDB) UpdateBusinessStatus(ctx context.Context, id string, status int) (string, error) {
 	pId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		return commonErr.INVALID
+		return "", commonErr.INVALID
 	}
 
-	res, err := b.BusCol.UpdateOne(
+	res := b.BusCol.FindOneAndUpdate(
 		ctx,
 		bson.M{"_id": pId},
 		bson.D{
@@ -354,15 +509,114 @@ func (b *BusinessDB) UpdateBusinessStatus(ctx context.Context, id string, status
 				},
 			},
 		},
+		options.FindOneAndUpdate().SetProjection(bson.M{"email": 1}),
+	)
+
+	if res.Err() != nil {
+		if res.Err() == mongo.ErrNoDocuments {
+			return "", commonErr.NOTFOUND
+		}
+
+		return "", commonErr.INTERNAL
+	}
+
+	var business typedb.Business
+	if err := res.Decode(&business); err != nil {
+		return "", commonErr.INTERNAL
+	}
+
+	return business.Email, nil
+}
+
+func (b *BusinessDB) ListEmployee(ctx context.Context, businessId string) ([]typedb.Employee, error) {
+	pId, err := primitive.ObjectIDFromHex(businessId)
+	if err != nil {
+		return nil, commonErr.INVALID
+	}
+
+	res := b.BusCol.FindOne(ctx, bson.M{"_id": pId}, options.FindOne().SetProjection(bson.M{"employee": 1}))
+	if res.Err() != nil {
+		if res.Err() == mongo.ErrNoDocuments {
+			return nil, commonErr.NOTFOUND
+		}
+
+		return nil, commonErr.INTERNAL
+	}
+
+	var business typedb.Business
+	if err := res.Decode(&business); err != nil {
+		return nil, commonErr.INTERNAL
+	}
+
+	return business.Employee, nil
+}
+
+func (b *BusinessDB) CreateEmployee(ctx context.Context, businessId string, employee typedb.Employee) error {
+	pId, err := primitive.ObjectIDFromHex(businessId)
+	if err != nil {
+		return commonErr.INVALID
+	}
+
+	res, err := b.BusCol.UpdateOne(ctx, bson.M{"_id": pId}, bson.M{"$push": bson.M{"employee": employee}})
+	if err != nil {
+		return commonErr.INTERNAL
+	}
+
+	if res.MatchedCount == 0 {
+		return commonErr.NOTFOUND
+	}
+
+	return nil
+}
+
+func (b *BusinessDB) DeleteEmployee(ctx context.Context, businessId string, username string) error {
+	pId, err := primitive.ObjectIDFromHex(businessId)
+	if err != nil {
+		return commonErr.INVALID
+	}
+
+	res, err := b.BusCol.UpdateOne(
+		ctx,
+		bson.M{"_id": pId},
+		bson.M{"$pull": bson.M{"employee": bson.M{"username": username}}},
 	)
 
 	if err != nil {
 		return commonErr.INTERNAL
 	}
 
-	if res.ModifiedCount == 0 {
+	if res.MatchedCount == 0 {
 		return commonErr.NOTFOUND
 	}
 
 	return nil
+}
+
+func (b *BusinessDB) AuthenticateEmployee(ctx context.Context, username, password, businessName string) (string, error) {
+	res := b.BusCol.FindOne(
+		ctx,
+		bson.M{
+			"username": businessName,
+			"employee": bson.M{
+				"username": username,
+				"password": password,
+			},
+		},
+		options.FindOne().SetProjection(bson.M{"_id": 1}),
+	)
+
+	if res.Err() != nil {
+		if res.Err() == mongo.ErrNoDocuments {
+			return "", commonErr.NOTFOUND
+		}
+
+		return "", commonErr.INTERNAL
+	}
+
+	var business typedb.Business
+	if err := res.Decode(&business); err != nil {
+		return "", commonErr.INTERNAL
+	}
+
+	return business.Id.Hex(), nil
 }

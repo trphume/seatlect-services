@@ -7,6 +7,9 @@ import "common.proto";
 
 service ReservationService {
   rpc ListReservation (ListReservationRequest) returns (ListReservationResponse);
+  rpc SearchReservation (SearchReservationRequest) returns (SearchReservationResponse);
+  rpc ReserveSeats(ReserveSeatsRequest) returns (ReserveSeatsResponse);
+  rpc Susbscribe(SubscribeRequest) returns (stream SubscribeReponse);
 }
 
 // For ListReservation endpoint
@@ -19,4 +22,38 @@ message ListReservationRequest {
 
 message ListReservationResponse {
   repeated Reservation reservation = 1;
+}
+
+// For SearchReservation endpoint
+message SearchReservationRequest {
+  string name = 1;
+  string type = 2;
+  Latlng location = 3;
+  string start = 4;
+  string end = 5;
+}
+
+message SearchReservationResponse {
+  repeated Reservation reservation = 1;
+}
+
+// For ReserveSeats endpoint
+message ReserveSeatsRequest {
+  string resId = 1;
+  string userId = 2;
+  repeated string name = 3;
+  string username = 4;
+}
+
+message ReserveSeatsResponse {
+  Order order = 1;
+}
+
+// For Subscribe endpoint
+message SubscribeRequest {
+  string id = 1;
+}
+
+message SubscribeReponse {
+  ReservationPlacement placement = 1;
 }

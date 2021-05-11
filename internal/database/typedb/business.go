@@ -2,7 +2,6 @@ package typedb
 
 import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"time"
 )
 
 type Business struct {
@@ -18,21 +17,22 @@ type Business struct {
 	Address      string             `bson:"address"`
 	DisplayImage string             `bson:"displayImage"`
 	Images       []string           `bson:"images"`
-	Placement    []Seat             `bson:"placement"`
+	Placement    Placement          `bson:"placement"`
 	Menu         []MenuItems        `bson:"menu"`
 	Status       int                `bson:"status"`
 	Verified     bool               `bson:"verified"`
+	Employee     []Employee         `bson:"employee"`
+}
+
+type Employee struct {
+	Username string `bson:"username"`
+	Password string `bson:"password"`
 }
 
 type ListBusinessParams struct {
-	Limit      int32
-	Sort       int32
-	Name       string
-	Type       string
-	Tags       []string
-	Location   Location
-	StartPrice int32
-	EndPrice   int32
-	StartDate  time.Time
-	EndDate    time.Time
+	Limit    int32
+	Sort     int32
+	Name     string
+	Type     string
+	Location Location
 }

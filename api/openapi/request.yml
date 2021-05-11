@@ -55,6 +55,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ChangeRequest"
+    delete:
+      description: Reject a specific change request
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+          description: ID of the Business
+      responses:
+        "204":
+          description: Change request rejected successfully
     post:
       description: Create a new change request for a business
       parameters:

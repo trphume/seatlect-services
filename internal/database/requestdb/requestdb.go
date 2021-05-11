@@ -42,29 +42,29 @@ func (r *RequestDB) ListRequest(ctx context.Context, page int) ([]typedb.Request
 	return res, nil
 }
 
-func (r *RequestDB) ApproveRequest(ctx context.Context, id string) error {
+func (r *RequestDB) ApproveRequest(ctx context.Context, id string) (string, error) {
 	rId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		return commonErr.INVALID
+		return "", commonErr.INVALID
 	}
 
 	// Find the request and delete
 	tmp := r.ReqCol.FindOneAndDelete(ctx, bson.M{"_id": rId})
 	if tmp.Err() != nil {
 		if tmp.Err() == mongo.ErrNoDocuments {
-			return commonErr.NOTFOUND
+			return "", commonErr.NOTFOUND
 		}
 
-		return commonErr.INTERNAL
+		return "", commonErr.INTERNAL
 	}
 
 	var req typedb.Request
 	if err = tmp.Decode(&req); err != nil {
-		return commonErr.INTERNAL
+		return "", commonErr.INTERNAL
 	}
 
 	// Update information in business collection
-	_, err = r.BusCol.UpdateOne(
+	res := r.BusCol.FindOneAndUpdate(
 		ctx,
 		bson.M{"_id": req.Id},
 		bson.D{
@@ -79,13 +79,23 @@ func (r *RequestDB) ApproveRequest(ctx context.Context, id string) error {
 				},
 			},
 		},
+		options.FindOneAndUpdate().SetProjection(bson.M{"email": 1}),
 	)
 
-	if err != nil {
-		return commonErr.INTERNAL
+	if res.Err() != nil {
+		if res.Err() == mongo.ErrNoDocuments {
+			return "", commonErr.NOTFOUND
+		}
+
+		return "", commonErr.INTERNAL
 	}
 
-	return nil
+	var business typedb.Business
+	if err := res.Decode(&business); err != nil {
+		return "", commonErr.INTERNAL
+	}
+
+	return business.Email, nil
 }
 
 func (r *RequestDB) GetRequestById(ctx context.Context, request *typedb.Request) error {
@@ -116,6 +126,24 @@ func (r *RequestDB) CreateRequest(ctx context.Context, request *typedb.Request) 
 	_, err = r.ReqCol.InsertOne(ctx, request)
 	if err != nil {
 		return commonErr.INTERNAL
+	}
+
+	return nil
+}
+
+func (r *RequestDB) DeleteRequest(ctx context.Context, id string) error {
+	rId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return commonErr.INVALID
+	}
+
+	res, err := r.ReqCol.DeleteOne(ctx, bson.M{"_id": rId})
+	if err != nil {
+		return commonErr.INTERNAL
+	}
+
+	if res.DeletedCount == 0 {
+		return commonErr.NOTFOUND
 	}
 
 	return nil

@@ -1,0 +1,46 @@
+openapi: "3.0.2"
+info:
+  title: Order
+  version: "1.0"
+servers:
+  - url: http://localhost:{port}/api/v1
+    description: Local server
+    variables:
+      port:
+        default: "9000"
+paths:
+  /order/verify:
+    post:
+      description: Verify the order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VerifyRequest"
+      responses:
+        "200":
+          description: Order has been verified
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VerifyResponse"
+components:
+  schemas:
+    VerifyRequest:
+      type: object
+      properties:
+        orderId:
+          type: string
+        reservationId:
+          type: string
+      required:
+        - "orderId"
+        - "reservationId"
+    VerifyResponse:
+      type: object
+      properties:
+        seats:
+          type: array
+          items:
+            type: string

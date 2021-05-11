@@ -8,6 +8,7 @@ import "common.proto";
 service BusinessService {
   rpc ListBusiness (ListBusinessRequest) returns (ListBusinessResponse);
   rpc ListBusinessById (ListBusinessByIdRequest) returns (ListBusinessByIdResponse);
+  rpc GetBusinessById (GetBusinessByIdRequest) returns (GetBusinessByIdResponse);
 }
 
 // For List business endpoint - the parameters are optional
@@ -16,12 +17,7 @@ message ListBusinessRequest {
   Sort sort = 2;
   string name = 3;
   string type = 4;
-  repeated string tags = 5;
-  Latlng location = 6;
-  int32 startPrice = 7;
-  int32 endPrice = 8;
-  string startDate= 9;
-  string endDate = 10;
+  Latlng location = 5;
 }
 
 message ListBusinessResponse {
@@ -37,14 +33,19 @@ message ListBusinessByIdResponse {
   repeated Business businesses = 1;
 }
 
+// For Get business by id endpoint
+message GetBusinessByIdRequest {
+  string id = 1;
+}
+
+message GetBusinessByIdResponse {
+  Business business = 1;
+}
+
 // Helper definitions
 enum Sort {
   NAME_ASC = 0;
   NAME_DESC = 1;
   LOCATION_ASC = 2;
   LOCATION_DESC = 3;
-  PRICE_ASC = 4;
-  PRICE_DESC = 5;
-  DATE_ASC = 6;
-  DATE_DESC = 7;
 }

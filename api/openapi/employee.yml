@@ -1,0 +1,118 @@
+openapi: "3.0.2"
+info:
+  title: Employee
+  version: "1.0"
+servers:
+  - url: http://localhost:{port}/api/v1
+    description: Local server
+    variables:
+      port:
+        default: "9000"
+paths:
+  /employee/{businessId}:
+    post:
+      description: Create employee account with given username and password
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+            description: ID of business
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Employee"
+      responses:
+        "201":
+          description: Employee has been successfully created
+    get:
+      description: Get list of employees of a business
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+            description: ID of business
+      responses:
+        "200":
+          description: Business information retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListBusinessResponse"
+  /employee/{businessId}/{username}:
+    delete:
+      description: Delete an employee of a business
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+            description: ID of business
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+            description: Name of employee
+      responses:
+        "204":
+          description: Employee deleted successfully
+  /employee/login:
+    post:
+      description: Login with the username and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Authenticated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+components:
+  schemas:
+    Employee:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - "username"
+        - "password"
+    ListBusinessResponse:
+      type: object
+      properties:
+        employees:
+          type: array
+          items:
+            $ref: "#/components/schemas/Employee"
+    LoginRequest:
+      type: object
+      properties:
+        businessName:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - "businessName"
+        - "username"
+        - "password"
+    LoginResponse:
+      type: object
+      properties:
+        businessId:
+          type: string

@@ -6,6 +6,7 @@ import (
 	"github.com/tphume/seatlect-services/internal/database/customerdb"
 	"github.com/tphume/seatlect-services/internal/database/orderdb"
 	"github.com/tphume/seatlect-services/internal/database/reservationdb"
+	"github.com/tphume/seatlect-services/internal/database/typedb"
 	"github.com/tphume/seatlect-services/internal/genproto/businesspb"
 	"github.com/tphume/seatlect-services/internal/genproto/orderpb"
 	"github.com/tphume/seatlect-services/internal/genproto/reservationpb"
@@ -61,8 +62,8 @@ func main() {
 	ordRepo := &orderdb.OrderDB{OrdCol: ordCol}
 	ordServer := &ordermb.Server{Repo: ordRepo}
 
-	resRepo := &reservationdb.ReservationDB{ResCol: resCol}
-	resServer := &reservationmb.Server{Repo: resRepo}
+	resRepo := &reservationdb.ReservationDB{ResCol: resCol, BusCol: busCol, OrdCol: ordCol}
+	resServer := &reservationmb.Server{Repo: resRepo, SubscribersChannel: make(map[string]map[chan typedb.ReservationPlacement]bool)}
 
 	// Setup the gRPC server
 	lis, err := net.Listen("tcp", "0.0.0.0:9700")

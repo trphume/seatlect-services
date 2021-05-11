@@ -48,6 +48,12 @@ message MenuItem {
   string price = 4;
 }
 
+message ReservationPlacement {
+  int32 width = 1;
+  int32 height = 2;
+  repeated ReservationSeat seats = 3;
+}
+
 message OrderSeat {
   string name = 1;
   int32 space = 4;
@@ -73,6 +79,6 @@ message Reservation {
   string name = 3;
   string start = 4;
   string end = 5;
-  repeated ReservationSeat placement = 6;
+  ReservationPlacement placement = 6;
   string image = 7;
 }

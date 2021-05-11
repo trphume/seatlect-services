@@ -126,9 +126,9 @@ func (b *BusinessSuite) TestCreateAndDelete() {
 			Address:      "Somewhere",
 			DisplayImage: "",
 			Images:       nil,
-			Placement:    nil,
+			Placement:    typedb.Placement{},
 			Menu:         nil,
-			Status:       0,
+			Status:       1,
 			Verified:     false,
 		}, err: nil},
 		{in: &typedb.Business{
@@ -146,9 +146,9 @@ func (b *BusinessSuite) TestCreateAndDelete() {
 			Address:      "Somewhere",
 			DisplayImage: "",
 			Images:       nil,
-			Placement:    nil,
+			Placement:    typedb.Placement{},
 			Menu:         nil,
-			Status:       0,
+			Status:       1,
 			Verified:     false,
 		}, err: commonErr.INTERNAL},
 	}
@@ -208,7 +208,7 @@ func (b *BusinessSuite) TestGetBusinessById() {
 
 	for _, tt := range tests {
 		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
-		out, err := b.BusinessDB.GetBusinessById(ctx, tt.in)
+		out, err := b.BusinessDB.GetBusinessById(ctx, tt.in, false)
 
 		b.Assert().Equal(tt.err, err)
 		if err == nil {
@@ -243,6 +243,25 @@ func (b *BusinessSuite) TestUpdateBusinessById() {
 	for _, tt := range tests {
 		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 		err := b.BusinessDB.UpdateBusinessById(ctx, tt.in)
+
+		b.Assert().Equal(tt.err, err)
+	}
+}
+
+func (b *BusinessSuite) TestUpdateBusinessDIById() {
+	tests := []struct {
+		in  string
+		img string
+		err error
+	}{
+		{in: brightioID, img: b64Img, err: nil},
+		{in: admin1ID, img: b64Img, err: commonErr.NOTFOUND},
+		{in: admin1ID, img: "wrong", err: commonErr.INVALID},
+	}
+
+	for _, tt := range tests {
+		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+		_, err := b.BusinessDB.UpdateBusinessDIById(ctx, tt.in, tt.img)
 
 		b.Assert().Equal(tt.err, err)
 	}
@@ -331,7 +350,7 @@ func (b *BusinessSuite) TestUpdateBusinessStatus() {
 
 	// check updated status
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
-	brightio, err := b.BusinessDB.GetBusinessById(ctx, brightioID)
+	brightio, err := b.BusinessDB.GetBusinessById(ctx, brightioID, false)
 
 	b.Assert().Equal(nil, err)
 	b.Assert().Equal(100, brightio.Status)

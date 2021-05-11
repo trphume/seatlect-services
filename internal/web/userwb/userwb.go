@@ -2,16 +2,20 @@ package userwb
 
 import (
 	"context"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/tphume/seatlect-services/internal/commonErr"
 	"github.com/tphume/seatlect-services/internal/database/typedb"
 	"github.com/tphume/seatlect-services/internal/gen_openapi/user_api"
+	"github.com/tphume/seatlect-services/internal/utils"
+	"gopkg.in/gomail.v2"
 	"net/http"
 	"time"
 )
 
 type Server struct {
 	Repo Repo
+	Mail *gomail.Dialer
 }
 
 func (s *Server) PostUserLogin(ctx echo.Context) error {
@@ -64,7 +68,7 @@ func (s *Server) PostUserRegister(ctx echo.Context) error {
 		Address:      *req.Address,
 		DisplayImage: "",
 		Images:       make([]string, 0),
-		Placement:    make([]typedb.Seat, 0),
+		Placement:    typedb.Placement{Width: 400, Height: 400, Seats: make([]typedb.Seat, 0)},
 		Menu:         make([]typedb.MenuItems, 0),
 		Status:       0,
 		Verified:     false,
@@ -77,6 +81,14 @@ func (s *Server) PostUserRegister(ctx echo.Context) error {
 
 		return ctx.String(http.StatusConflict, "Business with that credentials already exist")
 	}
+
+	// Send email notification
+	go utils.SendEmail(
+		s.Mail,
+		business.Email,
+		"Seatlect Business Registration",
+		fmt.Sprintf("Business registration with the username <b>%s</b> successful. We are now reviewing your information", business.Username),
+	)
 
 	return ctx.String(http.StatusCreated, "Business created")
 }

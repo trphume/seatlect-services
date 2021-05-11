@@ -136,16 +136,16 @@ func (r *RequestSuite) TestGetRequestById() {
 	}
 }
 
-func (r *RequestSuite) TestCreateRequest() {
-	pBrightioId, _ := primitive.ObjectIDFromHex(brightioID)
+func (r *RequestSuite) TestCreateAndDeleteRequest() {
+	pBeerBurgerId, _ := primitive.ObjectIDFromHex(beerBurgerId)
 
 	tests := []struct {
 		in  *typedb.Request
 		err error
 	}{
 		{in: &typedb.Request{
-			Id:           pBrightioId,
-			BusinessName: "Brightio",
+			Id:           pBeerBurgerId,
+			BusinessName: "BeerBureger",
 			Type:         "Super Cool Bar",
 			Tags:         []string{},
 			Description:  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -159,15 +159,23 @@ func (r *RequestSuite) TestCreateRequest() {
 	}
 
 	for _, tt := range tests {
-		ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+		ctx, _ := context.WithTimeout(context.Background(), 20*time.Second)
 		err := r.RequestDB.CreateRequest(ctx, tt.in)
 
 		r.Assert().Equal(tt.err, err)
 
-		tmp := &typedb.Request{Id: pBrightioId}
+		// Check created request
+		tmp := &typedb.Request{Id: pBeerBurgerId}
 		err = r.RequestDB.GetRequestById(ctx, tmp)
 
 		r.Assert().Equal(tt.in.Type, tmp.Type)
+
+		// Delete request
+		err = r.RequestDB.DeleteRequest(ctx, beerBurgerId)
+		r.Assert().Equal(err, nil)
+
+		err = r.RequestDB.DeleteRequest(ctx, beerBurgerId)
+		r.Assert().Equal(err, commonErr.NOTFOUND)
 	}
 }
 

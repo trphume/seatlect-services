@@ -55,6 +55,9 @@ type ServerInterface interface {
 	// (GET /request)
 	GetRequest(ctx echo.Context, params GetRequestParams) error
 
+	// (DELETE /request/{businessId})
+	DeleteRequestBusinessId(ctx echo.Context, businessId string) error
+
 	// (GET /request/{businessId})
 	GetRequestBusinessId(ctx echo.Context, businessId string) error
 
@@ -85,6 +88,22 @@ func (w *ServerInterfaceWrapper) GetRequest(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshalled arguments
 	err = w.Handler.GetRequest(ctx, params)
+	return err
+}
+
+// DeleteRequestBusinessId converts echo context to params.
+func (w *ServerInterfaceWrapper) DeleteRequestBusinessId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "businessId" -------------
+	var businessId string
+
+	err = runtime.BindStyledParameter("simple", false, "businessId", ctx.Param("businessId"), &businessId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter businessId: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.DeleteRequestBusinessId(ctx, businessId)
 	return err
 }
 
@@ -165,6 +184,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	}
 
 	router.GET(baseURL+"/request", wrapper.GetRequest)
+	router.DELETE(baseURL+"/request/:businessId", wrapper.DeleteRequestBusinessId)
 	router.GET(baseURL+"/request/:businessId", wrapper.GetRequestBusinessId)
 	router.POST(baseURL+"/request/:businessId", wrapper.PostRequestBusinessId)
 	router.POST(baseURL+"/request/:businessId/approve", wrapper.PostRequestBusinessIdApprove)
@@ -174,17 +194,18 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/8yWUWvbMBDHv4q47dHEbreX+W3toBTKGH0dZSj22VGxJfV0zggh331IsuM4dloYFPpk",
-	"xzqd/vf/3aHsoTCtNRo1O8j34IoNtjK83m6krvERXzp07D9YMhaJFYblP6r0D95ZhBwck9I1HBKQZUno",
-	"3OLaunNKo3M/ZYuLASW6gpRlZfTiemMKOSx+Jqwgh0/pWEHay08fhrhDAizroEYxtsuy+g+SSO7G37PA",
-	"MdKsn7FgH/qgHPcWPaKzRjucW0Wjh0cRr6mfOj8TuKjjxJjp4Y1kxV15WpDu2jVS9FPXl1bnx/hPSlcm",
-	"BCtu/NqgMoEtkgsK4GqVrTKf3ljU0irI4csqW11DAlbyJshKT0ypMTwm8IOzYmgYIXUpFDtRBGtEv1l4",
-	"NdTGysNxFN7vS8jhDnkUZyXJFhnJQf57D8qf8NIh7SABHboRrKwRkgBLEZaQM3WY9BNx4o/SjHUw6MlH",
-	"R+ihpuss84/CaEYdSpLWNiqSSZ9dxDMmfLWDFxorAJi69IhMCrcoGm+XqaaOnbnluqJA56quaXwb+WwD",
-	"hnQ/bLwvDxeZ3CELKZzFQlWqOEv/CoCbY+45iukJ9z98EbxBMeyBJNLynTPCWp9mfBPZcYLfk9jZ1M5Z",
-	"3V7sXUE9xnLGKAFr3AKKW0LJKKTQ+Pecc2VIyGMnzLj8Mu5jgomSTLl7TyZTTYdZQ1xd9Po/pymV1pLZ",
-	"xnthkeX3GHDC7K3RWkTYp/lwI/Z1XvHNcp2it6oMfh4ScEjboYqOGshhw2zzNPV/BJqNcZzvrSH2Jqt0",
-	"ewXnM+fvxUbENP6OkqTkuonK/MYorZJdw5DDtyzL/NFPh38BAAD//1ZZ0fQYCQAA",
+	"H4sIAAAAAAAC/9RWQWvbTBD9K8t831FYStpLdWscCIFQiq8llLU0ljdIu5vZkYsx/u9lV5JleZWElhbS",
+	"k2zN7Myb995IOkBhGms0anaQH8AVW2xk+LncSl3hCp9bdOxvWDIWiRWG8HdV+gvvLUIOjknpCo4JyLIk",
+	"dG42tm6d0ujcF9ngbEKJriBlWRk9G69NIYfg/4QbyOG/dJwg7eGnD0PeMQGWVUCjGJt5WP0NSST34/8o",
+	"ccw06ycs2Kc+KMc9RSt01miHMVU0cngC8Rr6KfMRwFkcZ8RMm9eSFbfl+UC6bdZIHZ+6eikat/G3lN6Y",
+	"kKy49rEBZQI7JBcQwNUiW2S+vLGopVWQw4dFtriGBKzkbYCVnpFSYbhMxA/MisEwQupSKHaiCNSI/rDw",
+	"aKjpJg/tKPy+LyGHO+QRnJUkG2QkB/m3Ayjf4blF2kMCOrgRrKwQkiCWIiwhZ2ox6TfijB+lGatA0KPP",
+	"7kQPM11nmb8URjPqMJK0tladMumT6+QZC77q4BljBQGmLK2QSeEORe3pMpspYxdsubYo0LlNW9feRr7a",
+	"IEN6GA7el8dOjBoZY1lW6L0gpHAWC7VRxUWTSIbbUKgf5ebUJNZk2uf+1k/DWxTDGUg62byFRtXW5xXf",
+	"1O60yrF0H+NZl1P6KIyOZcRjMu/gO/wVnka7vmOS/py/L55xsbOXL266oN70c0pY42akWBJKRiGFxh+X",
+	"W7ExJORpbyJdvhr3PoXpIJly/zc1mWI6Roa4epHr33z2pNJaMrvuLTqr5ecu4Uyzt1ZrVsK+zL/wHLqZ",
+	"n1P0VJWBz2MCDmk3TNFSDTlsmW2epv6zqd4ax/nBGmJPskp3V3C5c/4rohZdGf9Gl6Tkuu6Q+YMdtI1s",
+	"a4YcPmVZ5ls/Hn8GAAD//+f47SFGCgAA",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code

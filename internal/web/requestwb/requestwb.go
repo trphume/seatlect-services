@@ -6,13 +6,17 @@ import (
 	"github.com/tphume/seatlect-services/internal/commonErr"
 	"github.com/tphume/seatlect-services/internal/database/typedb"
 	"github.com/tphume/seatlect-services/internal/gen_openapi/request_api"
+	"github.com/tphume/seatlect-services/internal/utils"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"gopkg.in/gomail.v2"
 	"net/http"
 	"time"
 )
 
 type Server struct {
-	Repo Repo
+	Repo    Repo
+	BusRepo BusRepo
+	Mail    *gomail.Dialer
 }
 
 func (s *Server) GetRequest(ctx echo.Context, params request_api.GetRequestParams) error {
@@ -80,11 +84,29 @@ func (s *Server) PostRequestBusinessId(ctx echo.Context, businessId string) erro
 		return ctx.String(http.StatusInternalServerError, "Database error")
 	}
 
+	// Get email of the business by id
+	business, err := s.BusRepo.GetBusinessById(ctx.Request().Context(), businessId, false)
+	if err != nil {
+		if err == commonErr.NOTFOUND {
+			return ctx.String(http.StatusNotFound, "Error fnding business with given id")
+		}
+
+		return ctx.String(http.StatusInternalServerError, "Database error")
+	}
+
+	// Send email notification
+	go utils.SendEmail(
+		s.Mail,
+		business.Email,
+		"Seatlect Change Request Created",
+		"Your change request have been created and is awaiting approval.",
+	)
+
 	return ctx.String(http.StatusCreated, "Business change request created successfully")
 }
 
-func (s *Server) PostRequestBusinessIdApprove(ctx echo.Context, businessId string) error {
-	if err := s.Repo.ApproveRequest(ctx.Request().Context(), businessId); err != nil {
+func (s *Server) DeleteRequestBusinessId(ctx echo.Context, businessId string) error {
+	if err := s.Repo.DeleteRequest(ctx.Request().Context(), businessId); err != nil {
 		if err == commonErr.NOTFOUND {
 			return ctx.String(http.StatusNotFound, "Error change request of business with given id")
 		}
@@ -92,14 +114,40 @@ func (s *Server) PostRequestBusinessIdApprove(ctx echo.Context, businessId strin
 		return ctx.String(http.StatusInternalServerError, "Database error")
 	}
 
+	return ctx.String(http.StatusNoContent, "Business change request rejected successfully")
+}
+
+func (s *Server) PostRequestBusinessIdApprove(ctx echo.Context, businessId string) error {
+	em, err := s.Repo.ApproveRequest(ctx.Request().Context(), businessId)
+	if err != nil {
+		if err == commonErr.NOTFOUND {
+			return ctx.String(http.StatusNotFound, "Error change request of business with given id")
+		}
+
+		return ctx.String(http.StatusInternalServerError, "Database error")
+	}
+
+	// Send email notification
+	go utils.SendEmail(
+		s.Mail,
+		em,
+		"Seatlect Change Request Approved",
+		"Your latest change request have been approved.",
+	)
+
 	return ctx.String(http.StatusNoContent, "Business change request approved successfully")
 }
 
 type Repo interface {
 	ListRequest(ctx context.Context, page int) ([]typedb.Request, error)
-	ApproveRequest(ctX context.Context, id string) error
+	ApproveRequest(ctX context.Context, id string) (string, error)
 	GetRequestById(ctx context.Context, request *typedb.Request) error
 	CreateRequest(ctx context.Context, request *typedb.Request) error
+	DeleteRequest(ctx context.Context, id string) error
+}
+
+type BusRepo interface {
+	GetBusinessById(ctx context.Context, id string, withMenu bool) (*typedb.Business, error)
 }
 
 // Helper functions

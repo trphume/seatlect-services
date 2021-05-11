@@ -7,13 +7,16 @@ import (
 	"github.com/tphume/seatlect-services/internal/commonErr"
 	"github.com/tphume/seatlect-services/internal/database/typedb"
 	"github.com/tphume/seatlect-services/internal/gen_openapi/business_api"
+	"github.com/tphume/seatlect-services/internal/utils"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"gopkg.in/gomail.v2"
 	"net/http"
 	"strconv"
 )
 
 type Server struct {
 	Repo Repo
+	Mail *gomail.Dialer
 }
 
 func (s *Server) GetBusiness(ctx echo.Context, params business_api.GetBusinessParams) error {
@@ -30,7 +33,7 @@ func (s *Server) GetBusiness(ctx echo.Context, params business_api.GetBusinessPa
 }
 
 func (s *Server) GetBusinessBusinessId(ctx echo.Context, businessId string) error {
-	business, err := s.Repo.GetBusinessById(ctx.Request().Context(), businessId)
+	business, err := s.Repo.GetBusinessById(ctx.Request().Context(), businessId, false)
 	if err != nil {
 		if err == commonErr.NOTFOUND {
 			return ctx.String(http.StatusNotFound, "Business not found with given id")
@@ -102,7 +105,24 @@ func (s *Server) PutBusinessBusinessIdDisplayImage(ctx echo.Context, businessId 
 }
 
 func (s *Server) PostBusinessBusinessIdImages(ctx echo.Context, businessId string) error {
-	panic("implement me")
+	var req business_api.AppendImageRequest
+	if err := ctx.Bind(&req); err != nil {
+		return ctx.String(http.StatusBadRequest, "Error binding request body")
+	}
+
+	img, err := s.Repo.AppendBusinessImage(ctx.Request().Context(), businessId, *req.Image)
+	if err != nil {
+		if err == commonErr.INVALID {
+			return ctx.String(http.StatusBadRequest, "Bad argument")
+		} else if err == commonErr.NOTFOUND {
+			return ctx.String(http.StatusNotFound, "Can't find business id with given id")
+		}
+
+		return ctx.String(http.StatusInternalServerError, "Internal error")
+	}
+
+	res := business_api.AppendImageResponse{Image: createString(img)}
+	return ctx.JSONPretty(http.StatusCreated, res, "  ")
 }
 
 func (s *Server) DeleteBusinessBusinessIdImagesPos(ctx echo.Context, businessId string, pos int) error {
@@ -188,7 +208,8 @@ func (s *Server) PatchBusinessBusinessIdStatus(ctx echo.Context, businessId stri
 		return ctx.String(http.StatusBadRequest, "Error binding request body")
 	}
 
-	if err := s.Repo.UpdateBusinessStatus(ctx.Request().Context(), businessId, *req.Status); err != nil {
+	em, err := s.Repo.UpdateBusinessStatus(ctx.Request().Context(), businessId, *req.Status)
+	if err != nil {
 		if err == commonErr.NOTFOUND {
 			return ctx.String(http.StatusNotFound, "Business not found with given id")
 		} else if err == commonErr.INVALID {
@@ -198,20 +219,28 @@ func (s *Server) PatchBusinessBusinessIdStatus(ctx echo.Context, businessId stri
 		return ctx.String(http.StatusInternalServerError, "Database error")
 	}
 
+	// Send email notification
+	go utils.SendEmail(
+		s.Mail,
+		em,
+		"Seatlect Business Approved",
+		"Your business registration have been approved. You can now login to the web management platform.",
+	)
+
 	return ctx.String(http.StatusNoContent, "Business status updated successfully")
 }
 
 type Repo interface {
 	SimpleListBusiness(ctx context.Context, status int, page int) ([]typedb.Business, error)
-	GetBusinessById(ctx context.Context, id string) (*typedb.Business, error)
+	GetBusinessById(ctx context.Context, id string, withMenu bool) (*typedb.Business, error)
 	UpdateBusinessById(ctx context.Context, business typedb.Business) error
 	UpdateBusinessDIById(ctx context.Context, id string, image string) (string, error)
-	AppendBusinessImage(ctx context.Context, id string, image string) error
+	AppendBusinessImage(ctx context.Context, id string, image string) (string, error)
 	RemoveBusinessImage(ctx context.Context, id string, pos int) error
 	ListMenuItem(ctx context.Context, id string) ([]typedb.MenuItems, error)
 	AppendMenuItem(ctx context.Context, id string, item typedb.MenuItems) (string, error)
 	RemoveMenuItem(ctx context.Context, id string, name string) error
-	UpdateBusinessStatus(ctx context.Context, id string, status int) error
+	UpdateBusinessStatus(ctx context.Context, id string, status int) (string, error)
 }
 
 // Helper function

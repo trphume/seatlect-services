@@ -14,7 +14,7 @@ services:
     volumes:
       - ./database/init.js:/docker-entrypoint-initdb.d/init.js
       - ./database/initIndex.js:/docker-entrypoint-initdb.d/initIndex.js
-      - ./database/initMock.js:/docker-entrypoint-initdb.d/initMock.js
+      - ./database/initMock.js:/docker-entrypoint-initdb.d/initMockTest.js
     ports:
       - "27017:27017"
     logging:

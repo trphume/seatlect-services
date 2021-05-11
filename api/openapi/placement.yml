@@ -1,0 +1,81 @@
+openapi: "3.0.2"
+info:
+  title: Placement
+  description: Endpoint for Seatlect admin management platform
+  version: "1.0"
+servers:
+  - url: http://localhost:{port}/api/v1
+    description: Local server
+    variables:
+      port:
+        default: "9000"
+paths:
+  /placement/{businessId}:
+    get:
+      description: Get Business placement
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+          description: ID of the Business
+      responses:
+        "200":
+          description: Retrieved business placement successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Placement"
+    put:
+      description: Update Business placement
+      parameters:
+        - in: path
+          name: businessId
+          required: true
+          schema:
+            type: string
+          description: ID of the Business
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Placement"
+      responses:
+        "200":
+          description: Placement updated
+components:
+  schemas:
+    Seat:
+      type: object
+      properties:
+        name:
+          type: string
+        floor:
+          type: integer
+        "type":
+          type: string
+        space:
+          type: integer
+        x:
+          type: number
+        "y":
+          type: number
+        width:
+          type: number
+        height:
+          type: number
+        rotation:
+          type: number
+    Placement:
+      type: object
+      properties:
+        width:
+          type: integer
+        height:
+          type: integer
+        seats:
+          type: array
+          items:
+            $ref: "#/components/schemas/Seat"
