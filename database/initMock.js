@@ -23,6 +23,8 @@ reservation_4 = ObjectId('608f59c053a970a744ce14ac');
 reservation_5 = ObjectId('608f59c96f17b50ec1ad94e2');
 reservation_6 = ObjectId('608f59d0e58318c67666fced');
 
+order_1 = ObjectId('609a72efe0a21a5e7f6b758e');
+
 orderA = ObjectId('6035fb35bf78e591bea86350');
 
 // Reusable mockup
@@ -77,6 +79,69 @@ examplePlacement = {
       floor: 1,
       type: 'TABLE',
       space: 4,
+      x: 200,
+      y: 200,
+      width: 80,
+      height: 80,
+      rotation: 0,
+    },
+  ]
+}
+
+reservation3Placement = {
+  width: 800,
+  height: 800,
+  seats: [
+    {
+      name: 'A1',
+      floor: 1,
+      type: 'TABLE',
+      space: 4,
+      user: jakeId,
+      username: 'Jake',
+      status: 'TAKEN',
+      x: 100,
+      y: 100,
+      width: 80,
+      height: 80,
+      rotation: 0,
+    },
+    {
+      name: 'A2',
+      floor: 1,
+      type: 'TABLE',
+      space: 4,
+      user: null,
+      username: '',
+      status: 'AVAILABLE',
+      x: 200,
+      y: 100,
+      width: 80,
+      height: 80,
+      rotation: 0,
+    },
+    {
+      name: 'B1',
+      floor: 1,
+      type: 'TABLE',
+      space: 4,
+      user: null,
+      username: '',
+      status: 'AVAILABLE',
+      x: 100,
+      y: 200,
+      width: 80,
+      height: 80,
+      rotation: 0,
+    },
+    {
+      name: 'B2',
+      floor: 1,
+      type: 'TABLE',
+      space: 4,
+      user: null,
+      username: '',
+      status: 'AVAILABLE',
       x: 200,
       y: 200,
       width: 80,
@@ -363,7 +428,7 @@ db.reservation.insertMany([
     name: 'Central Brightio',
     start: new Date('2021-06-03T19:00:00Z'),
     end: new Date('2021-06-03T23:00:00Z'),
-    placement: exampleReservationPlacement,
+    placement: reservation3Placement,
     image: exampleDisplayImage,
     location: {
       type: 'Point',
@@ -420,7 +485,33 @@ db.reservation.insertMany([
 ]);
 
 // order
-db.order.insertMany([]);
+db.order.insertMany([
+  {
+    _id: order_1,
+    reservationId: reservation_3,
+    customerId: jakeId,
+    businessId: centralBrightioId,
+    start: new Date('2021-06-03T19:00:00Z'),
+    end: new Date('2021-06-03T23:00:00Z'),
+    seats: [
+      {
+        name: 'A1',
+        floor: 1,
+        type: 'TABLE',
+        space: 4,
+        x: 100,
+        y: 100,
+        width: 80,
+        height: 80,
+        rotation: 0,
+      }
+    ],
+    status: 'AVAILABLE',
+    image: 'https://i.imgur.com/rXjqn0y.jpeg',
+    extraSpace: 0,
+    name: 'Central Brightio'
+  }
+]);
 
 // request
 db.request.insertMany([
