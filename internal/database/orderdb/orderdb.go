@@ -72,10 +72,15 @@ func (o *OrderDB) CancelOrder(ctx context.Context, id string) error {
 		return commonErr.INTERNAL
 	}
 
+	seats := make([]string, len(ord.Seats))
+	for i, seat := range ord.Seats {
+		seats[i] = seat.Name
+	}
+
 	// update status of reservation
 	if _, err := o.ResCol.UpdateOne(
 		ctx,
-		bson.M{"_id": ord.Id},
+		bson.M{"_id": ord.ReservationId},
 		bson.D{
 			{
 				"$set",
@@ -87,7 +92,7 @@ func (o *OrderDB) CancelOrder(ctx context.Context, id string) error {
 			},
 		},
 		options.Update().SetArrayFilters(options.ArrayFilters{Filters: []interface{}{
-			bson.M{"elem.name": bson.M{"$in": ord.Seats}},
+			bson.M{"elem.name": bson.M{"$in": seats}},
 		}}),
 	); err != nil {
 		return commonErr.INTERNAL
