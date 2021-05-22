@@ -7,6 +7,7 @@ import "common.proto";
 
 service OrderService {
   rpc ListOrder (ListOrderRequest) returns (ListOrderResponse);
+  rpc CancelOrder (CancelOrderRequest) returns (CancelOrderResponse);
 }
 
 // For ListOrder endpoint
@@ -19,3 +20,10 @@ message ListOrderRequest {
 message ListOrderResponse {
   repeated Order orders = 1;
 }
+
+// For CancelOrder endpoint
+message CancelOrderRequest {
+  string id = 1;
+}
+
+message CancelOrderResponse {}
