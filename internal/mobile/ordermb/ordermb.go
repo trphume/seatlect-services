@@ -32,8 +32,13 @@ func (s *Server) ListOrder(ctx context.Context, req *orderpb.ListOrderRequest) (
 	return &orderpb.ListOrderResponse{Orders: res}, nil
 }
 
+func (s *Server) CancelOrder(ctx context.Context, req *orderpb.CancelOrderRequest) (*orderpb.CancelOrderResponse, error) {
+	panic("implement me")
+}
+
 type Repo interface {
 	ListOrderByCustomer(ctx context.Context, customerId string, limit int32, page int32) ([]typedb.Order, error)
+	CancelOrder(ctx context.Context, id string) error
 }
 
 // Helper function

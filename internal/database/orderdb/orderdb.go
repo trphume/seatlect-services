@@ -45,6 +45,10 @@ func (o *OrderDB) ListOrderByCustomer(ctx context.Context, customerId string, li
 	return res, nil
 }
 
+func (o *OrderDB) CancelOrder(ctx context.Context, id string) error {
+	panic("implement me")
+}
+
 func (o *OrderDB) GetOrderWithReservationId(ctx context.Context, orderId string, reservationId string) (*typedb.Order, error) {
 	// parsing id
 	oId, err := primitive.ObjectIDFromHex(orderId)
