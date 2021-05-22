@@ -42,6 +42,17 @@ examplePlacement = {
   height: 800,
   seats: [
     {
+      name: 'Stage',
+      floor: 1,
+      type: 'OBJECT_SQUARE',
+      space: 4,
+      x: 10,
+      y: 10,
+      width: 80,
+      height: 320,
+      rotation: 0,
+    },
+    {
       name: 'A1',
       floor: 1,
       type: 'TABLE',
@@ -92,6 +103,20 @@ reservation3Placement = {
   width: 800,
   height: 800,
   seats: [
+    {
+      name: 'Stage',
+      floor: 1,
+      type: 'OBJECT_SQUARE',
+      space: 0,
+      user: null,
+      username: '',
+      status: '',
+      x: 10,
+      y: 10,
+      width: 80,
+      height: 320,
+      rotation: 0,
+    },
     {
       name: 'A1',
       floor: 1,
@@ -160,6 +185,20 @@ exampleReservationPlacement = {
   width: 800,
   height: 800,
   seats: [
+    {
+      name: 'Stage',
+      floor: 1,
+      type: 'OBJECT_SQUARE',
+      space: 0,
+      user: null,
+      username: '',
+      status: '',
+      x: 10,
+      y: 10,
+      width: 80,
+      height: 320,
+      rotation: 0,
+    },
     {
       name: 'A1',
       floor: 1,
@@ -396,8 +435,8 @@ db.reservation.insertMany([
     _id: reservation_1,
     businessId: brightioId,
     name: 'Brightio',
-    start: new Date('2021-06-03T19:00:00Z'),
-    end: new Date('2021-06-03T00:23:00Z'),
+    start: new Date('2021-06-23T19:00:00Z'),
+    end: new Date('2021-06-23T00:23:00Z'),
     placement: exampleReservationPlacement,
     image: exampleDisplayImage,
     location: {
@@ -411,8 +450,8 @@ db.reservation.insertMany([
     _id: reservation_2,
     businessId: jiaShinId,
     name: 'JiaShin',
-    start: new Date('2021-06-03T19:00:00Z'),
-    end: new Date('2021-06-03T23:00:00Z'),
+    start: new Date('2021-06-23T19:00:00Z'),
+    end: new Date('2021-06-23T23:00:00Z'),
     placement: exampleReservationPlacement,
     image: exampleDisplayImage,
     location: {
@@ -426,8 +465,8 @@ db.reservation.insertMany([
     _id: reservation_3,
     businessId: centralBrightioId,
     name: 'Central Brightio',
-    start: new Date('2021-06-03T19:00:00Z'),
-    end: new Date('2021-06-03T23:00:00Z'),
+    start: new Date('2021-06-23T19:00:00Z'),
+    end: new Date('2021-06-23T23:00:00Z'),
     placement: reservation3Placement,
     image: exampleDisplayImage,
     location: {
@@ -441,8 +480,8 @@ db.reservation.insertMany([
     _id: reservation_4,
     businessId: ironBuffetId,
     name: 'Iron Buffet',
-    start: new Date('2021-06-03T19:00:00Z'),
-    end: new Date('2021-06-03T23:00:00Z'),
+    start: new Date('2021-06-23T19:00:00Z'),
+    end: new Date('2021-06-23T23:00:00Z'),
     placement: exampleReservationPlacement,
     image: exampleDisplayImage,
     location: {
@@ -456,8 +495,8 @@ db.reservation.insertMany([
     _id: reservation_5,
     businessId: specialTaleId,
     name: 'Special Tale',
-    start: new Date('2021-06-03T19:00:00Z'),
-    end: new Date('2021-06-03T23:00:00Z'),
+    start: new Date('2021-06-23T19:00:00Z'),
+    end: new Date('2021-06-23T23:00:00Z'),
     placement: exampleReservationPlacement,
     image: exampleDisplayImage,
     location: {
@@ -471,8 +510,8 @@ db.reservation.insertMany([
     _id: reservation_6,
     businessId: beerBurgerId,
     name: 'Beer Burger',
-    start: new Date('2021-06-03T19:00:00Z'),
-    end: new Date('2021-06-03T23:00:00Z'),
+    start: new Date('2021-06-23T19:00:00Z'),
+    end: new Date('2021-06-23T23:00:00Z'),
     placement: exampleReservationPlacement,
     image: exampleDisplayImage,
     location: {
@@ -491,8 +530,8 @@ db.order.insertMany([
     reservationId: reservation_3,
     customerId: jakeId,
     businessId: centralBrightioId,
-    start: new Date('2021-06-03T19:00:00Z'),
-    end: new Date('2021-06-03T23:00:00Z'),
+    start: new Date('2021-06-23T19:00:00Z'),
+    end: new Date('2021-06-23T23:00:00Z'),
     seats: [
       {
         name: 'A1',
