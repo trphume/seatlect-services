@@ -15,6 +15,7 @@ jiaShinId = ObjectId('608458b0a704b63fed6c7731')
 beerBurgerId = ObjectId('5facaff31c6d49b2c7256bf3');
 ironBuffetId = ObjectId('5facaff9e4d46967c9c2a558');
 specialTaleId = ObjectId('5fcde2ec209efa45620a08b6');
+reggaeBarId = ObjectId('60ae0864220ff22a378bd2f0');
 
 reservation_1 = ObjectId('6035f3a48d505df0b9d043a3');
 reservation_2 = ObjectId('604c80551714a597557abc2e');
@@ -420,6 +421,27 @@ db.business.insertMany([
       coordinates: [100.53793107547114, 13.745226384751511]
     },
     address: 'Groove, Central World',
+    displayImage: exampleDisplayImage,
+    images: exampleImages,
+    placement: examplePlacement,
+    menu: exampleMenu,
+    status: 1,
+    employee: exampleEmployees,
+  },
+  {
+    _id: reggaeBarId,
+    username: 'ReggaeBar',
+    email: '60090043@kmitl.ac.th',
+    password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
+    businessName: 'ReggaeBar',
+    type: 'Bar',
+    tags: [],
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    location: {
+      type: 'Point',
+      coordinates: [100.5018, 13.7563]
+    },
+    address: 'Bangkok',
     displayImage: exampleDisplayImage,
     images: exampleImages,
     placement: examplePlacement,
