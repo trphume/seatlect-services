@@ -12,6 +12,7 @@ import (
 
 type OrderDB struct {
 	OrdCol *mongo.Collection
+	ResCol *mongo.Collection
 }
 
 func (o *OrderDB) ListOrderByCustomer(ctx context.Context, customerId string, limit int32, page int32) ([]typedb.Order, error) {
@@ -43,6 +44,61 @@ func (o *OrderDB) ListOrderByCustomer(ctx context.Context, customerId string, li
 	}
 
 	return res, nil
+}
+
+func (o *OrderDB) CancelOrder(ctx context.Context, id string) error {
+	oId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return commonErr.INVALID
+	}
+
+	// find and delete order
+	ordRes := o.OrdCol.FindOneAndDelete(
+		ctx,
+		bson.M{"_id": oId},
+		options.FindOneAndDelete().SetProjection(bson.M{"reservationId": 1, "seats": 1}),
+	)
+
+	if ordRes.Err() != nil {
+		if ordRes.Err() == mongo.ErrNoDocuments {
+			return commonErr.NOTFOUND
+		}
+
+		return commonErr.INTERNAL
+	}
+
+	var ord typedb.Order
+	if err = ordRes.Decode(&ord); err != nil {
+		return commonErr.INTERNAL
+	}
+
+	seats := make([]string, len(ord.Seats))
+	for i, seat := range ord.Seats {
+		seats[i] = seat.Name
+	}
+
+	// update status of reservation
+	if _, err := o.ResCol.UpdateOne(
+		ctx,
+		bson.M{"_id": ord.ReservationId},
+		bson.D{
+			{
+				"$set",
+				bson.M{
+					"placement.seats.$[elem].user":     nil,
+					"placement.seats.$[elem].username": "",
+					"placement.seats.$[elem].status":   "AVAILABLE",
+				},
+			},
+		},
+		options.Update().SetArrayFilters(options.ArrayFilters{Filters: []interface{}{
+			bson.M{"elem.name": bson.M{"$in": seats}},
+		}}),
+	); err != nil {
+		return commonErr.INTERNAL
+	}
+
+	return nil
 }
 
 func (o *OrderDB) GetOrderWithReservationId(ctx context.Context, orderId string, reservationId string) (*typedb.Order, error) {

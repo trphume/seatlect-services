@@ -2,6 +2,7 @@ package ordermb
 
 import (
 	"context"
+	"github.com/tphume/seatlect-services/internal/commonErr"
 	"github.com/tphume/seatlect-services/internal/database/typedb"
 	"github.com/tphume/seatlect-services/internal/genproto/commonpb"
 	"github.com/tphume/seatlect-services/internal/genproto/orderpb"
@@ -32,8 +33,27 @@ func (s *Server) ListOrder(ctx context.Context, req *orderpb.ListOrderRequest) (
 	return &orderpb.ListOrderResponse{Orders: res}, nil
 }
 
+func (s *Server) CancelOrder(ctx context.Context, req *orderpb.CancelOrderRequest) (*orderpb.CancelOrderResponse, error) {
+	if len(req.Id) <= 0 {
+		return nil, status.Error(codes.Unauthenticated, "ID is not valid")
+	}
+
+	if err := s.Repo.CancelOrder(ctx, req.Id); err != nil {
+		if err == commonErr.NOTFOUND {
+			return nil, status.Error(codes.NotFound, "Order not found")
+		} else if err == commonErr.INVALID {
+			return nil, status.Error(codes.Unauthenticated, "ID is not valid")
+		}
+
+		return nil, status.Error(codes.Internal, "Internal error")
+	}
+
+	return &orderpb.CancelOrderResponse{}, nil
+}
+
 type Repo interface {
 	ListOrderByCustomer(ctx context.Context, customerId string, limit int32, page int32) ([]typedb.Order, error)
+	CancelOrder(ctx context.Context, id string) error
 }
 
 // Helper function

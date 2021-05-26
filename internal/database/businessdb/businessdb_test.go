@@ -343,7 +343,7 @@ func (b *BusinessSuite) TestUpdateBusinessStatus() {
 
 	for _, tt := range tests {
 		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
-		err := b.BusinessDB.UpdateBusinessStatus(ctx, tt.in, tt.status)
+		_, err := b.BusinessDB.UpdateBusinessStatus(ctx, tt.in, tt.status)
 
 		b.Assert().Equal(tt.err, err)
 	}
@@ -357,7 +357,7 @@ func (b *BusinessSuite) TestUpdateBusinessStatus() {
 
 	// cleanup
 	ctx, _ = context.WithTimeout(context.Background(), 5*time.Second)
-	err = b.BusinessDB.UpdateBusinessStatus(ctx, brightioID, 1)
+	_, err = b.BusinessDB.UpdateBusinessStatus(ctx, brightioID, 1)
 
 	b.Assert().Equal(nil, err)
 }

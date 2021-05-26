@@ -90,7 +90,7 @@ func (r *RequestSuite) TestApproveRequest() {
 
 	for _, tt := range tests {
 		ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-		err := r.RequestDB.ApproveRequest(ctx, tt.in)
+		_, err := r.RequestDB.ApproveRequest(ctx, tt.in)
 
 		r.Assert().Equal(tt.err, err)
 	}

@@ -59,7 +59,7 @@ func main() {
 	busRepo := &businessdb.BusinessDB{BusCol: busCol}
 	busServer := &businessmb.Server{Repo: busRepo}
 
-	ordRepo := &orderdb.OrderDB{OrdCol: ordCol}
+	ordRepo := &orderdb.OrderDB{OrdCol: ordCol, ResCol: resCol}
 	ordServer := &ordermb.Server{Repo: ordRepo}
 
 	resRepo := &reservationdb.ReservationDB{ResCol: resCol, BusCol: busCol, OrdCol: ordCol}
