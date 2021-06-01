@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"strings"
 	"time"
 )
 
@@ -245,9 +246,9 @@ func (r *ReservationDB) ReserveSeats(ctx context.Context, id string, user string
 			{
 				"$set",
 				bson.M{
-					"placement.seats.$[elem].user":   uId,
+					"placement.seats.$[elem].user":     uId,
 					"placement.seats.$[elem].username": username,
-					"placement.seats.$[elem].status": "TAKEN",
+					"placement.seats.$[elem].status":   "TAKEN",
 				},
 			},
 		},
@@ -379,13 +380,20 @@ func (r *ReservationDB) UpdateOrderStatus(ctx context.Context, reservationId str
 func toReservationSeats(seats []typedb.Seat) []typedb.ReservationSeat {
 	res := make([]typedb.ReservationSeat, len(seats))
 	for i, s := range seats {
+		var status string
+		if strings.Contains(s.Type, "TABLE") {
+			status = "AVAILABLE"
+		} else {
+			status = ""
+		}
+
 		res[i] = typedb.ReservationSeat{
 			Name:     s.Name,
 			Floor:    s.Floor,
 			Type:     s.Type,
 			Space:    s.Space,
 			User:     primitive.ObjectID{},
-			Status:   "AVAILABLE",
+			Status:   status,
 			X:        s.X,
 			Y:        s.Y,
 			Width:    s.Width,
