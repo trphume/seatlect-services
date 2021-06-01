@@ -16,7 +16,7 @@ services:
       - ./database/initIndex.js:/docker-entrypoint-initdb.d/initIndex.js
       - ./database/initMock.js:/docker-entrypoint-initdb.d/initMock.js
     ports:
-      - "27017:27017"
+      - "0.0.0.0:27017:27017"
     logging:
       driver: none
     networks:
@@ -35,7 +35,7 @@ services:
     networks:
       - seatlect-service
     ports:
-      - "9700:9700"
+      - "0.0.0.0:9700:9700"
 
   seatlect-service-web:
     build:
@@ -52,4 +52,4 @@ services:
     networks:
       - seatlect-service
     ports:
-      - "9999:9999"
+      - "0.0.0.0:9999:9999"
