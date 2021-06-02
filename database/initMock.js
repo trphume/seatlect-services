@@ -16,6 +16,8 @@ beerBurgerId = ObjectId('5facaff31c6d49b2c7256bf3');
 ironBuffetId = ObjectId('5facaff9e4d46967c9c2a558');
 specialTaleId = ObjectId('5fcde2ec209efa45620a08b6');
 reggaeBarId = ObjectId('60ae0864220ff22a378bd2f0');
+anotherBrightioId = ObjectId('60b759196d645ef1f6a4ebc8');
+tateCafeId = ObjectId('60b759a06b4ced4a5e1fa652');
 
 reservation_1 = ObjectId('6035f3a48d505df0b9d043a3');
 reservation_2 = ObjectId('604c80551714a597557abc2e');
@@ -259,6 +261,12 @@ exampleReservationPlacement = {
   ]
 }
 
+emptyPlacement = {
+  width: 800,
+  height: 800,
+  seats: []
+}
+
 // admin collection
 db.admin.insertMany([
   {
@@ -442,12 +450,54 @@ db.business.insertMany([
       coordinates: [100.5018, 13.7563]
     },
     address: 'Bangkok',
-    displayImage: exampleDisplayImage,
-    images: exampleImages,
-    placement: examplePlacement,
-    menu: exampleMenu,
+    displayImage: "",
+    images: [],
+    placement: emptyPlacement,
+    menu: [],
     status: 0,
-    employee: exampleEmployees,
+    employee: [],
+  },
+  {
+    _id: anotherBrightioId,
+    username: 'AnotherBrightio',
+    email: '60090027@kmitl.ac.th',
+    password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
+    businessName: 'AnotherBrightio',
+    type: 'Restaurant',
+    tags: [],
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    location: {
+      type: 'Point',
+      coordinates: [100.769452, 13.725892]
+    },
+    address: 'Keki Ngam 4, Chalong Krung 1, Latkrabang, Bangkok, 10520',
+    displayImage: "",
+    images: [],
+    placement: emptyPlacement,
+    menu: [],
+    status: 0,
+    employee: [],
+  },
+  {
+    _id: tateCafeId,
+    username: 'TateCafe',
+    email: '60090011@kmitl.ac.th',
+    password: '$2y$12$dx/ILJHQbxtQHDq04JAk/OICg25Cj9DmYv33FgYXfDa4gxOwJVJ9.',
+    businessName: 'TateCafe',
+    type: 'Restaurant',
+    tags: [],
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    location: {
+      type: 'Point',
+      coordinates: [100.5018, 13.7563]
+    },
+    address: 'Bangkok',
+    displayImage: "",
+    images: [],
+    placement: emptyPlacement,
+    menu: [],
+    status: 0,
+    employee: [],
   },
 ]);
 
@@ -457,8 +507,8 @@ db.reservation.insertMany([
     _id: reservation_1,
     businessId: brightioId,
     name: 'Brightio',
-    start: new Date('2021-06-23T19:00:00Z'),
-    end: new Date('2021-06-23T00:23:00Z'),
+    start: new Date('2021-06-16T19:00:00Z'),
+    end: new Date('2021-06-16T00:23:00Z'),
     placement: exampleReservationPlacement,
     image: exampleDisplayImage,
     location: {
@@ -472,8 +522,8 @@ db.reservation.insertMany([
     _id: reservation_2,
     businessId: jiaShinId,
     name: 'JiaShin',
-    start: new Date('2021-06-23T19:00:00Z'),
-    end: new Date('2021-06-23T23:00:00Z'),
+    start: new Date('2021-06-16T19:00:00Z'),
+    end: new Date('2021-06-16T23:00:00Z'),
     placement: exampleReservationPlacement,
     image: exampleDisplayImage,
     location: {
@@ -487,8 +537,8 @@ db.reservation.insertMany([
     _id: reservation_3,
     businessId: centralBrightioId,
     name: 'Central Brightio',
-    start: new Date('2021-06-23T19:00:00Z'),
-    end: new Date('2021-06-23T23:00:00Z'),
+    start: new Date('2021-06-16T19:00:00Z'),
+    end: new Date('2021-06-16T23:00:00Z'),
     placement: reservation3Placement,
     image: exampleDisplayImage,
     location: {
@@ -502,8 +552,8 @@ db.reservation.insertMany([
     _id: reservation_4,
     businessId: ironBuffetId,
     name: 'Iron Buffet',
-    start: new Date('2021-06-23T19:00:00Z'),
-    end: new Date('2021-06-23T23:00:00Z'),
+    start: new Date('2021-06-16T19:00:00Z'),
+    end: new Date('2021-06-16T23:00:00Z'),
     placement: exampleReservationPlacement,
     image: exampleDisplayImage,
     location: {
@@ -517,8 +567,8 @@ db.reservation.insertMany([
     _id: reservation_5,
     businessId: specialTaleId,
     name: 'Special Tale',
-    start: new Date('2021-06-23T19:00:00Z'),
-    end: new Date('2021-06-23T23:00:00Z'),
+    start: new Date('2021-06-16T19:00:00Z'),
+    end: new Date('2021-06-16T23:00:00Z'),
     placement: exampleReservationPlacement,
     image: exampleDisplayImage,
     location: {
@@ -532,8 +582,8 @@ db.reservation.insertMany([
     _id: reservation_6,
     businessId: beerBurgerId,
     name: 'Beer Burger',
-    start: new Date('2021-06-23T19:00:00Z'),
-    end: new Date('2021-06-23T23:00:00Z'),
+    start: new Date('2021-06-16T19:00:00Z'),
+    end: new Date('2021-06-16T23:00:00Z'),
     placement: exampleReservationPlacement,
     image: exampleDisplayImage,
     location: {
@@ -552,8 +602,8 @@ db.order.insertMany([
     reservationId: reservation_3,
     customerId: jakeId,
     businessId: centralBrightioId,
-    start: new Date('2021-06-23T19:00:00Z'),
-    end: new Date('2021-06-23T23:00:00Z'),
+    start: new Date('2021-06-16T19:00:00Z'),
+    end: new Date('2021-06-16T23:00:00Z'),
     seats: [
       {
         name: 'A1',

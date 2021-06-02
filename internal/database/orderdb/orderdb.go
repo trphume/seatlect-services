@@ -55,7 +55,7 @@ func (o *OrderDB) CancelOrder(ctx context.Context, id string) error {
 	// find and delete order
 	ordRes := o.OrdCol.FindOneAndDelete(
 		ctx,
-		bson.M{"_id": oId},
+		bson.M{"_id": oId, "status": "AVAILABLE"},
 		options.FindOneAndDelete().SetProjection(bson.M{"reservationId": 1, "seats": 1}),
 	)
 
