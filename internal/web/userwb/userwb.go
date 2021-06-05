@@ -72,6 +72,7 @@ func (s *Server) PostUserRegister(ctx echo.Context) error {
 		Menu:         make([]typedb.MenuItems, 0),
 		Status:       0,
 		Verified:     false,
+		Employee:     make([]typedb.Employee, 0),
 	}
 
 	if err := s.Repo.CreateBusiness(ctx.Request().Context(), business); err != nil {
