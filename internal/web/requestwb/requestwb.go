@@ -72,7 +72,7 @@ func (s *Server) PostRequestBusinessId(ctx echo.Context, businessId string) erro
 			Type:        "Point",
 			Coordinates: []float64{float64(*req.Location.Longitude), float64(*req.Location.Latitude)},
 		},
-		Address:   *req.Type,
+		Address:   *req.Address,
 		CreatedAt: time.Now(),
 	}
 
